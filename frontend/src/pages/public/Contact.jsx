@@ -1,0 +1,177 @@
+import { useState } from 'react';
+import { motion } from 'framer-motion';
+import { FiMail, FiPhone, FiMapPin, FiSend, FiMessageSquare } from 'react-icons/fi';
+
+const Contact = () => {
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    subject: '',
+    message: ''
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    // Simulate API call
+    setTimeout(() => {
+      setIsSubmitting(false);
+      setSubmitted(true);
+      setFormData({ name: '', email: '', subject: '', message: '' });
+    }, 1500);
+  };
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  return (
+    <div className="bg-dark-bg min-h-screen pt-32 pb-24 text-slate-200">
+      <div className="container-custom">
+        <div className="max-w-6xl mx-auto">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-20">
+            {/* Info Side */}
+            <motion.div
+              initial={{ opacity: 0, x: -30 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8 }}
+            >
+              <h1 className="text-6xl md:text-7xl font-black text-white tracking-tighter mb-8 leading-none">
+                GET IN <br />
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-500 via-rose-500 to-amber-500 animate-gradient-x">TOUCH.</span>
+              </h1>
+              <p className="text-xl text-slate-400 mb-12 font-medium leading-relaxed max-w-md">
+                Have a question or need assistance? Our team is here to help you experience the extraordinary.
+              </p>
+
+              <div className="space-y-10">
+                <div className="flex items-start gap-6 group">
+                  <div className="w-14 h-14 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-primary text-2xl group-hover:bg-primary group-hover:text-white transition-all duration-500 shadow-xl">
+                    <FiMail />
+                  </div>
+                  <div>
+                    <p className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 mb-2">Email Us</p>
+                    <p className="text-xl font-bold text-white group-hover:text-primary transition-colors">hello@aurapass.com</p>
+                  </div>
+                </div>
+
+                <div className="flex items-start gap-6 group">
+                  <div className="w-14 h-14 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-rose-500 text-2xl group-hover:bg-rose-500 group-hover:text-white transition-all duration-500 shadow-xl">
+                    <FiPhone />
+                  </div>
+                  <div>
+                    <p className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 mb-2">Call Us</p>
+                    <p className="text-xl font-bold text-white group-hover:text-rose-500 transition-colors">+1 (555) 000-0000</p>
+                  </div>
+                </div>
+
+                <div className="flex items-start gap-6 group">
+                  <div className="w-14 h-14 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-amber-500 text-2xl group-hover:bg-amber-500 group-hover:text-white transition-all duration-500 shadow-xl">
+                    <FiMapPin />
+                  </div>
+                  <div>
+                    <p className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 mb-2">Visit Us</p>
+                    <p className="text-xl font-bold text-white group-hover:text-amber-500 transition-colors">123 Innovation Drive, Tech Valley</p>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+
+            {/* Form Side */}
+            <motion.div
+              initial={{ opacity: 0, x: 30 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+            >
+              <div className="glass-card p-12 bg-white/5 border-white/10 relative overflow-hidden">
+                <div className="absolute top-0 right-0 p-8 opacity-10">
+                  <FiMessageSquare size={120} className="text-primary" />
+                </div>
+                
+                {submitted ? (
+                  <div className="text-center py-20">
+                    <div className="w-20 h-20 bg-emerald-500/10 text-emerald-500 rounded-full flex items-center justify-center mx-auto mb-8 text-4xl border border-emerald-500/20">
+                      <FiSend />
+                    </div>
+                    <h2 className="text-3xl font-black text-white mb-4 uppercase tracking-tighter">Message Sent!</h2>
+                    <p className="text-slate-400 font-medium mb-10">Thank you for reaching out. We'll get back to you within 24 hours.</p>
+                    <button 
+                      onClick={() => setSubmitted(false)}
+                      className="btn-primary"
+                    >
+                      Send Another
+                    </button>
+                  </div>
+                ) : (
+                  <form onSubmit={handleSubmit} className="space-y-8 relative z-10">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                      <div className="space-y-3">
+                        <label className="text-[10px] font-black uppercase tracking-widest text-slate-500 ml-4">Full Name</label>
+                        <input
+                          required
+                          type="text"
+                          name="name"
+                          value={formData.name}
+                          onChange={handleChange}
+                          className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-white focus:border-primary/50 outline-none transition-all placeholder:text-slate-700 font-bold"
+                          placeholder="John Doe"
+                        />
+                      </div>
+                      <div className="space-y-3">
+                        <label className="text-[10px] font-black uppercase tracking-widest text-slate-500 ml-4">Email Address</label>
+                        <input
+                          required
+                          type="email"
+                          name="email"
+                          value={formData.email}
+                          onChange={handleChange}
+                          className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-white focus:border-primary/50 outline-none transition-all placeholder:text-slate-700 font-bold"
+                          placeholder="john@example.com"
+                        />
+                      </div>
+                    </div>
+                    <div className="space-y-3">
+                      <label className="text-[10px] font-black uppercase tracking-widest text-slate-500 ml-4">Subject</label>
+                      <input
+                        required
+                        type="text"
+                        name="subject"
+                        value={formData.subject}
+                        onChange={handleChange}
+                        className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-white focus:border-primary/50 outline-none transition-all placeholder:text-slate-700 font-bold"
+                        placeholder="How can we help?"
+                      />
+                    </div>
+                    <div className="space-y-3">
+                      <label className="text-[10px] font-black uppercase tracking-widest text-slate-500 ml-4">Message</label>
+                      <textarea
+                        required
+                        name="message"
+                        rows="6"
+                        value={formData.message}
+                        onChange={handleChange}
+                        className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-white focus:border-primary/50 outline-none transition-all placeholder:text-slate-700 font-bold resize-none"
+                        placeholder="Tell us more about your inquiry..."
+                      ></textarea>
+                    </div>
+                    <button
+                      disabled={isSubmitting}
+                      type="submit"
+                      className="w-full btn-primary py-5 text-sm"
+                    >
+                      {isSubmitting ? 'SENDING...' : 'SEND MESSAGE'}
+                    </button>
+                  </form>
+                )}
+              </div>
+            </motion.div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default Contact;
