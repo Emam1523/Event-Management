@@ -3,6 +3,15 @@ import { FiCalendar, FiMapPin, FiArrowRight, FiStar } from 'react-icons/fi';
 import { HiSparkles } from 'react-icons/hi2';
 import { format, isValid } from 'date-fns';
 import { motion } from 'framer-motion';
+import { API_ROOT } from '../services/api';
+
+const DEFAULT_IMAGE = 'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=800';
+
+const resolveImage = (image) => {
+  if (!image) return DEFAULT_IMAGE;
+  if (image.startsWith('http')) return image;
+  return `${API_ROOT}${image}`;
+};
 
 const EventCard = ({ event }) => {
   const navigate = useNavigate();
@@ -30,11 +39,11 @@ const EventCard = ({ event }) => {
       {/* Image Section */}
       <div className="relative h-64 overflow-hidden shrink-0">
         <motion.img
-          src={event.image || 'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=800'}
+          src={resolveImage(event.image)}
           alt={event.title}
           className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000 ease-in-out"
           onError={(e) => {
-            e.target.src = 'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=800';
+            e.target.src = DEFAULT_IMAGE;
           }}
         />
         

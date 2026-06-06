@@ -20,7 +20,7 @@ import EventCard from '../components/EventCard';
 import Pagination from '../components/common/Pagination';
 import eventService from '../services/eventService';
 
-const CATEGORIES = [
+const DEFAULT_CATEGORIES = [
   'All',
   'Concert',
   'Festival',
@@ -34,7 +34,7 @@ const CATEGORIES = [
   'Food & Drink',
 ];
 
-const LOCATIONS = [
+const DEFAULT_LOCATIONS = [
   'All',
   'Dhaka',
   'Chattogram',
@@ -51,6 +51,10 @@ const Events = () => {
   const [isFilterSidebarOpen, setIsFilterSidebarOpen] = useState(false);
   const [totalEvents, setTotalEvents] = useState(0);
 
+  // Dynamic filters from database
+  const [categories, setCategories] = useState(DEFAULT_CATEGORIES);
+  const [locations, setLocations] = useState(DEFAULT_LOCATIONS);
+
   // Filter states
   const [search, setSearch] = useState(searchParams.get('search') || '');
   const [category, setCategory] = useState(
@@ -60,6 +64,25 @@ const Events = () => {
     searchParams.get('location') || 'All'
   );
   const [page, setPage] = useState(parseInt(searchParams.get('page')) || 1);
+
+  useEffect(() => {
+    const fetchFilters = async () => {
+      try {
+        const data = await eventService.getFilters();
+        if (data && data.success) {
+          if (data.categories && data.categories.length > 0) {
+            setCategories(['All', ...data.categories]);
+          }
+          if (data.locations && data.locations.length > 0) {
+            setLocations(['All', ...data.locations]);
+          }
+        }
+      } catch (error) {
+        console.error('Error fetching filters from DB:', error);
+      }
+    };
+    fetchFilters();
+  }, []);
 
   const fetchEvents = useCallback(async () => {
     await Promise.resolve();
@@ -282,7 +305,7 @@ const Events = () => {
                 </h4>
                 
                 <div className="flex flex-col gap-1.5">
-                  {CATEGORIES.map((cat) => (
+                  {categories.map((cat) => (
                     <button
                       key={cat}
                       onClick={() => {
@@ -321,7 +344,7 @@ const Events = () => {
                     }}
                     className="w-full bg-white/5 border border-white/10 text-white text-[11px] font-bold px-4 py-4 rounded-xl outline-none appearance-none focus:border-primary/50 cursor-pointer"
                   >
-                    {LOCATIONS.map((loc) => (
+                    {locations.map((loc) => (
                       <option key={loc} value={loc} className="bg-slate-900">
                         {loc === 'All' ? 'Everywhere' : loc}
                       </option>
@@ -477,7 +500,7 @@ const Events = () => {
                     Categories
                   </h4>
                   <div className="grid grid-cols-2 gap-2">
-                    {CATEGORIES.map((cat) => (
+                    {categories.map((cat) => (
                       <button
                         key={cat}
                         onClick={() => {
@@ -509,7 +532,7 @@ const Events = () => {
                     }}
                     className="w-full bg-white/5 border border-white/10 text-white text-xs font-bold px-4 py-4 rounded-xl outline-none"
                   >
-                    {LOCATIONS.map((loc) => (
+                    {locations.map((loc) => (
                       <option key={loc} value={loc} className="bg-slate-900">
                         {loc}
                       </option>

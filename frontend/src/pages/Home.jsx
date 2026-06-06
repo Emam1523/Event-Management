@@ -16,7 +16,15 @@ import { BsTicketPerforated } from 'react-icons/bs';
 import { motion, AnimatePresence } from 'framer-motion';
 import EventCard from '../components/EventCard';
 import eventService from '../services/eventService';
-import { statsAPI } from '../services/api';
+import { statsAPI, API_ROOT } from '../services/api';
+
+const DEFAULT_IMAGE = 'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=1200';
+
+const resolveImage = (image) => {
+  if (!image) return DEFAULT_IMAGE;
+  if (image.startsWith('http')) return image;
+  return `${API_ROOT}${image}`;
+};
 
 const Home = () => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -91,13 +99,8 @@ const Home = () => {
         const events = Array.isArray(featuredResponse)
           ? featuredResponse
           : featuredResponse?.events;
-        const bangladeshEvents = (events || []).filter((event) =>
-          (event.location || '').toLowerCase().includes('bangladesh')
-        );
 
-        setFeaturedEvents(
-          bangladeshEvents.length > 0 ? bangladeshEvents : []
-        );
+        setFeaturedEvents(events || []);
         setIsLoading(false);
 
         const statsData = statsResponse?.data?.data;
@@ -446,12 +449,10 @@ const Home = () => {
                     className="absolute inset-0"
                   >
                     <img
-                      src={
-                        activeUpcoming?.image ||
-                        'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=1200'
-                      }
+                      src={resolveImage(activeUpcoming?.image)}
                       alt={activeUpcoming?.title || 'Upcoming event'}
                       className="h-full w-full object-cover opacity-70"
+                      onError={(e) => { e.target.src = DEFAULT_IMAGE; }}
                     />
                     <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/30 to-black/80" />
 

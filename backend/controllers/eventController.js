@@ -22,13 +22,19 @@ exports.getFeaturedEvents = asyncHandler(async (req, res) => {
 // @route   GET /api/events
 // @access  Public
 exports.getEvents = asyncHandler(async (req, res) => {
-  const { category, search, page = 1, limit = 9 } = req.query;
+  const { category, location, search, page = 1, limit = 9 } = req.query;
   const skip = (Number(page) - 1) * Number(limit);
   const take = Number(limit);
 
   const where = {};
   if (category && category !== 'All') {
     where.category = category;
+  }
+  if (location && location !== 'All') {
+    where.location = {
+      contains: location,
+      mode: 'insensitive'
+    };
   }
   if (search) {
     where.OR = [
@@ -204,4 +210,34 @@ exports.deleteEvent = asyncHandler(async (req, res) => {
   await prisma.event.delete({ where: { id } });
 
   res.json({ message: 'Event removed' });
+});
+
+// @desc    Get all unique categories and locations
+// @route   GET /api/events/filters
+// @access  Public
+exports.getFilters = asyncHandler(async (req, res) => {
+  const [categoriesFromDb, locationsFromDb, eventsForCategories, eventsForLocations] = await Promise.all([
+    prisma.category.findMany({ select: { name: true }, orderBy: { name: 'asc' } }),
+    prisma.location.findMany({ select: { name: true }, orderBy: { name: 'asc' } }),
+    prisma.event.findMany({ select: { category: true }, distinct: ['category'] }),
+    prisma.event.findMany({ select: { location: true }, distinct: ['location'] })
+  ]);
+
+  // Combine category names from Category table and unique categories from Event table
+  const categoryNames = new Set([
+    ...categoriesFromDb.map(c => c.name),
+    ...eventsForCategories.map(e => e.category)
+  ]);
+
+  // Combine locations from Location table and unique locations from Event table
+  const locationNames = new Set([
+    ...locationsFromDb.map(l => l.name),
+    ...eventsForLocations.map(e => e.location).filter(Boolean)
+  ]);
+
+  res.json({
+    success: true,
+    categories: Array.from(categoryNames),
+    locations: Array.from(locationNames)
+  });
 });

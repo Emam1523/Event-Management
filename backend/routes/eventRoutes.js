@@ -6,11 +6,13 @@ const {
   createEvent, 
   getFeaturedEvents,
   updateEvent,
-  deleteEvent
+  deleteEvent,
+  getFilters
 } = require('../controllers/eventController');
 const { protect, admin } = require('../middleware/authMiddleware');
 
 router.get('/featured', getFeaturedEvents);
+router.get('/filters', getFilters);
 
 router.route('/')
   .get(getEvents)

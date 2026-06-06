@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { FiPlus, FiTrash2, FiUpload, FiCalendar, FiClock, FiMapPin, FiTag, FiUsers, FiInfo, FiArrowLeft, FiSave } from 'react-icons/fi';
 import { motion, AnimatePresence } from 'framer-motion';
-import api from '../../services/api';
+import api, { eventsAPI } from '../../services/api';
 import toast from 'react-hot-toast';
 
 const EditEvent = () => {
@@ -29,11 +29,32 @@ const EditEvent = () => {
     ticketTypes: []
   });
 
-  const categories = [
+  const [categories, setCategories] = useState([
     'Concert', 'Festival', 'Workshop', 'Conference', 'Sports', 'Theater',
-    'Comedy Show', 'Networking Event', 'Art Show', 'Food & Drink',
-    'Music Festival', 'Tech Talk', 'Seminar', 'Exhibition', 'Meetup'
-  ];
+    'Comedy Show', 'Networking Event', 'Art Show', 'Food & Drink'
+  ]);
+  const [cities, setCities] = useState([
+    'Dhaka', 'Chattogram', 'Sylhet', 'Khulna', 'Rajshahi', 'Barishal'
+  ]);
+
+  useEffect(() => {
+    const fetchFilters = async () => {
+      try {
+        const { data } = await eventsAPI.getFilters();
+        if (data && data.success) {
+          if (data.categories && data.categories.length > 0) {
+            setCategories(data.categories);
+          }
+          if (data.locations && data.locations.length > 0) {
+            setCities(data.locations);
+          }
+        }
+      } catch (err) {
+        console.error('Error fetching categories and cities:', err);
+      }
+    };
+    fetchFilters();
+  }, []);
 
   useEffect(() => {
     const fetchEvent = async () => {
@@ -49,6 +70,10 @@ const EditEvent = () => {
             }
         }
 
+        const locationParts = data.location ? data.location.split(', ') : [];
+        const locationName = locationParts[0] || '';
+        const cityName = locationParts[1] || '';
+
         setFormData({
           title: data.title || '',
           description: data.description || '',
@@ -56,9 +81,9 @@ const EditEvent = () => {
           date: formattedDate,
           time: data.time || '',
           endTime: data.endTime || '',
-          location: data.location || '',
+          location: locationName,
           googleMapUrl: data.googleMapUrl || '',
-          venue: data.venue || '',
+          venue: cityName,
           address: data.address || '',
           category: data.category || '',
           capacity: data.capacity || '',
@@ -172,7 +197,7 @@ const EditEvent = () => {
         date: formData.date,
         time: formData.time,
         endTime: formData.endTime || '',
-        location: formData.location,
+        location: formData.venue ? `${formData.location}, ${formData.venue}` : formData.location,
         googleMapUrl: formData.googleMapUrl || '',
         price: Number(formData.ticketTypes[0]?.price || 0),
         image: finalImageUrl,
@@ -413,14 +438,21 @@ const EditEvent = () => {
             </div>
             <div className="group">
                 <label className="block text-[10px] font-black text-zinc-500 uppercase tracking-[0.2em] mb-4 ml-2 group-focus-within:text-emerald-500 transition-colors">City</label>
-                <input
-                  type="text"
-                  name="venue"
-                  value={formData.venue}
-                  onChange={handleChange}
-                  className="w-full bg-white/5 border border-white/5 rounded-2xl py-5 px-8 text-white placeholder:text-zinc-700 focus:outline-none focus:border-emerald-500/50 focus:ring-4 focus:ring-emerald-500/10 transition-all font-bold"
-                  placeholder="e.g. Dhaka, Bangladesh"
-                />
+                <div className="relative">
+                  <FiMapPin className="absolute left-8 top-1/2 -translate-y-1/2 text-zinc-500 pointer-events-none" />
+                  <select
+                    name="venue"
+                    value={formData.venue}
+                    onChange={handleChange}
+                    className="w-full bg-white/5 border border-white/5 rounded-2xl py-5 pl-16 pr-8 text-white focus:outline-none focus:border-emerald-500/50 focus:ring-4 focus:ring-emerald-500/10 transition-all appearance-none font-bold cursor-pointer"
+                    required
+                  >
+                    <option value="" className="bg-zinc-950">Select a city</option>
+                    {cities.map((city) => (
+                      <option key={city} value={city} className="bg-zinc-950">{city}</option>
+                    ))}
+                  </select>
+                </div>
             </div>
             <div className="group md:col-span-2">
                 <label className="block text-[10px] font-black text-zinc-500 uppercase tracking-[0.2em] mb-4 ml-2 group-focus-within:text-emerald-500 transition-colors">Google Maps URL</label>

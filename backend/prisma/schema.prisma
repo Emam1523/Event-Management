@@ -125,3 +125,8 @@ model VerificationCode {
   @@index([email, purpose, consumedAt])
   @@index([expiresAt])
 }
+
+model Location {
+  id   String @id @default(uuid())
+  name String @unique
+}

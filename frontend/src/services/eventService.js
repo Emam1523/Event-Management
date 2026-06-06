@@ -16,6 +16,11 @@ const eventService = {
     return response.data;
   },
 
+  getFilters: async () => {
+    const response = await eventsAPI.getFilters();
+    return response.data;
+  },
+
   createEvent: async (eventData) => {
     const response = await eventsAPI.create(eventData);
     return response.data;
