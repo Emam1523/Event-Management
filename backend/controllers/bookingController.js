@@ -5,6 +5,11 @@ const asyncHandler = require('../utils/asyncHandler');
 // @route   POST /api/bookings
 // @access  Private
 exports.createBooking = asyncHandler(async (req, res) => {
+  if (req.user.role === 'admin') {
+    res.status(403);
+    throw new Error('Admins are not allowed to buy tickets');
+  }
+
   const { eventId, ticketType, quantity, totalPrice } = req.body;
 
   const event = await prisma.event.findUnique({

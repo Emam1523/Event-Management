@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import { FiCalendar, FiMapPin, FiArrowRight, FiClock, FiStar } from 'react-icons/fi';
+import { FiCalendar, FiMapPin, FiArrowRight, FiStar } from 'react-icons/fi';
 import { HiSparkles } from 'react-icons/hi2';
 import { format, isValid } from 'date-fns';
 import { motion } from 'framer-motion';

@@ -1,164 +1,366 @@
-import { useState } from 'react';
-import { FiMessageSquare, FiSend } from 'react-icons/fi';
+import { useState, useRef, useEffect } from 'react';
+import { motion} from 'framer-motion';
+import {
+  FiSend,
+  FiArrowLeft,
+  FiCalendar,
+  FiMapPin,
+  FiArrowRight,
+  FiZap,
+} from 'react-icons/fi';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { chatAPI } from '../../services/api';
+import { useNotifications } from '../../context/NotificationContext';
+
+const SUGGESTIONS = [
+  { text: 'Concerts in Dhaka this month', icon: '🎵' },
+  { text: 'Are there any food festivals?', icon: '🍔' },
+  { text: 'How do I download my tickets?', icon: '🎟️' },
+  { text: 'Show all upcoming events', icon: '✨' },
+];
 
 const Assistant = () => {
-  const [chatInput, setChatInput] = useState('');
-  const [chatLoading, setChatLoading] = useState(false);
-  const [chatMessages, setChatMessages] = useState([
+  const [messages, setMessages] = useState([
     {
       id: 'welcome',
       role: 'assistant',
-      text: 'Hi! I am your AuraPass AI Assistant. You can ask me anything about events in Bangladesh, or any general question you have!'
-    }
+      text: "Hello! I am AuraPass AI. I can recommend premium events, answer ticket booking queries, or help with general questions. What are you looking for today?",
+      timestamp: new Date().toISOString(),
+    },
   ]);
+  const [input, setInput] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const messagesContainerRef = useRef(null);
+  const { showNotification } = useNotifications();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const queryProcessedRef = useRef(false);
 
-  const suggestedPrompts = [
-    'Concerts in Dhaka',
-    'How to book a ticket?',
-    'What is AuraPass?',
-    'Tell me a joke'
-  ];
-
-  const formatEventDate = (dateValue) => {
-    const date = new Date(dateValue);
-    if (Number.isNaN(date.getTime())) return 'Date TBA';
-    return date.toLocaleDateString('en-US', { day: '2-digit', month: 'short', year: 'numeric' });
+  const scrollToBottom = () => {
+    if (messagesContainerRef.current) {
+      messagesContainerRef.current.scrollTo({
+        top: messagesContainerRef.current.scrollHeight,
+        behavior: 'smooth',
+      });
+    }
   };
 
-  const handleChatSend = async (messageText) => {
-    const trimmed = messageText.trim();
-    if (!trimmed || chatLoading) return;
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages, isLoading]);
 
-    const userMessage = { id: `${Date.now()}-user`, role: 'user', text: trimmed };
-    setChatMessages((prev) => [...prev, userMessage]);
-    setChatInput('');
-    setChatLoading(true);
+  const handleSendMessage = async (textToSend) => {
+    const query = textToSend.trim();
+    if (!query || isLoading) return;
+
+    // Add user message
+    const userMsgId = `user-${Date.now()}`;
+    setMessages((prev) => [
+      ...prev,
+      {
+        id: userMsgId,
+        role: 'user',
+        text: query,
+        timestamp: new Date().toISOString(),
+      },
+    ]);
+    setInput('');
+    setIsLoading(true);
 
     try {
-      const response = await chatAPI.sendMessage(trimmed);
-      const reply = response?.data?.data?.reply || 'I am sorry, I could not process that.';
-      const events = response?.data?.data?.events || [];
-      const assistantMessage = {
-        id: `${Date.now()}-assistant`,
-        role: 'assistant',
-        text: reply,
-        events
-      };
-      setChatMessages((prev) => [...prev, assistantMessage]);
+      const response = await chatAPI.sendMessage(query);
+      
+      if (response.data?.success) {
+        const { reply, events } = response.data.data;
+        
+        setMessages((prev) => [
+          ...prev,
+          {
+            id: `assistant-${Date.now()}`,
+            role: 'assistant',
+            text: reply,
+            events: events || [],
+            timestamp: new Date().toISOString(),
+          },
+        ]);
+      } else {
+        showNotification(response.data?.message || 'Failed to get a reply.', 'error');
+      }
     } catch (error) {
-      const assistantMessage = {
-        id: `${Date.now()}-assistant-error`,
-        role: 'assistant',
-        text: 'Sorry, I could not reach the assistant. Please try again.'
-      };
-      setChatMessages((prev) => [...prev, assistantMessage]);
+      console.error('Chat error:', error);
+      showNotification('Unable to connect to AuraPass AI. Try again.', 'error');
+      
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: `assistant-error-${Date.now()}`,
+          role: 'assistant',
+          text: "I apologize, but I am having trouble connecting to my brain right now. Please verify your connection and try again.",
+          timestamp: new Date().toISOString(),
+        },
+      ]);
     } finally {
-      setChatLoading(false);
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (queryProcessedRef.current) return;
+    const params = new URLSearchParams(location.search);
+    const initialQuery = params.get('q') || params.get('query');
+    if (initialQuery) {
+      handleSendMessage(initialQuery);
+      queryProcessedRef.current = true;
+    }
+ 
+  },[location.search]);
+
+  const formatTime = (isoString) => {
+    try {
+      const date = new Date(isoString);
+      return date.toLocaleTimeString('en-US', {
+        hour: '2-digit',
+        minute: '2-digit',
+      });
+    } catch {
+      return '';
     }
   };
 
   return (
-    <div className="bg-dark-bg min-h-screen text-slate-200 pt-24 pb-16">
-      <div className="container-custom">
-        <div className="relative rounded-[2.5rem] border border-white/10 bg-[#0c0c10]/90 p-6 shadow-[0_30px_80px_rgba(0,0,0,0.45)]">
-          <div className="flex items-center justify-between mb-6">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-white">
-                <FiMessageSquare className="text-lg" />
-              </div>
-              <div>
-                <div className="text-sm font-black text-white">AuraPass AI Assistant</div>
-                <div className="text-[11px] text-slate-400">Ask me anything</div>
+    <div className="bg-dark-bg h-screen text-slate-200 relative overflow-hidden flex flex-col pt-20 sm:pt-24 md:pt-28 lg:pt-32 pb-6">
+      {/* Background Decorative Gradients */}
+      <div className="absolute inset-0 bg-aurora animate-aurora opacity-20 pointer-events-none z-0" />
+      <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-primary/5 rounded-full blur-[120px] pointer-events-none -z-10" />
+      <div className="absolute bottom-1/4 right-10 w-[400px] h-[400px] bg-[#ff2d55]/5 rounded-full blur-[140px] pointer-events-none -z-10" />
+
+      <div className="container-custom relative z-10 flex flex-col flex-1 min-h-0">
+        {/* Header bar */}
+        <div className="flex items-center justify-between pb-6 border-b border-white/5 mb-6">
+          <div className="flex items-center gap-4 text-left">
+            <button
+              onClick={() => navigate(-1)}
+              className="h-10 w-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-slate-400 hover:text-white hover:bg-white/10 transition-all cursor-pointer"
+              aria-label="Go back"
+            >
+              <FiArrowLeft />
+            </button>
+            
+            <div>
+              <div className="flex items-center gap-2">
+                <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
+                <h1 className="text-xl font-black text-white uppercase tracking-tight">
+                  AuraPass AI
+                </h1>
               </div>
             </div>
-            <div className="text-[10px] font-black uppercase tracking-[0.2em] text-emerald-300">Live</div>
           </div>
 
-          <div className="h-[460px] overflow-y-auto rounded-2xl border border-white/10 bg-black/30 p-4 space-y-4">
-            {chatMessages.map((message) => (
-              <div key={message.id} className="space-y-3">
-                <div className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-                  <div
-                    className={`max-w-[80%] rounded-2xl px-4 py-3 text-sm font-medium ${
-                      message.role === 'user' ? 'bg-rose-500 text-white' : 'bg-white/5 text-slate-200'
-                    }`}
+          <div className="flex items-center gap-2 bg-white/5 px-4 py-2 rounded-2xl border border-white/10">
+            <FiZap className="text-primary animate-pulse" />
+            <span className="text-[10px] font-black tracking-widest text-slate-300 uppercase">
+              Assistant Active
+            </span>
+          </div>
+        </div>
+
+        {/* Main Grid: suggestions sidebar + chat */}
+        <div className="flex-1 flex gap-8 min-h-0">
+          
+          {/* Sidebar - Suggestions */}
+          <aside className="hidden lg:block w-80 shrink-0 text-left">
+            <div className="space-y-6 bg-white/[0.01] border border-white/5 p-6 rounded-[2rem] h-full flex flex-col justify-start">
+              <div>
+                <h3 className="text-white text-sm font-black uppercase tracking-wider mb-2 flex items-center gap-2">
+                  <span className="text-primary">💡</span> Suggestions
+                </h3>
+                <p className="text-xs text-slate-500 font-medium leading-relaxed">
+                  Click on one of the common queries below to quickly ask the AI:
+                </p>
+              </div>
+
+              <div className="space-y-3 flex-1 overflow-y-auto">
+                {SUGGESTIONS.map((sug) => (
+                  <button
+                    key={sug.text}
+                    onClick={() => handleSendMessage(sug.text)}
+                    disabled={isLoading}
+                    className="w-full p-4 rounded-2xl bg-white/[0.02] border border-white/5 hover:border-primary/30 text-left hover:bg-white/[0.05] transition-all duration-300 text-xs font-semibold text-slate-300 hover:text-white flex gap-3 cursor-pointer disabled:opacity-50"
                   >
-                    {message.text}
-                  </div>
-                </div>
+                    <span className="text-lg">{sug.icon}</span>
+                    <span className="leading-normal">{sug.text}</span>
+                  </button>
+                ))}
+              </div>
 
-                {message.role === 'assistant' && message.events?.length > 0 && (
-                  <div className="grid grid-cols-1 gap-3">
-                    {message.events.map((event) => (
-                      <div
-                        key={event.id}
-                        className="flex items-center gap-4 rounded-2xl border border-white/10 bg-white/5 p-3"
-                      >
-                        <img
-                          src={event.image || 'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=400'}
-                          alt={event.title}
-                          className="h-16 w-16 rounded-xl object-cover"
-                        />
-                        <div className="flex-1">
-                          <div className="text-sm font-bold text-white line-clamp-1">{event.title}</div>
-                          <div className="text-xs text-slate-400">
-                            {formatEventDate(event.date)} · {event.location}
+              <div className="pt-4 border-t border-white/5 text-[10px] text-slate-600 font-bold uppercase tracking-wider text-center">
+                AuraPass Intelligence
+              </div>
+            </div>
+          </aside>
+
+          {/* Chat Pane */}
+          <div className="flex-grow flex flex-col bg-white/[0.01] backdrop-blur-md border border-white/5 rounded-[2.5rem] overflow-hidden shadow-[0_24px_60px_rgba(0,0,0,0.5)]">
+            
+            {/* Scrollable messages area */}
+            <div ref={messagesContainerRef} className="flex-1 overflow-y-auto p-6 md:p-8 space-y-6 scrollbar-hide">
+              {messages.map((msg) => (
+                <div
+                  key={msg.id}
+                  className={`flex gap-4 ${
+                    msg.role === 'user' ? 'justify-end' : 'justify-start'
+                  }`}
+                >
+                  {msg.role !== 'user' && (
+                    <div className="w-8 h-8 rounded-full bg-brand-primary/10 border border-brand-primary/20 flex items-center justify-center text-brand-primary text-xs shrink-0 self-end">
+                      ✨
+                    </div>
+                  )}
+
+                  <div className="max-w-[80%] md:max-w-[70%] space-y-3 text-left">
+                    {/* Text Bubble */}
+                    <div
+                      className={`px-5 py-4 rounded-[1.5rem] text-sm font-medium leading-relaxed shadow-lg ${
+                        msg.role === 'user'
+                          ? 'bg-gradient-to-r from-brand-primary to-brand-secondary text-white shadow-brand-primary/10 rounded-tr-none'
+                          : 'bg-white/5 border border-white/10 text-slate-200 rounded-tl-none'
+                      }`}
+                    >
+                      {/* Process text line breaks */}
+                      <p className="whitespace-pre-wrap">{msg.text}</p>
+                    </div>
+
+                    {/* Meta Timestamp */}
+                    <div
+                      className={`text-[9px] text-slate-600 font-bold uppercase tracking-widest px-2 ${
+                        msg.role === 'user' ? 'text-right' : 'text-left'
+                      }`}
+                    >
+                      {formatTime(msg.timestamp)}
+                    </div>
+
+                    {/* Inline Event Recommendations (if any exist) */}
+                    {msg.events && msg.events.length > 0 && (
+                      <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        {msg.events.map((event) => (
+                          <div
+                            key={event.id}
+                            className="bg-slate-900/60 border border-white/5 rounded-2xl overflow-hidden hover:border-primary/40 transition-colors flex flex-col h-full"
+                          >
+                            <img
+                              src={event.image || 'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=400'}
+                              className="h-32 w-full object-cover"
+                              alt={event.title}
+                            />
+                            <div className="p-4 flex flex-col flex-1">
+                              <h4 className="font-extrabold text-sm text-white line-clamp-1 uppercase">
+                                {event.title}
+                              </h4>
+                              
+                              <div className="mt-2 flex flex-col gap-1 text-[10px] text-slate-400 font-semibold">
+                                <div className="flex items-center gap-1.5">
+                                  <FiCalendar className="text-primary" />
+                                  <span>
+                                    {new Date(event.date).toLocaleDateString('en-US', {
+                                      month: 'short',
+                                      day: 'numeric',
+                                    })}
+                                  </span>
+                                </div>
+                                <div className="flex items-center gap-1.5">
+                                  <FiMapPin className="text-primary" />
+                                  <span className="truncate">{event.location}</span>
+                                </div>
+                              </div>
+
+                              <div className="mt-4 pt-3 border-t border-white/5 flex items-center justify-between mt-auto">
+                                <span className="text-xs font-black text-white">
+                                  {event.price && event.price > 0
+                                    ? `৳${Number(event.price).toLocaleString()}`
+                                    : 'Free'}
+                                </span>
+                                <Link
+                                  to={`/events/${event.id}`}
+                                  className="px-3 py-1.5 bg-primary rounded-lg text-white text-[9px] font-black uppercase tracking-wider flex items-center gap-1 shadow-md shadow-primary/10 hover:bg-orange-600 transition-colors"
+                                >
+                                  Book <FiArrowRight />
+                                </Link>
+                              </div>
+                            </div>
                           </div>
-                        </div>
-                        <div className="text-xs font-bold text-white">
-                          {event.price ? `৳${Number(event.price).toLocaleString()}` : 'Free'}
-                        </div>
+                        ))}
                       </div>
-                    ))}
+                    )}
                   </div>
-                )}
-              </div>
-            ))}
-            {chatLoading && (
-              <div className="flex justify-start">
-                <div className="rounded-2xl px-4 py-3 text-sm font-medium bg-white/5 text-slate-300">
-                  Thinking...
                 </div>
-              </div>
-            )}
-          </div>
+              ))}
 
-          <div className="mt-4 flex flex-wrap gap-2">
-            {suggestedPrompts.map((prompt) => (
-              <button
-                key={prompt}
-                type="button"
-                onClick={() => setChatInput(prompt)}
-                className="px-3 py-2 rounded-2xl border border-white/10 text-[10px] font-black uppercase tracking-[0.2em] text-slate-300 hover:text-white hover:border-white/20 transition-all"
+              {messages.length === 1 && (
+                <motion.div
+                  initial={{ opacity: 0, y: 15 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.15 }}
+                  className="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-xl mx-auto"
+                >
+                  {SUGGESTIONS.map((sug) => (
+                    <button
+                      key={sug.text}
+                      type="button"
+                      onClick={() => handleSendMessage(sug.text)}
+                      disabled={isLoading}
+                      className="p-5 rounded-2xl bg-white/[0.02] border border-white/5 hover:border-brand-primary/35 text-left hover:bg-white/[0.04] hover:scale-[1.01] active:scale-98 transition-all duration-300 text-xs font-semibold text-slate-300 hover:text-white flex flex-col gap-2.5 cursor-pointer disabled:opacity-50"
+                    >
+                      <span className="text-2xl">{sug.icon}</span>
+                      <span className="leading-relaxed">{sug.text}</span>
+                    </button>
+                  ))}
+                </motion.div>
+              )}
+
+              {/* Typing indicator */}
+              {isLoading && (
+                <div className="flex gap-4 justify-start">
+                  <div className="w-8 h-8 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center text-primary text-xs shrink-0 self-end">
+                    ✨
+                  </div>
+                  <div className="bg-white/5 border border-white/10 px-5 py-4 rounded-[1.5rem] rounded-tl-none flex items-center gap-1.5 self-start shadow-lg">
+                    <span className="w-2.5 h-2.5 bg-slate-500 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
+                    <span className="w-2.5 h-2.5 bg-slate-500 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
+                    <span className="w-2.5 h-2.5 bg-slate-500 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Input bar */}
+            <div className="p-4 bg-slate-950/20 border-t border-white/5">
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  handleSendMessage(input);
+                }}
+                className="flex gap-3 bg-white/[0.02] border border-white/10 rounded-2xl p-1.5 focus-within:border-brand-primary/50 transition-colors"
               >
-                {prompt}
-              </button>
-            ))}
+                <input
+                  type="text"
+                  placeholder="Ask AuraPass AI anything..."
+                  value={input}
+                  onChange={(e) => setInput(e.target.value)}
+                  disabled={isLoading}
+                  className="flex-grow bg-transparent border-none outline-none text-white text-sm px-4 py-2 placeholder:text-slate-600 font-semibold"
+                />
+                
+                <button
+                  type="submit"
+                  disabled={!input.trim() || isLoading}
+                  className="h-10 w-10 rounded-xl bg-gradient-to-r from-brand-primary to-brand-secondary text-white flex items-center justify-center shadow-lg shadow-brand-primary/20 hover:brightness-110 active:scale-95 transition-all disabled:opacity-30 disabled:scale-100 disabled:hover:brightness-100 cursor-pointer"
+                  aria-label="Send message"
+                >
+                  <FiSend />
+                </button>
+              </form>
+            </div>
           </div>
-
-          <form
-            className="mt-4 flex items-center gap-3"
-            onSubmit={(e) => {
-              e.preventDefault();
-              handleChatSend(chatInput);
-            }}
-          >
-            <input
-              type="text"
-              value={chatInput}
-              onChange={(e) => setChatInput(e.target.value)}
-              placeholder="Ask me anything..."
-              className="flex-1 rounded-2xl bg-white/5 border border-white/10 px-4 py-3 text-sm font-semibold text-white placeholder:text-slate-500/70 outline-none focus:border-primary/40"
-            />
-            <button
-              type="submit"
-              className="h-12 w-12 rounded-2xl bg-rose-500 text-white flex items-center justify-center hover:bg-rose-500/90 transition-colors"
-              aria-label="Send message"
-            >
-              <FiSend className="text-lg" />
-            </button>
-          </form>
         </div>
       </div>
     </div>

@@ -1,6 +1,7 @@
 @import "tailwindcss";
 
 :root {
+  --color-primary: #ff5a35;
   --color-brand-primary: #ff5a35;
   --color-brand-orange: #ff5a35;
   --color-brand-secondary: #ff2d55;

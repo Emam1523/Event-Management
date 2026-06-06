@@ -168,7 +168,8 @@ exports.chat = async (req, res) => {
           OR: [
             { title: { contains: message, mode: 'insensitive' } },
             { description: { contains: message, mode: 'insensitive' } },
-            { category: { contains: message, mode: 'insensitive' } }
+            { category: { contains: message, mode: 'insensitive' } },
+            { location: { contains: message, mode: 'insensitive' } }
           ]
         });
       }

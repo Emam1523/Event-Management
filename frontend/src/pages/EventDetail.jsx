@@ -1,8 +1,9 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { FiCalendar, FiMapPin, FiUsers, FiStar, FiUser } from 'react-icons/fi';
+import { FiCalendar, FiMapPin, FiUsers, FiStar, FiUser, FiShield } from 'react-icons/fi';
 import { format } from 'date-fns';
 import { useCart } from '../context/CartContext';
+import { useAuth } from '../context/AuthContext';
 import { motion } from 'framer-motion';
 import api, { API_ROOT } from '../services/api';
 
@@ -10,6 +11,7 @@ const EventDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { addToCart } = useCart();
+  const { user } = useAuth();
   const [event, setEvent] = useState(null);
   const [selectedTicket, setSelectedTicket] = useState(null);
   const [quantity, setQuantity] = useState(1);
@@ -227,81 +229,93 @@ const EventDetail = () => {
             <div className="glass-card p-10 bg-slate-900 border-white/10 sticky top-28 shadow-3xl shadow-black/40">
               <h3 className="text-xs font-black uppercase tracking-[0.4em] text-slate-500 mb-8 text-center">SELECT YOUR PASS</h3>
               
-              {/* Ticket Types */}
-              <div className="space-y-4 mb-10">
-                {(event.tickets || []).map((ticket) => (
-                  <div
-                    key={ticket.id}
-                    onClick={() => setSelectedTicket(ticket)}
-                    className={`relative p-6 rounded-[2rem] cursor-pointer transition-all duration-500 border-2 ${
-                      selectedTicket?.id === ticket.id
-                        ? 'border-primary bg-primary/5'
-                        : 'border-white/5 bg-white/5 hover:border-white/20'
-                    }`}
-                  >
-                    <div className="flex justify-between items-start mb-2">
-                      <div>
-                        <p className={`font-black text-sm uppercase tracking-tighter transition-colors ${selectedTicket?.id === ticket.id ? 'text-primary' : 'text-white'}`}>
-                          {ticket.name}
-                        </p>
-                        <p className="text-[10px] font-medium text-slate-500 mt-1">{ticket.description}</p>
+              {user?.role === 'admin' ? (
+                <div className="text-center py-12 bg-white/5 rounded-3xl border border-white/10">
+                  <div className="w-16 h-16 rounded-full bg-slate-800 flex items-center justify-center mx-auto mb-6 text-slate-400 shadow-inner">
+                    <FiShield className="text-2xl" />
+                  </div>
+                  <p className="text-sm font-black uppercase tracking-widest text-slate-400 mb-2">Admin Restriction</p>
+                  <p className="text-xs font-medium text-slate-500 px-4">Administrators cannot purchase event tickets.</p>
+                </div>
+              ) : (
+                <>
+                  {/* Ticket Types */}
+                  <div className="space-y-4 mb-10">
+                    {(event.tickets || []).map((ticket) => (
+                      <div
+                        key={ticket.id}
+                        onClick={() => setSelectedTicket(ticket)}
+                        className={`relative p-6 rounded-[2rem] cursor-pointer transition-all duration-500 border-2 ${
+                          selectedTicket?.id === ticket.id
+                            ? 'border-primary bg-primary/5'
+                            : 'border-white/5 bg-white/5 hover:border-white/20'
+                        }`}
+                      >
+                        <div className="flex justify-between items-start mb-2">
+                          <div>
+                            <p className={`font-black text-sm uppercase tracking-tighter transition-colors ${selectedTicket?.id === ticket.id ? 'text-primary' : 'text-white'}`}>
+                              {ticket.name}
+                            </p>
+                            <p className="text-[10px] font-medium text-slate-500 mt-1">{ticket.description}</p>
+                          </div>
+                          <p className="text-xl font-black text-white tracking-tighter">৳{ticket.price}</p>
+                        </div>
+                        <div className="mt-4 flex items-center justify-between">
+                          <span className={`text-[9px] font-black uppercase tracking-widest ${ticket.capacity < 20 ? 'text-rose-500' : 'text-slate-600'}`}>
+                            {ticket.capacity} Spots Left
+                          </span>
+                          {selectedTicket?.id === ticket.id && (
+                            <motion.div layoutId="check" className="w-5 h-5 bg-primary rounded-full flex items-center justify-center">
+                              <div className="w-2 h-2 bg-white rounded-full" />
+                            </motion.div>
+                          )}
+                        </div>
                       </div>
-                      <p className="text-xl font-black text-white tracking-tighter">৳{ticket.price}</p>
+                    ))}
+                  </div>
+
+                  {/* Quantity */}
+                  <div className="mb-10">
+                    <div className="flex items-center justify-between mb-4">
+                      <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Quantity</label>
+                      <div className="flex items-center bg-white/5 rounded-2xl border border-white/5">
+                        <button
+                          onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                          className="w-12 h-12 flex items-center justify-center text-white hover:text-primary transition-colors font-black text-xl"
+                        >
+                          –
+                        </button>
+                        <span className="w-8 text-center font-black text-white">{quantity}</span>
+                        <button
+                          onClick={() => setQuantity(Math.min(selectedTicket?.capacity || 1, quantity + 1))}
+                          className="w-12 h-12 flex items-center justify-center text-white hover:text-primary transition-colors font-black text-xl"
+                        >
+                          +
+                        </button>
+                      </div>
                     </div>
-                    <div className="mt-4 flex items-center justify-between">
-                      <span className={`text-[9px] font-black uppercase tracking-widest ${ticket.capacity < 20 ? 'text-rose-500' : 'text-slate-600'}`}>
-                        {ticket.capacity} Spots Left
+                  </div>
+
+                  {/* Action */}
+                  <div className="space-y-4 pt-6 border-t border-white/5">
+                    <div className="flex justify-between items-center mb-6">
+                      <span className="text-xs font-black text-slate-500 uppercase tracking-widest">Grand Total</span>
+                      <span className="text-4xl font-black text-white tracking-tighter">
+                        ৳{selectedTicket ? selectedTicket.price * quantity : 0}
                       </span>
-                      {selectedTicket?.id === ticket.id && (
-                        <motion.div layoutId="check" className="w-5 h-5 bg-primary rounded-full flex items-center justify-center">
-                          <div className="w-2 h-2 bg-white rounded-full" />
-                        </motion.div>
-                      )}
                     </div>
-                  </div>
-                ))}
-              </div>
-
-              {/* Quantity */}
-              <div className="mb-10">
-                <div className="flex items-center justify-between mb-4">
-                  <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Quantity</label>
-                  <div className="flex items-center bg-white/5 rounded-2xl border border-white/5">
-                    <button
-                      onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                      className="w-12 h-12 flex items-center justify-center text-white hover:text-primary transition-colors font-black text-xl"
+                    <button 
+                      onClick={handleAddToCart} 
+                      className="w-full btn-primary py-5 rounded-[2rem] text-[11px] shadow-2xl shadow-primary/30 group"
                     >
-                      –
+                      Confirm & Secure Pass
                     </button>
-                    <span className="w-8 text-center font-black text-white">{quantity}</span>
-                    <button
-                      onClick={() => setQuantity(Math.min(selectedTicket?.capacity || 1, quantity + 1))}
-                      className="w-12 h-12 flex items-center justify-center text-white hover:text-primary transition-colors font-black text-xl"
-                    >
-                      +
+                    <button className="w-full btn-secondary py-5 rounded-[2rem] text-[11px]">
+                      Share Experience
                     </button>
                   </div>
-                </div>
-              </div>
-
-              {/* Action */}
-              <div className="space-y-4 pt-6 border-t border-white/5">
-                <div className="flex justify-between items-center mb-6">
-                  <span className="text-xs font-black text-slate-500 uppercase tracking-widest">Grand Total</span>
-                  <span className="text-4xl font-black text-white tracking-tighter">
-                    ৳{selectedTicket ? selectedTicket.price * quantity : 0}
-                  </span>
-                </div>
-                <button 
-                  onClick={handleAddToCart} 
-                  className="w-full btn-primary py-5 rounded-[2rem] text-[11px] shadow-2xl shadow-primary/30 group"
-                >
-                  Confirm & Secure Pass
-                </button>
-                <button className="w-full btn-secondary py-5 rounded-[2rem] text-[11px]">
-                  Share Experience
-                </button>
-              </div>
+                </>
+              )}
             </div>
           </div>
         </div>

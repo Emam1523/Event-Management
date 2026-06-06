@@ -3,6 +3,7 @@ import MainLayout from '../layouts/MainLayout';
 import AdminLayout from '../layouts/AdminLayout';
 import ProtectedRoute from './ProtectedRoute';
 import PublicOnlyRoute from './PublicOnlyRoute';
+import UserOnlyRoute from './UserOnlyRoute';
 
 // Public Pages
 import Home from '../pages/Home';
@@ -14,7 +15,6 @@ import NotFound from '../pages/NotFound';
 import Contact from '../pages/public/Contact';
 import PrivacyPolicy from '../pages/public/PrivacyPolicy';
 import TermsOfService from '../pages/public/TermsOfService';
-import HelpCenter from '../pages/public/HelpCenter';
 import About from '../pages/public/About';
 import Assistant from '../pages/public/Assistant';
 
@@ -42,33 +42,33 @@ import ManageBookings from '../pages/admin/ManageBookings';
 const AppRouter = () => {
   return (
     <Routes>
-      {/* Public Routes */}
-      <Route element={<MainLayout />}>
-        <Route path="/" element={<Home />} />
-        <Route path="/events" element={<Events />} />
-        <Route path="/events/:id" element={<EventDetail />} />
-        <Route path="/cart" element={<Cart />} />
-        <Route element={<PublicOnlyRoute />}>
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/forgot-password" element={<ForgotPassword />} />
-          <Route path="/verify-email" element={<VerifyEmail />} />
-        </Route>
-        <Route path="/contact" element={<Contact />} />
-        <Route path="/assistant" element={<Assistant />} />
-        <Route path="/about" element={<About />} />
-        <Route path="/privacy" element={<PrivacyPolicy />} />
-        <Route path="/terms" element={<TermsOfService />} />
-        <Route path="/help" element={<HelpCenter />} />
-        <Route path="/support" element={<HelpCenter />} />
-        
-        {/* Protected User Routes */}
-        <Route element={<ProtectedRoute />}>
-          <Route path="/checkout" element={<Checkout />} />
-          <Route path="/dashboard" element={<UserDashboard />} />
-          <Route path="/profile" element={<UserProfile />} />
-          <Route path="/my-tickets" element={<MyTickets />} />
-          <Route path="/payment-success" element={<PaymentSuccess />} />
+      {/* Public/User Routes */}
+      <Route element={<UserOnlyRoute />}>
+        <Route element={<MainLayout />}>
+          <Route path="/" element={<Home />} />
+          <Route path="/events" element={<Events />} />
+          <Route path="/events/:id" element={<EventDetail />} />
+          <Route path="/cart" element={<Cart />} />
+          <Route element={<PublicOnlyRoute />}>
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route path="/verify-email" element={<VerifyEmail />} />
+          </Route>
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/assistant" element={<Assistant />} />
+          <Route path="/privacy" element={<PrivacyPolicy />} />
+          <Route path="/terms" element={<TermsOfService />} />
+          
+          {/* Protected User Routes */}
+          <Route element={<ProtectedRoute />}>
+            <Route path="/checkout" element={<Checkout />} />
+            <Route path="/dashboard" element={<UserDashboard />} />
+            <Route path="/profile" element={<UserProfile />} />
+            <Route path="/my-tickets" element={<MyTickets />} />
+            <Route path="/payment-success" element={<PaymentSuccess />} />
+          </Route>
         </Route>
       </Route>
 

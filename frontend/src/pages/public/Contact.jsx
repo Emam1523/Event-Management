@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { FiMail, FiPhone, FiMapPin, FiSend, FiMessageSquare } from 'react-icons/fi';
+import { contactAPI } from '../../services/api';
+import toast from 'react-hot-toast';
 
 const Contact = () => {
   const [formData, setFormData] = useState({
@@ -12,15 +14,20 @@ const Contact = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
-    // Simulate API call
-    setTimeout(() => {
-      setIsSubmitting(false);
+    
+    try {
+      await contactAPI.submit(formData);
       setSubmitted(true);
       setFormData({ name: '', email: '', subject: '', message: '' });
-    }, 1500);
+      toast.success('Message sent successfully!');
+    } catch (error) {
+      toast.error(error.response?.data?.message || 'Failed to send message. Please try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleChange = (e) => {
@@ -53,7 +60,7 @@ const Contact = () => {
                   </div>
                   <div>
                     <p className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 mb-2">Email Us</p>
-                    <p className="text-xl font-bold text-white group-hover:text-primary transition-colors">hello@aurapass.com</p>
+                    <p className="text-xl font-bold text-white group-hover:text-primary transition-colors">hassanchowdhury204573@gmail.com</p>
                   </div>
                 </div>
 
@@ -63,7 +70,7 @@ const Contact = () => {
                   </div>
                   <div>
                     <p className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 mb-2">Call Us</p>
-                    <p className="text-xl font-bold text-white group-hover:text-rose-500 transition-colors">+1 (555) 000-0000</p>
+                    <p className="text-xl font-bold text-white group-hover:text-rose-500 transition-colors">+8801307947274</p>
                   </div>
                 </div>
 
@@ -73,7 +80,7 @@ const Contact = () => {
                   </div>
                   <div>
                     <p className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 mb-2">Visit Us</p>
-                    <p className="text-xl font-bold text-white group-hover:text-amber-500 transition-colors">123 Innovation Drive, Tech Valley</p>
+                    <p className="text-xl font-bold text-white group-hover:text-amber-500 transition-colors">IIT, DU</p>
                   </div>
                 </div>
               </div>
@@ -116,7 +123,7 @@ const Contact = () => {
                           value={formData.name}
                           onChange={handleChange}
                           className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-white focus:border-primary/50 outline-none transition-all placeholder:text-slate-700 font-bold"
-                          placeholder="John Doe"
+                          placeholder="Emam Hassan"
                         />
                       </div>
                       <div className="space-y-3">
@@ -128,7 +135,7 @@ const Contact = () => {
                           value={formData.email}
                           onChange={handleChange}
                           className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-white focus:border-primary/50 outline-none transition-all placeholder:text-slate-700 font-bold"
-                          placeholder="john@example.com"
+                          placeholder="hassanchowdhury204573@gmail.com"
                         />
                       </div>
                     </div>

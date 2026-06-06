@@ -86,7 +86,7 @@ const UserDashboard = () => {
       variants={containerVariants}
       initial="hidden"
       animate="visible"
-      className="space-y-12"
+      className="space-y-12 pt-32 pb-20 px-4 sm:px-8 max-w-7xl mx-auto"
     >
       {/* Hero Header - Enhanced with Mesh and Interactions */}
       <section className="relative overflow-hidden rounded-[3rem] bg-zinc-950 border border-white/5 p-8 sm:p-16 group">

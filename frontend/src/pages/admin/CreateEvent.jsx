@@ -44,6 +44,20 @@ const CreateEvent = () => {
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
+      const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/webp', 'image/gif'];
+      if (!allowedTypes.includes(file.type)) {
+        alert('Invalid file format. Only JPEG, PNG, WEBP, and GIF images are allowed!');
+        e.target.value = '';
+        return;
+      }
+
+      const maxSize = 5 * 1024 * 1024;
+      if (file.size > maxSize) {
+        alert('File size exceeds the 5MB limit. Please upload a smaller image.');
+        e.target.value = '';
+        return;
+      }
+
       setFormData({
         ...formData,
         image: file,

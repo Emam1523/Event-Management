@@ -31,10 +31,32 @@ exports.getEvents = asyncHandler(async (req, res) => {
     where.category = category;
   }
   if (search) {
-    where.title = {
-      contains: search,
-      mode: 'insensitive'
-    };
+    where.OR = [
+      {
+        title: {
+          contains: search,
+          mode: 'insensitive'
+        }
+      },
+      {
+        description: {
+          contains: search,
+          mode: 'insensitive'
+        }
+      },
+      {
+        category: {
+          contains: search,
+          mode: 'insensitive'
+        }
+      },
+      {
+        location: {
+          contains: search,
+          mode: 'insensitive'
+        }
+      }
+    ];
   }
 
   const [events, total] = await Promise.all([

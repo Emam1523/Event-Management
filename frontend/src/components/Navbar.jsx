@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { FiShoppingCart, FiMenu, FiX, FiUser, FiChevronDown, FiLogOut } from 'react-icons/fi';
+import { FiShoppingCart, FiMenu, FiX, FiUser, FiLogOut } from 'react-icons/fi';
 import { BsTicketPerforated } from 'react-icons/bs';
 import { HiSparkles } from 'react-icons/hi2';
 import { motion, AnimatePresence } from 'framer-motion';

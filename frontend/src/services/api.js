@@ -92,4 +92,9 @@ export const chatAPI = {
   sendMessage: (message) => api.post('/chat', { message }),
 };
 
+// ── Contact ──────────────────────────────────────────────────────────────────
+export const contactAPI = {
+  submit: (data) => api.post('/contact', data),
+};
+
 export default api;
