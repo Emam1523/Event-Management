@@ -93,6 +93,14 @@ export const chatAPI = {
   sendMessage: (message) => api.post('/chat', { message }),
 };
 
+// ── App Reviews ───────────────────────────────────────────────────────────────
+export const appReviewsAPI = {
+  getAll: () => api.get('/app-reviews'),
+  getMine: () => api.get('/app-reviews/mine'),
+  submit: (data) => api.post('/app-reviews', data),
+  delete: (id) => api.delete(`/app-reviews/${id}`),
+};
+
 // ── Contact ──────────────────────────────────────────────────────────────────
 export const contactAPI = {
   submit: (data) => api.post('/contact', data),

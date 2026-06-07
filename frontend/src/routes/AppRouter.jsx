@@ -38,6 +38,7 @@ import EditEvent from '../pages/admin/EditEvent';
 import Analytics from '../pages/admin/Analytics';
 import ManageUsers from '../pages/admin/ManageUsers';
 import ManageBookings from '../pages/admin/ManageBookings';
+import AdminReviews from '../pages/admin/AdminReviews';
 
 const AppRouter = () => {
   return (
@@ -83,6 +84,7 @@ const AppRouter = () => {
           <Route path="analytics" element={<Analytics />} />
           <Route path="manage-users" element={<ManageUsers />} />
           <Route path="manage-bookings" element={<ManageBookings />} />
+          <Route path="reviews" element={<AdminReviews />} />
         </Route>
       </Route>
 

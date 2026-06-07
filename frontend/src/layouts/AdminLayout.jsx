@@ -2,18 +2,19 @@ import { useState } from 'react';
 import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
 import {
   FiGrid, FiCalendar, FiPlus, FiTrendingUp, FiUsers, FiUser,
-  FiLogOut, FiMenu, FiX, FiShield, FiChevronRight
+  FiLogOut, FiMenu, FiX, FiShield, FiMessageSquare
 } from 'react-icons/fi';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../context/AuthContext';
 
 const navItems = [
-  { to: '/admin',                icon: <FiGrid />,        label: 'Dashboard',      exact: true },
-  { to: '/admin/profile',        icon: <FiUser />,        label: 'Profile' },
-  { to: '/admin/create-event',   icon: <FiPlus />,        label: 'Create Event' },
-  { to: '/admin/manage-events',  icon: <FiCalendar />,    label: 'Manage Events' },
-  { to: '/admin/manage-users',   icon: <FiUsers />,       label: 'Users' },
-  { to: '/admin/analytics',      icon: <FiTrendingUp />,  label: 'Analytics' },
+  { to: '/admin',                icon: <FiGrid />,         label: 'Dashboard',      exact: true },
+  { to: '/admin/profile',        icon: <FiUser />,         label: 'Profile' },
+  { to: '/admin/create-event',   icon: <FiPlus />,         label: 'Create Event' },
+  { to: '/admin/manage-events',  icon: <FiCalendar />,     label: 'Manage Events' },
+  { to: '/admin/manage-users',   icon: <FiUsers />,        label: 'Users' },
+  { to: '/admin/analytics',      icon: <FiTrendingUp />,   label: 'Analytics' },
+  { to: '/admin/reviews',        icon: <FiMessageSquare />, label: 'App Reviews' },
 ];
 
 const AdminLayout = () => {

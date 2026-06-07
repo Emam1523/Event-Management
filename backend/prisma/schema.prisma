@@ -26,6 +26,7 @@ model User {
   bookings      Booking[]
   notifications Notification[]
   reviews       Review[]
+  appReviews    AppReview[]
 }
 
 model Event {
@@ -129,4 +130,14 @@ model VerificationCode {
 model Location {
   id   String @id @default(uuid())
   name String @unique
+}
+
+model AppReview {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  rating    Int
+  comment   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
