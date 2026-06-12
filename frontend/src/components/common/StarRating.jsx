@@ -1,4 +1,3 @@
-// StarRating.jsx - Star rating component for reviews
 import { useState } from 'react';
 import { FiStar } from 'react-icons/fi';
 

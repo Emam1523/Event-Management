@@ -36,7 +36,7 @@ const Home = () => {
   const [stats, setStats] = useState({
     ticketsSold: 0,
     totalUsers: 0,
-    majorCities: [],
+    totalCities: 0,
     rating: 0,
     totalReviews: 0,
   });
@@ -174,8 +174,8 @@ const Home = () => {
     {
       value: statsLoading
         ? '...'
-        : numberFormatter.format(stats.majorCities?.length || 0),
-      label: 'Major Cities (BD)',
+        : numberFormatter.format(stats.totalCities || 0),
+      label: 'Number of Major Cities',
     },
     {
       value: statsLoading ? '...' : `${(stats.rating || 0).toFixed(1)}/5`,
@@ -399,7 +399,7 @@ const Home = () => {
       </section>
 
       {/* ── Stats Section ─────────────────────────────────────────────────────── */}
-      <section className="py-20 relative z-10">
+      <section className="pt-12 pb-8 relative z-10">
         <div className="container-custom">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
             {heroStats.map((stat, i) => (
@@ -421,7 +421,7 @@ const Home = () => {
           </div>
 
           {/* Featured Upcoming Slide with Framer Motion transitions */}
-          <div className="mt-10 relative overflow-hidden rounded-[2.5rem] border border-white/5 bg-[#09090d]/60 backdrop-blur-xl card-glow border-t-white/10">
+          <div className="mt-6 relative overflow-hidden rounded-[2.5rem] border border-white/5 bg-[#09090d]/60 backdrop-blur-xl card-glow border-t-white/10">
             <div className="absolute inset-0 bg-gradient-to-r from-amber-400/5 via-rose-500/5 to-indigo-500/5" />
             
             <div className="relative p-6 md:p-8">
@@ -553,7 +553,7 @@ const Home = () => {
       </section>
 
       {/* ── Featured Events ───────────────────────────────────────────────────── */}
-      <section className="py-24 bg-slate-900/10 relative overflow-hidden">
+      <section className="pt-8 pb-12 bg-slate-900/10 relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent opacity-30" />
         <div className="absolute -top-24 right-[-10%] w-[520px] h-[520px] bg-rose-500/10 rounded-full blur-[140px]" />
         <div className="absolute -bottom-24 left-[-10%] w-[520px] h-[520px] bg-indigo-500/10 rounded-full blur-[140px]" />
@@ -632,7 +632,7 @@ const Home = () => {
 
       {/* ── User Reviews ──────────────────────────────────────────────────────── */}
       {appReviews.length > 0 && (
-        <section className="py-24 relative overflow-hidden">
+        <section className="pt-6 pb-12 bg-slate-900/10 relative overflow-hidden">
           <div className="absolute -top-20 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-amber-500/8 rounded-full blur-[120px]" />
           <div className="container-custom">
             <div className="text-center mb-16">
@@ -703,7 +703,7 @@ const Home = () => {
       )}
 
       {/* ── Organizer CTA ─────────────────────────────────────────────────────── */}
-      <section className="py-16 pb-24 relative overflow-hidden">
+      <section className="pt-10 pb-4 bg-slate-900/10 relative overflow-hidden">
         <div className="container-custom">
           <motion.div
             initial={{ opacity: 0, scale: 0.98 }}

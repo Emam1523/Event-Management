@@ -1,6 +1,5 @@
 const prisma = require('../config/prisma');
 
-// POST /api/app-reviews — Submit or update a review
 const submitAppReview = async (req, res) => {
   try {
     const userId = req.user.id;
@@ -13,7 +12,6 @@ const submitAppReview = async (req, res) => {
       return res.status(400).json({ message: 'Comment must be at least 5 characters.' });
     }
 
-    // Upsert — one review per user
     const existing = await prisma.appReview.findFirst({ where: { userId } });
 
     let review;
@@ -37,7 +35,6 @@ const submitAppReview = async (req, res) => {
   }
 };
 
-// GET /api/app-reviews — Get all approved reviews (public, for home page)
 const getAppReviews = async (req, res) => {
   try {
     const reviews = await prisma.appReview.findMany({
@@ -46,11 +43,11 @@ const getAppReviews = async (req, res) => {
     });
     res.json(reviews);
   } catch (err) {
+    console.error(err);
     res.status(500).json({ message: 'Failed to fetch reviews.' });
   }
 };
 
-// GET /api/app-reviews/mine — Get current user's review
 const getMyAppReview = async (req, res) => {
   try {
     const review = await prisma.appReview.findFirst({
@@ -58,16 +55,17 @@ const getMyAppReview = async (req, res) => {
     });
     res.json(review || null);
   } catch (err) {
+    console.error(err);
     res.status(500).json({ message: 'Failed to fetch your review.' });
   }
 };
 
-// DELETE /api/app-reviews/:id — Admin can delete a review
 const deleteAppReview = async (req, res) => {
   try {
     await prisma.appReview.delete({ where: { id: req.params.id } });
     res.json({ message: 'Review deleted.' });
   } catch (err) {
+    console.error(err);
     res.status(500).json({ message: 'Failed to delete review.' });
   }
 };

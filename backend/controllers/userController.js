@@ -20,9 +20,7 @@ const createVerificationCode = async (email, purpose, metadata = {}) => {
   return code;
 };
 
-// @desc    Get all users
-// @route   GET /api/users
-// @access  Private/Admin
+
 exports.getUsers = asyncHandler(async (req, res) => {
   const users = await prisma.user.findMany({
     select: {
@@ -36,13 +34,19 @@ exports.getUsers = asyncHandler(async (req, res) => {
   res.json(users);
 });
 
-// @desc    Update user profile
-// @route   PUT /api/users/profile
-// @access  Private
+
 exports.updateUserProfile = asyncHandler(async (req, res) => {
   const { name, email, phone, password, passwordVerificationCode } = req.body;
 
   const existingUser = await prisma.user.findUnique({ where: { id: req.user.id } });
+
+  if (email && email !== existingUser.email) {
+    const userExists = await prisma.user.findUnique({ where: { email } });
+    if (userExists) {
+      res.status(400);
+      throw new Error('Email is already in use');
+    }
+  }
 
   const data = {
     ...(name !== undefined ? { name } : {}),

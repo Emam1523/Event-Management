@@ -33,7 +33,6 @@ const AdminLayout = () => {
 
   return (
     <div className="min-h-screen bg-black text-white flex overflow-hidden font-sans">
-      {/* Sidebar - Desktop */}
       <motion.aside 
         initial={false}
         animate={{ width: isCollapsed ? 100 : 280 }}
@@ -100,9 +99,7 @@ const AdminLayout = () => {
         </div>
       </motion.aside>
 
-      {/* Main Content Area */}
       <main className="flex-1 flex flex-col relative h-screen overflow-hidden">
-        {/* Top Header */}
         <header className="h-20 border-b border-white/5 flex items-center justify-between px-8 bg-zinc-950/80 backdrop-blur-xl z-30">
           <div className="flex items-center gap-6">
              <button 
@@ -124,7 +121,6 @@ const AdminLayout = () => {
           </div>
         </header>
 
-        {/* Dynamic Page Content */}
         <div className="flex-1 overflow-y-auto p-8 custom-scrollbar relative bg-[#050505]">
            <AnimatePresence mode="wait">
              <motion.div
@@ -141,7 +137,6 @@ const AdminLayout = () => {
         </div>
       </main>
 
-      {/* Mobile Sidebar Overlay */}
       <AnimatePresence>
         {mobileOpen && (
           <>

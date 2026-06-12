@@ -1,9 +1,7 @@
 const prisma = require('../config/prisma');
 const asyncHandler = require('../utils/asyncHandler');
 
-// @desc    Get featured events
-// @route   GET /api/events/featured
-// @access  Public
+
 exports.getFeaturedEvents = asyncHandler(async (req, res) => {
   const events = await prisma.event.findMany({
     take: 6,
@@ -18,9 +16,7 @@ exports.getFeaturedEvents = asyncHandler(async (req, res) => {
   res.json(events);
 });
 
-// @desc    Get all events
-// @route   GET /api/events
-// @access  Public
+
 exports.getEvents = asyncHandler(async (req, res) => {
   const { category, location, search, page = 1, limit = 9 } = req.query;
   const skip = (Number(page) - 1) * Number(limit);
@@ -89,13 +85,10 @@ exports.getEvents = asyncHandler(async (req, res) => {
   });
 });
 
-// @desc    Get single event
-// @route   GET /api/events/:id
-// @access  Public
 exports.getEventById = asyncHandler(async (req, res) => {
   const { id } = req.params;
 
-  // Validate UUID if using UUIDs (to avoid 500 errors on invalid IDs like 'featured')
+  // Validate UUID if using UUID
   const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
   if (!uuidRegex.test(id)) {
     res.status(400);
@@ -124,16 +117,50 @@ exports.getEventById = asyncHandler(async (req, res) => {
   }
 });
 
-// @desc    Create an event
-// @route   POST /api/events
-// @access  Private/Admin
+// Helper to extract city from location string 
+const extractCity = (locationStr) => {
+  if (!locationStr) return null;
+  const parts = locationStr.split(',').map(s => s.trim());
+  return parts.length > 1 ? parts[parts.length - 1] : parts[0];
+};
+
+// Helper to upsert category and location for filter dropdowns
+const upsertFilters = async (category, location) => {
+  const operations = [];
+  if (category) {
+    operations.push(
+      prisma.category.upsert({
+        where: { name: category },
+        update: {},
+        create: { name: category }
+      })
+    );
+  }
+  const city = extractCity(location);
+  if (city) {
+    operations.push(
+      prisma.location.upsert({
+        where: { name: city },
+        update: {},
+        create: { name: city }
+      })
+    );
+  }
+  if (operations.length > 0) {
+    await Promise.all(operations);
+  }
+};
+
+
 exports.createEvent = asyncHandler(async (req, res) => {
-  const { title, description, category, date, time, location, googleMapUrl, price, image, tickets } = req.body;
+  const { title, description, fullDescription, capacity, category, date, time, location, googleMapUrl, price, image, tickets } = req.body;
 
   const event = await prisma.event.create({
     data: {
       title,
       description,
+      fullDescription,
+      capacity: Number(capacity),
       category,
       date,
       time,
@@ -151,15 +178,15 @@ exports.createEvent = asyncHandler(async (req, res) => {
     }
   });
 
+  // Save category and location to filter tables for dynamic dropdowns
+  await upsertFilters(category, location);
+
   res.status(201).json(event);
 });
 
-// @desc    Update an event
-// @route   PUT /api/events/:id
-// @access  Private/Admin
 exports.updateEvent = asyncHandler(async (req, res) => {
   const { id } = req.params;
-  const { title, description, category, date, time, location, googleMapUrl, price, image, tickets } = req.body;
+  const { title, description, fullDescription, capacity, category, date, time, endTime, location, googleMapUrl, price, image, tickets } = req.body;
 
   let event = await prisma.event.findUnique({ where: { id } });
 
@@ -174,9 +201,12 @@ exports.updateEvent = asyncHandler(async (req, res) => {
     data: {
       title,
       description,
+      fullDescription,
+      capacity: Number(capacity),
       category,
       date,
       time,
+      endTime,
       location,
       googleMapUrl,
       price: Number(price),
@@ -191,12 +221,13 @@ exports.updateEvent = asyncHandler(async (req, res) => {
     }
   });
 
+  // Save category and location to filter tables for dynamic dropdowns
+  await upsertFilters(category, location);
+
   res.json(event);
 });
 
-// @desc    Delete an event
-// @route   DELETE /api/events/:id
-// @access  Private/Admin
+
 exports.deleteEvent = asyncHandler(async (req, res) => {
   const { id } = req.params;
 
@@ -212,15 +243,12 @@ exports.deleteEvent = asyncHandler(async (req, res) => {
   res.json({ message: 'Event removed' });
 });
 
-// @desc    Get all unique categories and locations
-// @route   GET /api/events/filters
-// @access  Public
+
 exports.getFilters = asyncHandler(async (req, res) => {
-  const [categoriesFromDb, locationsFromDb, eventsForCategories, eventsForLocations] = await Promise.all([
+  const [categoriesFromDb, locationsFromDb, eventsForCategories] = await Promise.all([
     prisma.category.findMany({ select: { name: true }, orderBy: { name: 'asc' } }),
     prisma.location.findMany({ select: { name: true }, orderBy: { name: 'asc' } }),
-    prisma.event.findMany({ select: { category: true }, distinct: ['category'] }),
-    prisma.event.findMany({ select: { location: true }, distinct: ['location'] })
+    prisma.event.findMany({ select: { category: true }, distinct: ['category'] })
   ]);
 
   // Combine category names from Category table and unique categories from Event table
@@ -229,15 +257,12 @@ exports.getFilters = asyncHandler(async (req, res) => {
     ...eventsForCategories.map(e => e.category)
   ]);
 
-  // Combine locations from Location table and unique locations from Event table
-  const locationNames = new Set([
-    ...locationsFromDb.map(l => l.name),
-    ...eventsForLocations.map(e => e.location).filter(Boolean)
-  ]);
+  // Use locations from Location table (cities are upserted on event create/update)
+  const locationNames = locationsFromDb.map(l => l.name);
 
   res.json({
     success: true,
     categories: Array.from(categoryNames),
-    locations: Array.from(locationNames)
+    locations: locationNames
   });
 });

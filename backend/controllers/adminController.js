@@ -1,9 +1,7 @@
 const prisma = require('../config/prisma');
 const asyncHandler = require('../utils/asyncHandler');
 
-// @desc    Get admin dashboard stats
-// @route   GET /api/admin/stats
-// @access  Private/Admin
+
 exports.getStats = asyncHandler(async (req, res) => {
   const [userCount, eventCount, bookingCount, totalRevenue, recentBookings] = await Promise.all([
     prisma.user.count(),
@@ -39,9 +37,7 @@ exports.getStats = asyncHandler(async (req, res) => {
   });
 });
 
-// @desc    Get all bookings
-// @route   GET /api/admin/bookings
-// @access  Private/Admin
+
 exports.getAllBookings = asyncHandler(async (req, res) => {
   const bookings = await prisma.booking.findMany({
     include: {
@@ -51,7 +47,6 @@ exports.getAllBookings = asyncHandler(async (req, res) => {
     orderBy: { createdAt: 'desc' }
   });
 
-  // Format for frontend
   const formatted = bookings.map(b => ({
     id: b.id,
     userName: b.user?.name || 'Unknown',
@@ -65,9 +60,7 @@ exports.getAllBookings = asyncHandler(async (req, res) => {
   res.json({ data: formatted });
 });
 
-// @desc    Get all users
-// @route   GET /api/admin/users
-// @access  Private/Admin
+
 exports.getAllUsers = asyncHandler(async (req, res) => {
   const users = await prisma.user.findMany({
     orderBy: { createdAt: 'desc' },
@@ -83,9 +76,7 @@ exports.getAllUsers = asyncHandler(async (req, res) => {
   res.json({ data: users });
 });
 
-// @desc    Update user role
-// @route   PUT /api/admin/users/:id/role
-// @access  Private/Admin
+
 exports.updateUserRole = asyncHandler(async (req, res) => {
   const { role } = req.body;
   const user = await prisma.user.update({
@@ -95,9 +86,7 @@ exports.updateUserRole = asyncHandler(async (req, res) => {
   res.json(user);
 });
 
-// @desc    Delete user
-// @route   DELETE /api/admin/users/:id
-// @access  Private/Admin
+
 exports.deleteUser = asyncHandler(async (req, res) => {
   await prisma.user.delete({
     where: { id: req.params.id }
@@ -105,15 +94,62 @@ exports.deleteUser = asyncHandler(async (req, res) => {
   res.json({ message: 'User removed' });
 });
 
-// @desc    Get analytics
-// @route   GET /api/admin/analytics
-// @access  Private/Admin
+
+exports.getCategories = asyncHandler(async (req, res) => {
+  const categories = await prisma.category.findMany({
+    orderBy: { name: 'asc' }
+  });
+  res.json({ success: true, data: categories });
+});
+
+
+exports.createCategory = asyncHandler(async (req, res) => {
+  const { name, description } = req.body;
+  const category = await prisma.category.upsert({
+    where: { name },
+    update: { description },
+    create: { name, description }
+  });
+  res.status(201).json({ success: true, data: category });
+});
+
+
+exports.deleteCategory = asyncHandler(async (req, res) => {
+  await prisma.category.delete({ where: { id: req.params.id } });
+  res.json({ success: true, message: 'Category deleted' });
+});
+
+exports.getLocations = asyncHandler(async (req, res) => {
+  const locations = await prisma.location.findMany({
+    orderBy: { name: 'asc' }
+  });
+  res.json({ success: true, data: locations });
+});
+
+
+exports.createLocation = asyncHandler(async (req, res) => {
+  const { name } = req.body;
+  const location = await prisma.location.upsert({
+    where: { name },
+    update: {},
+    create: { name }
+  });
+  res.status(201).json({ success: true, data: location });
+});
+
+
+exports.deleteLocation = asyncHandler(async (req, res) => {
+  await prisma.location.delete({ where: { id: req.params.id } });
+  res.json({ success: true, message: 'Location deleted' });
+});
+
+
 exports.getAnalytics = asyncHandler(async (req, res) => {
   try {
     const { timeframe = 'month' } = req.query;
 
     const bookings = await prisma.booking.findMany({
-      where: { status: 'confirmed' },
+      where: { status: { in: ['confirmed', 'paid'] } },
       select: {
         createdAt: true,
         totalPrice: true,
@@ -129,13 +165,13 @@ exports.getAnalytics = asyncHandler(async (req, res) => {
       if (!b.createdAt) return;
       const d = new Date(b.createdAt);
       
-      // Daily format: YYYY-MM-DD
+      // Daily format
       const dateKey = d.toISOString().split('T')[0];
       if (!daily[dateKey]) daily[dateKey] = { revenue: 0, tickets: 0 };
       daily[dateKey].revenue += Number(b.totalPrice || 0);
       daily[dateKey].tickets += (b.quantity || 0);
 
-      // Monthly format: MMM YY
+      // Monthly format
       const monthKey = d.toLocaleString('en-US', { month: 'short', year: '2-digit' });
       if (!monthly[monthKey]) monthly[monthKey] = { revenue: 0, tickets: 0 };
       monthly[monthKey].revenue += Number(b.totalPrice || 0);
@@ -162,7 +198,7 @@ exports.getAnalytics = asyncHandler(async (req, res) => {
       include: { 
         _count: { select: { bookings: true } },
         bookings: {
-          where: { status: 'confirmed' },
+          where: { status: { in: ['confirmed', 'paid'] } },
           select: { totalPrice: true, quantity: true }
         }
       }

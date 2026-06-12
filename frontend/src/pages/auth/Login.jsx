@@ -50,7 +50,6 @@ const Login = () => {
           navigate(from, { replace: true });
         } else {
           const role = result.user?.role;
-
           navigate(role === 'admin' ? '/admin' : '/dashboard', {
             replace: true,
           });
@@ -60,7 +59,8 @@ const Login = () => {
       }
     } catch (error) {
       showNotification(
-        error.response?.data?.message ||
+        error?.response?.data?.message ||
+        error?.message ||
           'Login failed. Please check your credentials.',
         'error'
       );
@@ -92,7 +92,7 @@ const Login = () => {
 
   return (
     <div className="min-h-screen flex bg-[#030303] overflow-hidden">
-      {/* Left Side: Visual/Branding (Matches Register Page) */}
+      {/* Left Side: Visual/Branding */}
       <div className="hidden lg:flex lg:w-1/2 relative overflow-hidden group border-r border-white/5">
         <motion.div
           initial={{ scale: 1.1, opacity: 0 }}
@@ -108,20 +108,9 @@ const Login = () => {
           <div className="absolute inset-0 bg-gradient-to-tr from-[#030303] via-[#030303]/40 to-transparent" />
         </motion.div>
 
-        <div className="relative z-10 flex flex-col justify-between p-16 w-full">
-          <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.5 }}
-          >
-            <Link to="/" className="flex items-center gap-3 group">
-              <span className="text-2xl font-black text-white tracking-tighter uppercase">
-                Aura <span className="text-primary">Pass</span>
-              </span>
-            </Link>
-          </motion.div>
-
-          <div className="max-w-md">
+        {/* ✅ FIXED: Added wrapper for proper vertical stacking and padding */}
+        <div className="relative z-10 flex flex-col justify-between w-full p-12 lg:p-16 pt-28 sm:pt-32 lg:pt-36">
+          <div className="max-w-md my-auto">
             <motion.h2
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -164,16 +153,15 @@ const Login = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 1.1 }}
-            className="text-slate-500 text-xs font-bold uppercase tracking-widest"
+            className="text-slate-500 text-xs font-bold uppercase tracking-widest mt-auto"
           >
-            &copy; 2026 AURA PASS PLATFORM. ALL RIGHTS RESERVED.
+            &copy; {new Date().getFullYear()} AURA PASS PLATFORM. ALL RIGHTS RESERVED.
           </motion.p>
         </div>
       </div>
 
-      {/* Right Side: Login Form (Matches Register Page structure) */}
-      <div className="w-full lg:w-1/2 flex items-center justify-center p-6 sm:p-12 relative z-10">
-        {/* Ambient background glows */}
+      {/* Right Side: Login Form */}
+      <div className="w-full lg:w-1/2 flex items-center justify-center p-6 sm:p-12 pt-28 sm:pt-32 lg:pt-36 relative z-10">
         <div className="absolute top-1/4 right-1/4 w-[450px] h-[450px] bg-primary/5 rounded-full blur-[130px] pointer-events-none -z-10" />
         <div className="absolute bottom-1/4 right-10 w-[380px] h-[380px] bg-[#ff2d55]/5 rounded-full blur-[140px] pointer-events-none -z-10" />
 
@@ -181,9 +169,9 @@ const Login = () => {
           variants={containerVariants}
           initial="hidden"
           animate="visible"
-          className="max-w-[540px] w-full relative z-10 bg-white/[0.02] backdrop-blur-xl border border-white/5 p-8 sm:p-10 rounded-[2.5rem] shadow-[0_30px_60px_-15px_rgba(0,0,0,0.7)] border-t-white/10"
+          className="max-w-[540px] w-full min-h-[520px] flex flex-col justify-center relative z-10 bg-white/[0.02] backdrop-blur-xl border border-white/5 p-8 sm:pt-12 sm:pb-8 sm:px-12 rounded-[2.5rem] shadow-[0_30px_60px_-15px_rgba(0,0,0,0.7)] border-t-white/10"
         >
-          <div className="mb-10">
+          <div className="mb-6">
             <motion.h1
               variants={itemVariants}
               className="text-4xl md:text-5xl font-black text-white tracking-tighter uppercase mb-4"
@@ -201,7 +189,7 @@ const Login = () => {
           <form onSubmit={handleSubmit} className="space-y-5">
             {/* Email */}
             <motion.div variants={itemVariants} className="space-y-2">
-              <label className="text-[10px] font-black text-slate-500 uppercase tracking-[0.3em] ml-1">
+              <label htmlFor="email" className="text-[10px] font-black text-slate-500 uppercase tracking-[0.3em] ml-1">
                 Email
               </label>
               <div className="relative group">
@@ -210,6 +198,7 @@ const Login = () => {
                   size={18}
                 />
                 <input
+                  id="email"
                   type="email"
                   name="email"
                   required
@@ -224,7 +213,7 @@ const Login = () => {
             {/* Password */}
             <motion.div variants={itemVariants} className="space-y-2">
               <div className="flex justify-between items-center">
-                <label className="text-[10px] font-black text-slate-500 uppercase tracking-[0.3em] ml-1">
+                <label htmlFor="password" className="text-[10px] font-black text-slate-500 uppercase tracking-[0.3em] ml-1">
                   Password
                 </label>
                 <Link
@@ -240,6 +229,7 @@ const Login = () => {
                   size={18}
                 />
                 <input
+                  id="password"
                   type={showPassword ? 'text' : 'password'}
                   name="password"
                   required
@@ -248,9 +238,11 @@ const Login = () => {
                   placeholder="••••••••"
                   className="w-full pl-14 pr-14 py-4 bg-white/5 border border-white/5 rounded-2xl text-white font-bold placeholder:text-slate-700 focus:outline-none focus:border-primary/50 transition-all focus:bg-white/[0.08]"
                 />
+                {/* ✅ FIXED: Added aria-label for accessibility */}
                 <button
                   type="button"
-                  className="absolute right-5 top-1/2 -translate-y-1/2 text-slate-600 hover:text-white transition-colors"
+                  aria-label={showPassword ? "Hide password" : "Show password"}
+                  className="absolute right-5 top-1/2 -translate-y-1/2 text-slate-600 hover:text-white transition-colors cursor-pointer"
                   onClick={() => setShowPassword(!showPassword)}
                 >
                   {showPassword ? (
@@ -267,6 +259,7 @@ const Login = () => {
               <button
                 type="submit"
                 disabled={isLoading}
+                aria-disabled={isLoading}
                 className="w-full bg-primary hover:bg-orange-600 text-white py-5 rounded-[1.25rem] font-black text-[11px] uppercase tracking-[0.3em] shadow-xl shadow-primary/20 transition-all duration-300 flex items-center justify-center gap-3 group active:scale-95 disabled:opacity-50 cursor-pointer"
               >
                 {isLoading ? (
@@ -282,7 +275,7 @@ const Login = () => {
           </form>
 
           {/* Footer */}
-          <motion.div variants={itemVariants} className="mt-10 text-center">
+          <motion.div variants={itemVariants} className="mt-6 text-center">
             <p className="text-slate-500 font-medium">
               New to Aura Pass?{' '}
               <Link

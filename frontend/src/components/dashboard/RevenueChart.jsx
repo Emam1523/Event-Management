@@ -1,5 +1,4 @@
 const RevenueChart = ({ data = [] }) => {
-  // Simple CSS-based bar chart for revenue visualization
   const maxVal = Math.max(...data.map(d => d.amount), 1);
 
   return (

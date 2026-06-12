@@ -8,9 +8,9 @@ const {
   deleteAppReview,
 } = require('../controllers/appReviewController');
 
-router.get('/', getAppReviews);                        // public — home page
-router.get('/mine', protect, getMyAppReview);          // user's own review
-router.post('/', protect, submitAppReview);            // submit / update
-router.delete('/:id', protect, admin, deleteAppReview); // admin delete
+router.get('/', getAppReviews);                        
+router.get('/mine', protect, getMyAppReview);          
+router.post('/', protect, submitAppReview);            
+router.delete('/:id', protect, admin, deleteAppReview);
 
 module.exports = router;

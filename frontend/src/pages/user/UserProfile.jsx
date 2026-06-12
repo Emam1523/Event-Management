@@ -2,12 +2,11 @@ import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import {
   FiUser, FiMail, FiLock, FiShield, FiEdit3, FiSave,
-  FiX, FiChevronRight, FiLogOut, FiCheckCircle, FiPhone,
+  FiCheckCircle, FiPhone,
   FiCalendar, FiMapPin, FiArrowRight, FiEye, FiEyeOff,
-  FiStar, FiTrendingUp, FiZap, FiMessageSquare,
+  FiStar, FiTrendingUp, FiZap, FiMessageSquare, FiAlertCircle,
 } from 'react-icons/fi';
 import { BsTicketPerforated } from 'react-icons/bs';
-import { HiSparkles } from 'react-icons/hi2';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../../context/AuthContext';
 import { useNotifications } from '../../context/NotificationContext';
@@ -19,41 +18,6 @@ const resolveImage = (image) => {
   if (!image) return null;
   if (image.startsWith('http')) return image;
   return `${API_ROOT}${image}`;
-};
-
-const validatePassword = (pw) => {
-  const errors = [];
-  if (pw.length < 8)                   errors.push('At least 8 characters');
-  if (!/[A-Z]/.test(pw))               errors.push('One uppercase letter');
-  if (!/[a-z]/.test(pw))               errors.push('One lowercase letter');
-  if (!/[0-9]/.test(pw))               errors.push('One number');
-  if (!/[^A-Za-z0-9]/.test(pw))        errors.push('One special character (!@#$…)');
-  return errors;
-};
-
-const PasswordStrength = ({ password }) => {
-  if (!password) return null;
-  const errors = validatePassword(password);
-  const strength = 5 - errors.length;
-  const colors = ['bg-red-500', 'bg-red-400', 'bg-amber-400', 'bg-yellow-400', 'bg-emerald-400', 'bg-emerald-500'];
-  const labels = ['', 'Very Weak', 'Weak', 'Fair', 'Good', 'Strong'];
-  return (
-    <div className="mt-2 space-y-2">
-      <div className="flex gap-1">
-        {[1,2,3,4,5].map(i => (
-          <div key={i} className={`h-1 flex-1 rounded-full transition-all ${i <= strength ? colors[strength] : 'bg-white/10'}`} />
-        ))}
-      </div>
-      <p className={`text-[10px] font-bold ${strength >= 4 ? 'text-emerald-400' : strength >= 3 ? 'text-amber-400' : 'text-red-400'}`}>
-        {labels[strength]}
-      </p>
-      {errors.length > 0 && (
-        <ul className="text-[10px] text-slate-500 space-y-0.5 pl-1">
-          {errors.map(e => <li key={e}>· {e}</li>)}
-        </ul>
-      )}
-    </div>
-  );
 };
 
 const StarRating = ({ value, onChange }) => (
@@ -78,7 +42,7 @@ const fadeUp = {
 
 /* ═══════════════════════════════════════════════════════════════ */
 const UserProfile = () => {
-  const { user, logout, updateProfile } = useAuth();
+  const { user, updateProfile } = useAuth();
   const { showNotification } = useNotifications();
   const navigate = useNavigate();
 
@@ -88,6 +52,7 @@ const UserProfile = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
   const [awaitingPasswordCode, setAwaitingPasswordCode] = useState(false);
+  const [passwordError, setPasswordError] = useState('');
 
   const [stats, setStats] = useState({ total: 0, upcoming: 0, spent: 0 });
   const [recentBookings, setRecentBookings] = useState([]);
@@ -106,6 +71,7 @@ const UserProfile = () => {
   /* ── Populate form ── */
   useEffect(() => {
     if (!user) return;
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setFormData((p) => ({ ...p, name: user.name || '', phone: user.phone || '', password: '', confirmPassword: '' }));
   }, [user]);
 
@@ -146,15 +112,19 @@ const UserProfile = () => {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((p) => ({ ...p, [name]: value }));
+    if (passwordError) setPasswordError('');
   };
-
   const handleCancelEdit = () => {
     setIsEditing(false);
-    setAwaitingPasswordCode(false);
-    setFormData((p) => ({
-      ...p, name: user?.name || '', phone: user?.phone || '',
-      password: '', confirmPassword: '', passwordVerificationCode: '',
-    }));
+    if (user) {
+      setFormData((p) => ({
+        ...p,
+        name: user.name || '',
+        phone: user.phone || '',
+        password: '',
+        confirmPassword: '',
+      }));
+    }
   };
 
   const handleProfileSubmit = async (e) => {
@@ -173,11 +143,9 @@ const UserProfile = () => {
 
   const handlePasswordSubmit = async (e) => {
     e.preventDefault();
-    const errors = validatePassword(formData.password);
-    if (errors.length > 0) {
-      showNotification(`Password too weak: ${errors[0]}`, 'error'); return;
-    }
+    setPasswordError('');
     if (formData.password !== formData.confirmPassword) {
+      setPasswordError('Passwords do not match.');
       showNotification('Passwords do not match.', 'error'); return;
     }
     setSaving(true);
@@ -198,6 +166,7 @@ const UserProfile = () => {
       setAwaitingPasswordCode(false);
       setFormData((p) => ({ ...p, password: '', confirmPassword: '', passwordVerificationCode: '' }));
     } else {
+      setPasswordError(result.message || 'Verification failed.');
       showNotification(result.message || 'Failed.', 'error');
     }
     setSaving(false);
@@ -218,8 +187,6 @@ const UserProfile = () => {
     }
     setSavingReview(false);
   };
-
-  const handleLogout = () => { logout(); navigate('/'); };
 
   const avatarLetter = user?.name?.charAt(0)?.toUpperCase() || 'U';
   const isAdmin = user?.role === 'admin';
@@ -291,21 +258,12 @@ const UserProfile = () => {
                     {user?.phone && <p className="text-slate-600 text-xs mt-1">{user.phone}</p>}
                   </div>
                   <div className="flex items-center gap-3">
-                    {!isEditing ? (
-                      <button onClick={() => { setIsEditing(true); setActiveTab('profile'); }}
+                  {!isEditing && (
+                    <button onClick={() => setIsEditing(true)}
                         className="inline-flex items-center gap-2 px-5 py-2.5 rounded-2xl bg-brand-orange text-white text-[10px] font-black uppercase tracking-widest hover:bg-white hover:text-black transition-all shadow-lg shadow-brand-orange/25 cursor-pointer">
                         <FiEdit3 /> Edit Profile
                       </button>
-                    ) : (
-                      <button onClick={handleCancelEdit}
-                        className="inline-flex items-center gap-2 px-5 py-2.5 rounded-2xl border border-white/10 bg-white/5 text-white text-[10px] font-black uppercase tracking-widest hover:bg-white/10 transition-all cursor-pointer">
-                        <FiX /> Cancel
-                      </button>
-                    )}
-                    <button onClick={handleLogout}
-                      className="inline-flex items-center gap-2 px-5 py-2.5 rounded-2xl border border-red-500/20 bg-red-500/10 text-red-400 text-[10px] font-black uppercase tracking-widest hover:bg-red-500 hover:text-white transition-all cursor-pointer">
-                      <FiLogOut /> Logout
-                    </button>
+                  )}
                   </div>
                 </div>
               </div>
@@ -328,43 +286,9 @@ const UserProfile = () => {
         </motion.div>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-
-          {/* ── Sidebar: Quick Links first, then Navigation ── */}
           <motion.aside {...fadeUp} transition={{ delay: 0.15, duration: 0.5 }} className="lg:col-span-3 space-y-4">
-
-            {/* Quick Links (on top) */}
-            <div className="rounded-[2rem] bg-zinc-950/90 border border-white/8 p-3 space-y-1">
-              <p className="text-[9px] font-black uppercase tracking-[0.25em] text-slate-600 px-3 pb-2">Quick Links</p>
-              {isAdmin ? (
-                <>
-                  <Link to="/admin/manage-events" className="flex items-center justify-between px-4 py-3 rounded-xl text-sm font-bold text-slate-400 hover:text-white hover:bg-white/5 transition-all group">
-                    <span className="flex items-center gap-3"><FiCalendar className="text-brand-orange" /> Manage Events</span>
-                    <FiChevronRight className="group-hover:translate-x-1 transition-transform" />
-                  </Link>
-                  <Link to="/admin/analytics" className="flex items-center justify-between px-4 py-3 rounded-xl text-sm font-bold text-slate-400 hover:text-white hover:bg-white/5 transition-all group">
-                    <span className="flex items-center gap-3"><FiTrendingUp className="text-violet-400" /> Analytics</span>
-                    <FiChevronRight className="group-hover:translate-x-1 transition-transform" />
-                  </Link>
-                  <Link to="/admin/reviews" className="flex items-center justify-between px-4 py-3 rounded-xl text-sm font-bold text-slate-400 hover:text-white hover:bg-white/5 transition-all group">
-                    <span className="flex items-center gap-3"><FiMessageSquare className="text-cyan-400" /> App Reviews</span>
-                    <FiChevronRight className="group-hover:translate-x-1 transition-transform" />
-                  </Link>
-                </>
-              ) : (
-                <>
-                  <Link to="/my-tickets" className="flex items-center justify-between px-4 py-3 rounded-xl text-sm font-bold text-slate-400 hover:text-white hover:bg-white/5 transition-all group">
-                    <span className="flex items-center gap-3"><BsTicketPerforated className="text-brand-orange" /> My Tickets</span>
-                    <FiChevronRight className="group-hover:translate-x-1 transition-transform" />
-                  </Link>
-                  <Link to="/events" className="flex items-center justify-between px-4 py-3 rounded-xl text-sm font-bold text-slate-400 hover:text-white hover:bg-white/5 transition-all group">
-                    <span className="flex items-center gap-3"><HiSparkles className="text-violet-400" /> Browse Events</span>
-                    <FiChevronRight className="group-hover:translate-x-1 transition-transform" />
-                  </Link>
-                </>
-              )}
-            </div>
-
-            {/* Tab Navigation (below quick links) */}
+            
+            {/* Tab Navigation */}
             <div className="rounded-[2rem] bg-zinc-950/90 border border-white/8 p-3 space-y-1">
               <p className="text-[9px] font-black uppercase tracking-[0.25em] text-slate-600 px-3 pb-2">Navigation</p>
               {tabs.map((t) => (
@@ -496,44 +420,59 @@ const UserProfile = () => {
                     </div>
                   </div>
 
-                  {/* Requirements banner */}
-                  <div className="mb-6 p-4 rounded-2xl bg-violet-500/5 border border-violet-500/15">
-                    <p className="text-[10px] font-black uppercase tracking-widest text-violet-400 mb-2">Password Requirements</p>
-                    <div className="grid grid-cols-2 gap-1.5 text-[10px] text-slate-400 font-medium">
-                      {['At least 8 characters', 'One uppercase (A-Z)', 'One lowercase (a-z)', 'One number (0-9)', 'One special character (!@#$…)'].map(r => (
-                        <span key={r} className="flex items-center gap-1.5">
-                          <span className="w-1 h-1 rounded-full bg-violet-400 shrink-0" /> {r}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-
                   <div className="space-y-6">
                     {/* New Password */}
                     <div className="space-y-2">
-                      <label className="text-[10px] font-black uppercase tracking-widest text-slate-500">New Password</label>
-                      <div className="flex items-center rounded-2xl border border-white/10 bg-white/[0.03] px-4 py-1 focus-within:border-violet-500/40 focus-within:ring-2 focus-within:ring-violet-500/10 transition-all">
-                        <FiLock className="shrink-0 text-violet-400" />
-                        <input type={showPassword ? 'text' : 'password'} name="password" value={formData.password} onChange={handleChange}
-                          placeholder="Enter new password"
-                          className="w-full bg-transparent border-none outline-none py-3 px-3 text-white placeholder:text-slate-700 font-semibold text-sm" />
-                        <button type="button" onClick={() => setShowPassword(p => !p)} className="text-slate-500 hover:text-white transition-colors cursor-pointer">
-                          {showPassword ? <FiEyeOff /> : <FiEye />}
+                      <label className="text-[10px] font-black uppercase tracking-[0.3em] ml-1 text-slate-500">New Password</label>
+                      <div className="relative group">
+                        <FiLock
+                          className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-600 group-focus-within:text-violet-400 transition-colors"
+                          size={18}
+                        />
+                        <input
+                          type={showPassword ? 'text' : 'password'}
+                          name="password"
+                          value={formData.password}
+                          onChange={handleChange}
+                      disabled={!isEditing}
+                          placeholder="••••••••"
+                      className="w-full pl-14 pr-14 py-4 bg-white/5 border border-white/5 rounded-2xl text-white font-bold placeholder:text-slate-700 focus:outline-none focus:border-violet-500/50 transition-all focus:bg-white/[0.08] disabled:opacity-50 disabled:cursor-not-allowed"
+                        />
+                        <button
+                          type="button"
+                      disabled={!isEditing}
+                      className="absolute right-5 top-1/2 -translate-y-1/2 text-slate-600 hover:text-white transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                          onClick={() => setShowPassword(p => !p)}
+                        >
+                          {showPassword ? <FiEyeOff size={18} /> : <FiEye size={18} />}
                         </button>
                       </div>
-                      <PasswordStrength password={formData.password} />
                     </div>
 
                     {/* Confirm Password */}
                     <div className="space-y-2">
-                      <label className="text-[10px] font-black uppercase tracking-widest text-slate-500">Confirm New Password</label>
-                      <div className="flex items-center rounded-2xl border border-white/10 bg-white/[0.03] px-4 py-1 focus-within:border-violet-500/40 focus-within:ring-2 focus-within:ring-violet-500/10 transition-all">
-                        <FiCheckCircle className={`shrink-0 ${formData.confirmPassword && formData.password === formData.confirmPassword ? 'text-emerald-400' : 'text-slate-600'}`} />
-                        <input type={showConfirm ? 'text' : 'password'} name="confirmPassword" value={formData.confirmPassword} onChange={handleChange}
-                          placeholder="Repeat new password"
-                          className="w-full bg-transparent border-none outline-none py-3 px-3 text-white placeholder:text-slate-700 font-semibold text-sm" />
-                        <button type="button" onClick={() => setShowConfirm(p => !p)} className="text-slate-500 hover:text-white transition-colors cursor-pointer">
-                          {showConfirm ? <FiEyeOff /> : <FiEye />}
+                      <label className="text-[10px] font-black uppercase tracking-[0.3em] ml-1 text-slate-500">Confirm New Password</label>
+                      <div className="relative group">
+                        <FiCheckCircle
+                          className={`absolute left-5 top-1/2 -translate-y-1/2 transition-colors ${formData.confirmPassword && formData.password === formData.confirmPassword ? 'text-emerald-400' : 'text-slate-600 group-focus-within:text-violet-400'}`}
+                          size={18}
+                        />
+                        <input
+                          type={showConfirm ? 'text' : 'password'}
+                          name="confirmPassword"
+                          value={formData.confirmPassword}
+                          onChange={handleChange}
+                      disabled={!isEditing}
+                          placeholder="••••••••"
+                      className="w-full pl-14 pr-14 py-4 bg-white/5 border border-white/5 rounded-2xl text-white font-bold placeholder:text-slate-700 focus:outline-none focus:border-violet-500/50 transition-all focus:bg-white/[0.08] disabled:opacity-50 disabled:cursor-not-allowed"
+                        />
+                        <button
+                          type="button"
+                      disabled={!isEditing}
+                      className="absolute right-5 top-1/2 -translate-y-1/2 text-slate-600 hover:text-white transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                          onClick={() => setShowConfirm(p => !p)}
+                        >
+                          {showConfirm ? <FiEyeOff size={18} /> : <FiEye size={18} />}
                         </button>
                       </div>
                       {formData.confirmPassword && formData.password !== formData.confirmPassword && (
@@ -549,9 +488,9 @@ const UserProfile = () => {
                           <label className="text-[10px] font-black uppercase tracking-widest text-brand-orange">Email Verification Code</label>
                           <div className="flex items-center rounded-2xl border border-brand-orange/40 bg-brand-orange/5 px-4 py-1">
                             <FiShield className="shrink-0 text-brand-orange" />
-                            <input type="text" name="passwordVerificationCode" value={formData.passwordVerificationCode} onChange={handleChange}
+                        <input type="text" name="passwordVerificationCode" value={formData.passwordVerificationCode} onChange={handleChange} disabled={!isEditing}
                               placeholder="6-digit code from your email"
-                              className="w-full bg-transparent border-none outline-none py-3 px-3 text-white placeholder:text-slate-600 font-semibold text-sm tracking-widest" />
+                          className="w-full bg-transparent border-none outline-none py-3 px-3 text-white placeholder:text-slate-600 font-semibold text-sm tracking-widest disabled:opacity-50 disabled:cursor-not-allowed" />
                           </div>
                           <p className="text-[10px] text-slate-500 pl-2">Sent to <span className="text-brand-orange">{user?.email}</span></p>
                         </motion.div>
@@ -559,12 +498,47 @@ const UserProfile = () => {
                     </AnimatePresence>
                   </div>
 
-                  <div className="flex justify-end mt-8 pt-6 border-t border-white/5">
-                    <button type="submit" disabled={saving || !formData.password}
-                      className="flex items-center gap-3 px-8 py-3.5 rounded-2xl bg-violet-600 text-[11px] font-black uppercase tracking-widest text-white hover:bg-violet-500 transition-all shadow-lg shadow-violet-600/25 disabled:opacity-40 cursor-pointer">
-                      {saving ? <><span className="w-4 h-4 rounded-full border-2 border-white/30 border-t-white animate-spin" /> Processing...</> : <><FiShield /> {awaitingPasswordCode ? 'Verify & Update' : 'Change Password'}</>}
-                    </button>
-                  </div>
+                {/* Error Alert */}
+                <AnimatePresence mode="wait">
+                  {passwordError && (
+                    <motion.div
+                      initial={{ opacity: 0, height: 0, y: -10 }}
+                      animate={{ opacity: 1, height: 'auto', y: 0 }}
+                      exit={{ opacity: 0, height: 0, y: -10 }}
+                      className="overflow-hidden mt-6"
+                    >
+                      <div className="p-4 rounded-2xl bg-red-500/10 border border-red-500/20 flex items-center justify-start gap-3 text-left">
+                        <FiAlertCircle className="text-red-400 text-xl shrink-0" />
+                        <p className="text-[11px] font-bold text-red-300 tracking-wider uppercase">{passwordError}</p>
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+
+                <AnimatePresence>
+                  {isEditing && (
+                    <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 12 }}
+                      className="flex gap-4 justify-end mt-8 pt-6 border-t border-white/5">
+                      {awaitingPasswordCode && (
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setAwaitingPasswordCode(false);
+                            setPasswordError('');
+                            setFormData(p => ({ ...p, passwordVerificationCode: '' }));
+                          }}
+                          className="px-8 py-3.5 rounded-2xl border border-white/10 text-[11px] font-black uppercase tracking-widest text-white hover:bg-white/5 transition-all cursor-pointer"
+                        >
+                          Cancel
+                        </button>
+                      )}
+                      <button type="submit" disabled={saving || !formData.password}
+                        className="flex items-center gap-3 px-8 py-3.5 rounded-2xl bg-violet-600 text-[11px] font-black uppercase tracking-widest text-white hover:bg-violet-500 transition-all shadow-lg shadow-violet-600/25 disabled:opacity-40 cursor-pointer">
+                        {saving ? <><span className="w-4 h-4 rounded-full border-2 border-white/30 border-t-white animate-spin" /> Processing...</> : <><FiShield /> {awaitingPasswordCode ? 'Verify & Update' : 'Change Password'}</>}
+                      </button>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
                 </motion.form>
               )}
 
@@ -606,8 +580,9 @@ const UserProfile = () => {
                           const imgSrc = resolveImage(booking.event?.image);
                           return (
                             <motion.div key={booking.id}
+                              onClick={() => navigate(`/my-tickets/${booking.id}`)}
                               initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.1 }}
-                              className="flex items-center gap-5 p-4 rounded-2xl bg-white/[0.03] border border-white/5 hover:border-white/12 hover:bg-white/[0.05] transition-all group">
+                              className="flex items-center gap-5 p-4 rounded-2xl bg-white/[0.03] border border-white/5 hover:border-white/12 hover:bg-white/[0.05] transition-all group cursor-pointer">
                               <div className="w-16 h-16 rounded-xl overflow-hidden shrink-0 bg-white/5">
                                 {imgSrc ? <img src={imgSrc} alt={booking.event?.title} className="w-full h-full object-cover" onError={(e) => e.target.style.display='none'} />
                                   : <div className="w-full h-full flex items-center justify-center text-2xl">🎫</div>}

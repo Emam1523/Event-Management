@@ -1,9 +1,7 @@
 const prisma = require('../config/prisma');
 const asyncHandler = require('../utils/asyncHandler');
 
-// @desc    Add review to event
-// @route   POST /api/reviews
-// @access  Private
+
 exports.addReview = asyncHandler(async (req, res) => {
   const { eventId, rating, comment } = req.body;
 
@@ -19,9 +17,7 @@ exports.addReview = asyncHandler(async (req, res) => {
   res.status(201).json(review);
 });
 
-// @desc    Get reviews for an event
-// @route   GET /api/reviews/event/:id
-// @access  Public
+
 exports.getEventReviews = asyncHandler(async (req, res) => {
   const reviews = await prisma.review.findMany({
     where: { eventId: req.params.id },
@@ -40,9 +36,7 @@ exports.getEventReviews = asyncHandler(async (req, res) => {
   res.json(reviews);
 });
 
-// @desc    Update a review
-// @route   PUT /api/reviews/:id
-// @access  Private
+
 exports.updateReview = asyncHandler(async (req, res) => {
   const { rating, comment } = req.body;
   const review = await prisma.review.findUnique({ where: { id: req.params.id } });
@@ -65,9 +59,7 @@ exports.updateReview = asyncHandler(async (req, res) => {
   res.json(updatedReview);
 });
 
-// @desc    Delete a review
-// @route   DELETE /api/reviews/:id
-// @access  Private
+
 exports.deleteReview = asyncHandler(async (req, res) => {
   const review = await prisma.review.findUnique({ where: { id: req.params.id } });
 

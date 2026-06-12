@@ -1,4 +1,3 @@
-// Spinner.jsx - Loading spinner component
 const Spinner = ({
   size = 'w-6 h-6',
   color = 'border-primary-600',

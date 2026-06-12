@@ -101,6 +101,12 @@ export const appReviewsAPI = {
   delete: (id) => api.delete(`/app-reviews/${id}`),
 };
 
+// ── Notifications ─────────────────────────────────────────────────────────────
+export const notificationsAPI = {
+  getAll: () => api.get('/notifications'),
+  markAsRead: (id) => api.put(`/notifications/${id}/read`),
+};
+
 // ── Contact ──────────────────────────────────────────────────────────────────
 export const contactAPI = {
   submit: (data) => api.post('/contact', data),

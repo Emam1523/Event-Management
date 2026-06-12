@@ -28,7 +28,7 @@ const useBooking = () => {
     try {
       await bookingService.cancelBooking(id);
       showNotification('Booking cancelled.', 'success');
-    } catch (err) {
+    } catch {
       showNotification('Failed to cancel booking.', 'error');
     } finally {
       setLoading(false);

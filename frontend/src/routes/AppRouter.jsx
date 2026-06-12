@@ -29,6 +29,8 @@ import UserDashboard from '../pages/user/UserDashboard';
 import UserProfile from '../pages/user/UserProfile';
 import MyTickets from '../pages/user/MyTickets';
 import PaymentSuccess from '../pages/user/PaymentSuccess';
+import TicketDetail from '../pages/user/TicketDetail';
+import UserNotifications from '../pages/user/UserNotifications';
 
 // Admin Pages
 import AdminDashboard from '../pages/admin/AdminDashboard';
@@ -44,23 +46,27 @@ const AppRouter = () => {
   return (
     <Routes>
       {/* Public/User Routes */}
-      <Route element={<UserOnlyRoute />}>
-        <Route element={<MainLayout />}>
-          <Route path="/" element={<Home />} />
-          <Route path="/events" element={<Events />} />
-          <Route path="/events/:id" element={<EventDetail />} />
+      <Route element={<MainLayout />}>
+        <Route path="/" element={<Home />} />
+        <Route path="/events" element={<Events />} />
+        <Route path="/events/:id" element={<EventDetail />} />
+        
+        <Route element={<PublicOnlyRoute />}>
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/verify-email" element={<VerifyEmail />} />
+        </Route>
+        
+        <Route path="/contact" element={<Contact />} />
+        <Route path="/about" element={<About />} />
+        <Route path="/assistant" element={<Assistant />} />
+        <Route path="/privacy" element={<PrivacyPolicy />} />
+        <Route path="/terms" element={<TermsOfService />} />
+        
+        {/* User Only Area */}
+        <Route element={<UserOnlyRoute />}>
           <Route path="/cart" element={<Cart />} />
-          <Route element={<PublicOnlyRoute />}>
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
-            <Route path="/forgot-password" element={<ForgotPassword />} />
-            <Route path="/verify-email" element={<VerifyEmail />} />
-          </Route>
-          <Route path="/contact" element={<Contact />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/assistant" element={<Assistant />} />
-          <Route path="/privacy" element={<PrivacyPolicy />} />
-          <Route path="/terms" element={<TermsOfService />} />
           
           {/* Protected User Routes */}
           <Route element={<ProtectedRoute />}>
@@ -68,6 +74,8 @@ const AppRouter = () => {
             <Route path="/dashboard" element={<UserDashboard />} />
             <Route path="/profile" element={<UserProfile />} />
             <Route path="/my-tickets" element={<MyTickets />} />
+            <Route path="/my-tickets/:id" element={<TicketDetail />} />
+            <Route path="/notifications" element={<UserNotifications />} />
             <Route path="/payment-success" element={<PaymentSuccess />} />
           </Route>
         </Route>

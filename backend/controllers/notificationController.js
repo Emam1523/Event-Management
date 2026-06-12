@@ -1,9 +1,7 @@
 const prisma = require('../config/prisma');
 const asyncHandler = require('../utils/asyncHandler');
 
-// @desc    Get user notifications
-// @route   GET /api/notifications
-// @access  Private
+
 exports.getNotifications = asyncHandler(async (req, res) => {
   const notifications = await prisma.notification.findMany({
     where: { userId: req.user.id },
@@ -12,9 +10,7 @@ exports.getNotifications = asyncHandler(async (req, res) => {
   res.json(notifications);
 });
 
-// @desc    Mark notification as read
-// @route   PUT /api/notifications/:id/read
-// @access  Private
+
 exports.markAsRead = asyncHandler(async (req, res) => {
   const existing = await prisma.notification.findUnique({
     where: { id: req.params.id }
@@ -37,8 +33,7 @@ exports.markAsRead = asyncHandler(async (req, res) => {
   res.json(notification);
 });
 
-// @desc    Create notification
-// @access  Internal
+
 exports.createNotification = async (userId, message) => {
   try {
     await prisma.notification.create({

@@ -58,7 +58,6 @@ const AdminReviews = () => {
         <p className="text-slate-500 text-sm mt-1">User feedback and ratings for the platform</p>
       </div>
 
-      {/* Summary Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <div className="rounded-2xl bg-zinc-900/80 border border-white/8 p-6">
           <p className="text-[10px] font-black uppercase tracking-widest text-slate-500 mb-3">Average Rating</p>
@@ -86,7 +85,6 @@ const AdminReviews = () => {
         </div>
       </div>
 
-      {/* Reviews List */}
       <div className="rounded-2xl bg-zinc-900/80 border border-white/8 overflow-hidden">
         <div className="p-6 border-b border-white/5 flex items-center gap-3">
           <FiMessageSquare className="text-brand-orange text-lg" />
@@ -113,7 +111,6 @@ const AdminReviews = () => {
                 transition={{ delay: i * 0.04 }}
                 className="p-6 flex items-start gap-5 hover:bg-white/[0.02] transition-colors"
               >
-                {/* Avatar */}
                 <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-brand-orange to-rose-500 flex items-center justify-center text-white font-black text-sm shrink-0">
                   {review.user?.name?.charAt(0)?.toUpperCase() || <FiUser />}
                 </div>

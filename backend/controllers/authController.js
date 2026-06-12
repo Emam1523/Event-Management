@@ -1,4 +1,3 @@
-const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const crypto = require('crypto');
 const prisma = require('../config/prisma');
@@ -56,9 +55,7 @@ const toUserPayload = (user) => ({
   emailVerified: user.emailVerified,
 });
 
-// @desc    Auth user & get token
-// @route   POST /api/auth/login
-// @access  Public
+
 exports.loginUser = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
 
@@ -74,6 +71,11 @@ exports.loginUser = asyncHandler(async (req, res) => {
   if (!user || !user.password) {
     res.status(401);
     throw new Error('Invalid email or password');
+  }
+
+  if (user.role === 'blocked') {
+    res.status(403);
+    throw new Error('Your account has been blocked by an administrator.');
   }
 
   if (!user.emailVerified) {
@@ -92,9 +94,7 @@ exports.loginUser = asyncHandler(async (req, res) => {
   }
 });
 
-// @desc    Register a new user
-// @route   POST /api/auth/register
-// @access  Public
+
 exports.registerUser = asyncHandler(async (req, res) => {
   const { name, email, phone, password } = req.body;
 
@@ -154,9 +154,7 @@ exports.registerUser = asyncHandler(async (req, res) => {
   }
 });
 
-// @desc    Get user profile
-// @route   GET /api/auth/me
-// @access  Private
+
 exports.getMe = asyncHandler(async (req, res) => {
   const user = await prisma.user.findUnique({
     where: { id: req.user.id }
@@ -172,9 +170,7 @@ exports.getMe = asyncHandler(async (req, res) => {
   }
 });
 
-// @desc    Request a verification code
-// @route   POST /api/auth/request-code
-// @access  Public/Private
+
 exports.requestVerificationCode = asyncHandler(async (req, res) => {
   const { email, purpose } = req.body;
 
@@ -205,9 +201,7 @@ exports.requestVerificationCode = asyncHandler(async (req, res) => {
   res.json({ message: 'Verification code sent' });
 });
 
-// @desc    Verify code for registration/checkout/email update
-// @route   POST /api/auth/verify-code
-// @access  Public/Private
+
 exports.verifyCode = asyncHandler(async (req, res) => {
   const { email, purpose, code } = req.body;
 
@@ -249,9 +243,7 @@ exports.verifyCode = asyncHandler(async (req, res) => {
   res.json(response);
 });
 
-// @desc    Confirm password change after code verification
-// @route   POST /api/auth/confirm-password-change
-// @access  Private
+
 exports.confirmPasswordChange = asyncHandler(async (req, res) => {
   const { email, code, newPassword } = req.body;
 

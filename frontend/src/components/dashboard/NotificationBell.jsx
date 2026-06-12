@@ -1,4 +1,3 @@
-// NotificationBell.jsx - Bell icon with unread count badge
 import { useState } from 'react';
 import { FiBell } from 'react-icons/fi';
 

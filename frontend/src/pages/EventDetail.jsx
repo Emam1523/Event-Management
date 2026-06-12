@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { FiCalendar, FiMapPin, FiUsers, FiStar, FiUser, FiShield } from 'react-icons/fi';
+import { FiCalendar, FiMapPin, FiUsers, FiShield, FiTag,} from 'react-icons/fi';
 import { format } from 'date-fns';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
@@ -16,7 +16,6 @@ const EventDetail = () => {
   const [selectedTicket, setSelectedTicket] = useState(null);
   const [quantity, setQuantity] = useState(1);
   const [isLoading, setIsLoading] = useState(true);
-  const [reviews, setReviews] = useState([]);
 
   const getImageUrl = (url) => {
     if (!url) return 'https://images.unsplash.com/photo-1501281668745-f7f57925c3b4?w=1200';
@@ -26,7 +25,6 @@ const EventDetail = () => {
 
   const fetchEventDetails = useCallback(async () => {
     try {
-       setIsLoading(true);
        const { data } = await api.get(`/events/${id}`);
        setEvent(data);
        if (data.tickets && data.tickets.length > 0) {
@@ -39,21 +37,11 @@ const EventDetail = () => {
     }
   }, [id]);
 
-  const fetchReviews = useCallback(async () => {
-    try {
-      const { data } = await api.get(`/reviews/event/${id}`);
-      setReviews(data);
-    } catch (error) {
-      console.error('Error fetching reviews:', error);
-      // Fallback to empty reviews if fetch fails
-      setReviews([]);
-    }
-  }, [id]);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     fetchEventDetails();
-    fetchReviews();
-  }, [fetchEventDetails, fetchReviews]);
+  }, [fetchEventDetails]);
 
   const handleAddToCart = () => {
     if (!selectedTicket) return;
@@ -111,15 +99,11 @@ const EventDetail = () => {
             </h1>
             <div className="flex flex-wrap items-center gap-8 text-slate-400">
               <div className="flex items-center gap-3 group">
-                <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center border border-white/5 group-hover:border-primary/30 transition-all">
-                  <FiStar className="text-primary fill-primary" />
-                </div>
                 <div>
-                  <p className="text-[10px] font-black uppercase tracking-widest">Experience</p>
-                  <p className="text-sm font-bold text-white">4.8 <span className="text-slate-500">(Verified)</span></p>
+                  <span className="text-slate-500">(Verified)</span>
                 </div>
               </div>
-              <div className="flex items-center gap-3 group">
+              <div className="flex items-center gap-3 group"> 
                 <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center border border-white/5 group-hover:border-indigo-500/30 transition-all">
                   <FiUsers className="text-indigo-400" />
                 </div>
@@ -139,6 +123,7 @@ const EventDetail = () => {
           <div className="lg:col-span-8 space-y-12">
             {/* Event Cards */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* Date & Time */}
               <div className="glass-card p-8 bg-white/5 border-white/5">
                 <div className="flex items-center gap-4 mb-6">
                   <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary border border-primary/20">
@@ -152,7 +137,22 @@ const EventDetail = () => {
                 <p className="text-slate-400 font-medium">{event.time} {event.endTime ? `– ${event.endTime}` : ''}</p>
               </div>
 
+              {/* Classification & Capacity */}
               <div className="glass-card p-8 bg-white/5 border-white/5">
+                <div className="flex items-center gap-4 mb-6">
+                  <div className="w-12 h-12 rounded-2xl bg-amber-500/10 flex items-center justify-center text-amber-400 border border-amber-500/20">
+                    <FiTag className="text-2xl" />
+                  </div>
+                  <h3 className="text-xs font-black uppercase tracking-[0.2em] text-white">Classification & Capacity</h3>
+                </div>
+                <p className="text-xl font-bold text-white mb-1">
+                  {event.category}
+                </p>
+                <p className="text-slate-400 font-medium">{event.capacity ? `${event.capacity} Total Spots` : 'Unlimited Spots'}</p>
+              </div>
+
+              {/* Location */}
+              <div className="glass-card p-8 bg-white/5 border-white/5 md:col-span-2">
                 <div className="flex items-center gap-4 mb-6">
                   <div className="w-12 h-12 rounded-2xl bg-indigo-500/10 flex items-center justify-center text-indigo-400 border border-indigo-500/20">
                     <FiMapPin className="text-2xl" />
@@ -163,7 +163,11 @@ const EventDetail = () => {
                 {event.googleMapUrl && (
                   <div className="mt-6 h-48 rounded-2xl overflow-hidden border border-white/10 group relative">
                     <iframe
-                      src={event.googleMapUrl}
+                      src={
+                        /^-?\d+\.?\d*,-?\d+\.?\d*$/.test(event.googleMapUrl.trim())
+                          ? `https://maps.google.com/maps?q=${event.googleMapUrl.trim()}&z=15&output=embed`
+                          : event.googleMapUrl
+                      }
                       width="100%"
                       height="100%"
                       style={{ border: 0 }}
@@ -182,44 +186,12 @@ const EventDetail = () => {
             <div className="glass-card p-10 bg-white/5 border-white/5">
               <h2 className="text-2xl font-black text-white mb-8 uppercase tracking-tight flex items-center gap-4">
                 <div className="w-2 h-8 bg-primary rounded-full" />
-                About This Experience
+                About This Event
               </h2>
               <div className="prose prose-invert max-w-none">
                 <p className="text-slate-400 text-lg leading-relaxed whitespace-pre-line font-medium">
-                  {event.description}
+                  {event.fullDescription || event.description}
                 </p>
-              </div>
-            </div>
-
-            {/* Reviews Section */}
-            <div className="glass-card p-10 bg-white/5 border-white/5">
-              <h2 className="text-2xl font-black text-white mb-10 uppercase tracking-tight">Vibe Check <span className="text-primary">.</span></h2>
-              
-              <div className="space-y-8">
-                {reviews.map((review) => (
-                  <div key={review.id} className="flex gap-6 p-6 rounded-[2rem] bg-white/5 border border-white/5 group hover:bg-white/10 transition-all">
-                    <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center text-primary font-black text-lg">
-                      {review.user?.name?.charAt(0) || <FiUser />}
-                    </div>
-                    <div className="flex-1">
-                      <div className="flex items-center justify-between mb-2">
-                        <h4 className="font-black text-white text-sm uppercase tracking-wider">{review.user.name}</h4>
-                        <span className="text-[10px] font-black text-slate-500 uppercase">
-                          {format(new Date(review.createdAt), 'MMM d, yyyy')}
-                        </span>
-                      </div>
-                      <div className="flex items-center gap-1 mb-3">
-                        {[...Array(5)].map((_, i) => (
-                          <FiStar
-                            key={i}
-                            className={`text-xs ${i < review.rating ? 'text-primary fill-primary' : 'text-slate-700'}`}
-                          />
-                        ))}
-                      </div>
-                      <p className="text-slate-400 font-medium leading-relaxed">{review.comment}</p>
-                    </div>
-                  </div>
-                ))}
               </div>
             </div>
           </div>
@@ -309,9 +281,6 @@ const EventDetail = () => {
                       className="w-full btn-primary py-5 rounded-[2rem] text-[11px] shadow-2xl shadow-primary/30 group"
                     >
                       Confirm & Secure Pass
-                    </button>
-                    <button className="w-full btn-secondary py-5 rounded-[2rem] text-[11px]">
-                      Share Experience
                     </button>
                   </div>
                 </>

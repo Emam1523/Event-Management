@@ -1,4 +1,5 @@
-import { createContext, useState, useContext, useEffect } from 'react';
+/* eslint-disable react-refresh/only-export-components */
+import { createContext, useState, useContext } from 'react';
 import api from '../services/api';
 
 export const AuthContext = createContext();
@@ -12,25 +13,22 @@ export const useAuth = () => {
 };
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
+  const [user, setUser] = useState(() => {
     const token = localStorage.getItem('token');
     const userData = localStorage.getItem('user');
 
     if (token && userData) {
       try {
-        setUser(JSON.parse(userData));
         api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+        return JSON.parse(userData);
       } catch {
-        // Corrupted data — clear it so the app doesn't crash
         localStorage.removeItem('token');
         localStorage.removeItem('user');
       }
     }
-    setLoading(false);
-  }, []);
+    return null;
+  });
+  const [loading] = useState(false);
 
   const login = async (credentialsOrEmail, password) => {
     const credentials =

@@ -7,7 +7,7 @@ router.post('/login', loginUser);
 router.post('/register', registerUser);
 router.post('/request-code', requestVerificationCode);
 router.post('/verify-code', verifyCode);
-router.post('/confirm-password-change', protect, confirmPasswordChange);
+router.post('/confirm-password-change', confirmPasswordChange);
 router.get('/me', protect, getMe);
 
 module.exports = router;

@@ -1,5 +1,12 @@
 import { useState, useEffect } from 'react';
 
+const TimeBlock = ({ value, label }) => (
+  <div className="flex flex-col items-center bg-white p-3 rounded-xl shadow-sm border border-gray-50 min-w-[70px]">
+    <span className="text-2xl font-black text-primary-600">{value}</span>
+    <span className="text-[10px] uppercase font-bold text-gray-400 tracking-widest">{label}</span>
+  </div>
+);
+
 const EventCountdown = ({ targetDate }) => {
   const [timeLeft, setTimeLeft] = useState({
     days: 0,
@@ -27,13 +34,6 @@ const EventCountdown = ({ targetDate }) => {
 
     return () => clearInterval(timer);
   }, [targetDate]);
-
-  const TimeBlock = ({ value, label }) => (
-    <div className="flex flex-col items-center bg-white p-3 rounded-xl shadow-sm border border-gray-50 min-w-[70px]">
-      <span className="text-2xl font-black text-primary-600">{value}</span>
-      <span className="text-[10px] uppercase font-bold text-gray-400 tracking-widest">{label}</span>
-    </div>
-  );
 
   return (
     <div className="flex gap-3">

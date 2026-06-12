@@ -1,4 +1,4 @@
-const prisma = require('./config/prisma');
+const prisma = require('./prisma');
 const bcrypt = require('bcryptjs');
 
 async function createAdmin() {

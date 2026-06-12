@@ -9,64 +9,70 @@ datasource db {
 }
 
 model User {
-  id            String         @id @default(uuid())
-  name          String
-  email         String         @unique
-  phone         String?
-  password      String?
-  googleId      String?
-  facebookId    String?
-  avatar        String?
-  role          String         @default("user")
-  emailVerified Boolean        @default(false)
+  id              String         @id @default(uuid())
+  name            String
+  email           String         @unique
+  phone           String?
+  password        String?
+  googleId        String?
+  facebookId      String?
+  avatar          String?
+  role            String         @default("user")
+  emailVerified   Boolean        @default(false)
   emailVerifiedAt DateTime?
-  createdAt     DateTime       @default(now())
-  updatedAt     DateTime       @updatedAt
-  events        Event[]        @relation("OrganizerEvents")
-  bookings      Booking[]
-  notifications Notification[]
-  reviews       Review[]
-  appReviews    AppReview[]
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+  events          Event[]        @relation("OrganizerEvents")
+  bookings        Booking[]
+  notifications   Notification[]
+  reviews         Review[]
+  appReviews      AppReview[]
 }
 
 model Event {
-  id          String       @id @default(uuid())
-  title       String
+  id           String       @id @default(uuid())
+  title        String
   description String
+  fullDescription String?
+  capacity    Int?
   category    String
-  date        String
-  time        String
-  endTime     String?
-  location    String
+  date         String
+  time         String
+  endTime      String?
+  location     String
   googleMapUrl String?
-  price       Float
-  image       String?
-  organizerId String
-  organizer   User         @relation("OrganizerEvents", fields: [organizerId], references: [id])
-  createdAt   DateTime     @default(now())
-  updatedAt   DateTime     @updatedAt
-  bookings    Booking[]
-  reviews     Review[]
-  tickets     TicketType[]
+  price        Float
+  image        String?
+  organizerId  String
+  organizer    User         @relation("OrganizerEvents", fields: [organizerId], references: [id], onDelete: Cascade)
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+  bookings     Booking[]
+  reviews      Review[]
+  tickets      TicketType[]
+
+  @@index([category])
+  @@index([location])
+  @@index([category, location])
 }
 
 model TicketType {
-  id          String @id @default(uuid())
+  id          String  @id @default(uuid())
   name        String
   price       Float
   description String?
-  capacity    Int    @default(100)
-  sold        Int    @default(0)
+  capacity    Int     @default(100)
+  sold        Int     @default(0)
   eventId     String
-  event       Event  @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  event       Event   @relation(fields: [eventId], references: [id], onDelete: Cascade)
 }
 
 model Booking {
   id         String   @id @default(uuid())
   userId     String
-  user       User     @relation(fields: [userId], references: [id])
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   eventId    String
-  event      Event    @relation(fields: [eventId], references: [id])
+  event      Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
   ticketType String
   quantity   Int
   totalPrice Float
@@ -85,7 +91,7 @@ model Category {
 model Notification {
   id        String   @id @default(uuid())
   userId    String
-  user      User     @relation(fields: [userId], references: [id])
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   message   String
   read      Boolean  @default(false)
   createdAt DateTime @default(now())
@@ -94,7 +100,7 @@ model Notification {
 model Payment {
   id            String   @id @default(uuid())
   bookingId     String   @unique
-  booking       Booking  @relation(fields: [bookingId], references: [id])
+  booking       Booking  @relation(fields: [bookingId], references: [id], onDelete: Cascade)
   amount        Float
   status        String   @default("pending")
   method        String
@@ -105,23 +111,23 @@ model Payment {
 model Review {
   id        String   @id @default(uuid())
   userId    String
-  user      User     @relation(fields: [userId], references: [id])
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   eventId   String
-  event     Event    @relation(fields: [eventId], references: [id])
+  event     Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
   rating    Int
   comment   String?
   createdAt DateTime @default(now())
 }
 
 model VerificationCode {
-  id         String   @id @default(uuid())
+  id         String    @id @default(uuid())
   email      String
   purpose    String
   codeHash   String
   metadata   Json?
   expiresAt  DateTime
   consumedAt DateTime?
-  createdAt  DateTime @default(now())
+  createdAt  DateTime  @default(now())
 
   @@index([email, purpose, consumedAt])
   @@index([expiresAt])
@@ -135,7 +141,7 @@ model Location {
 model AppReview {
   id        String   @id @default(uuid())
   userId    String
-  user      User     @relation(fields: [userId], references: [id])
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   rating    Int
   comment   String
   createdAt DateTime @default(now())

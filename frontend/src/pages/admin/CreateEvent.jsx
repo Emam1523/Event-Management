@@ -1,12 +1,17 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FiPlus, FiTrash2, FiUpload, FiCalendar, FiClock, FiMapPin, FiTag, FiUsers, FiInfo } from 'react-icons/fi';
+import { FiPlus, FiTrash2, FiUpload, FiCalendar, FiClock, FiMapPin, FiTag, FiUsers, FiInfo, FiArrowLeft } from 'react-icons/fi';
 import { motion, AnimatePresence } from 'framer-motion';
 import api, { eventsAPI } from '../../services/api';
+import MapPicker from '../../components/common/MapPicker';
+
+const GOOGLE_MAPS_API_KEY = 'AIzaSyCeqQjFlRJ6KQOuTD9bfBzz_yFvyM0B6wQ';
 
 const CreateEvent = () => {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
+  const [categories, setCategories] = useState([]);
+  const [cities, setCities] = useState([]);
   const [formData, setFormData] = useState({
     title: '',
     description: '',
@@ -26,14 +31,6 @@ const CreateEvent = () => {
       { name: 'General Admission', price: '', available: '', description: '' }
     ]
   });
-
-  const [categories, setCategories] = useState([
-    'Concert', 'Festival', 'Workshop', 'Conference', 'Sports', 'Theater',
-    'Comedy Show', 'Networking Event', 'Art Show', 'Food & Drink'
-  ]);
-  const [cities, setCities] = useState([
-    'Dhaka', 'Chattogram', 'Sylhet', 'Khulna', 'Rajshahi', 'Barishal'
-  ]);
 
   useEffect(() => {
     const fetchFilters = async () => {
@@ -56,10 +53,23 @@ const CreateEvent = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value
-    });
+    
+    if (name === 'capacity') {
+      const updatedCapacity = value;
+      setFormData(prev => ({
+        ...prev,
+        [name]: value,
+        ticketTypes: prev.ticketTypes.map(t => ({
+          ...t,
+          available: updatedCapacity
+        }))
+      }));
+    } else {
+      setFormData(prev => ({
+        ...prev,
+        [name]: value
+      }));
+    }
   };
 
   const handleImageChange = (e) => {
@@ -101,7 +111,7 @@ const CreateEvent = () => {
       ...formData,
       ticketTypes: [
         ...formData.ticketTypes,
-        { name: '', price: '', available: '', description: '' }
+        { name: '', price: '', available: formData.capacity || '', description: '' }
       ]
     });
   };
@@ -139,7 +149,9 @@ const CreateEvent = () => {
       // 2. Prepare JSON payload
       const eventData = {
         title: formData.title,
-        description: formData.description || formData.fullDescription,
+        description: formData.description,
+        fullDescription: formData.fullDescription,
+        capacity: Number(formData.capacity || 0),
         category: formData.category,
         date: formData.date,
         time: formData.time,
@@ -174,81 +186,101 @@ const CreateEvent = () => {
   };
 
   return (
-    <div className="space-y-10 max-w-5xl mx-auto pb-20">
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
-        <div>
-          <h1 className="text-4xl font-black text-white tracking-tight mb-2 uppercase">Create <span className="text-brand-orange">Masterpiece</span></h1>
-          <p className="text-zinc-500 font-medium">Design an experience that will be remembered for a lifetime.</p>
-        </div>
+    <div className="max-w-6xl mx-auto pb-24 pt-4 px-2 sm:px-6 lg:px-8">
+      
+      <div className="mb-12">
+        <button 
+          onClick={() => navigate('/admin/manage-events')}
+          className="flex items-center gap-2 text-zinc-500 hover:text-white transition-colors mb-6 group w-fit"
+        >
+          <FiArrowLeft className="group-hover:-translate-x-1 transition-transform" />
+          <span className="text-[10px] font-black uppercase tracking-widest">Back to Ledger</span>
+        </button>
+        <h1 className="text-4xl md:text-5xl font-black text-white tracking-tight mb-4 uppercase">
+          Create <span className="text-brand-orange">Masterpiece</span>
+        </h1>
+        <p className="text-zinc-400 font-medium text-lg max-w-2xl">
+          Design an experience that will be remembered for a lifetime. Configure the details below to initialize a new exhibition.
+        </p>
       </div>
 
-      <form onSubmit={handleSubmit} className="space-y-8">
+      <form onSubmit={handleSubmit} className="space-y-12">
+        
         {/* Concept & Vision */}
         <motion.section 
           variants={sectionVariants}
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true }}
-          className="bg-zinc-950 border border-white/5 rounded-[2.5rem] p-10 backdrop-blur-3xl relative overflow-hidden"
+          className="grid grid-cols-1 lg:grid-cols-3 gap-8 md:gap-12"
         >
-          <div className="flex items-center gap-4 mb-10">
+          <div className="lg:col-span-1 space-y-4">
             <div className="w-12 h-12 rounded-2xl bg-brand-orange/10 flex items-center justify-center text-brand-orange">
               <FiInfo className="text-2xl" />
             </div>
-            <h2 className="text-xl font-black text-white uppercase tracking-tight">Concept & Vision</h2>
+            <div>
+              <h2 className="text-2xl font-black text-white uppercase tracking-tight">Basic Info</h2>
+              <p className="text-zinc-500 text-sm mt-3 font-medium leading-relaxed">
+                Name your event and tell attendees why they should come. Add a category and capacity to help people find it.
+              </p>
+            </div>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div className="space-y-8 md:col-span-2">
-              <div className="group">
-                <label className="block text-[10px] font-black text-zinc-500 uppercase tracking-[0.2em] mb-4 ml-2 group-focus-within:text-brand-orange transition-colors">Event Title</label>
-                <input
-                  type="text"
-                  name="title"
-                  value={formData.title}
-                  onChange={handleChange}
-                  className="w-full bg-white/5 border border-white/5 rounded-2xl py-5 px-8 text-white placeholder:text-zinc-700 focus:outline-none focus:border-brand-orange/50 focus:ring-4 focus:ring-brand-orange/10 transition-all font-bold text-lg"
-                  placeholder="e.g. Midnight Jazz Symphony"
-                  required
-                />
-              </div>
+          <div className="lg:col-span-2 bg-zinc-950/50 border border-white/5 rounded-[2.5rem] p-8 md:p-10 shadow-2xl backdrop-blur-xl space-y-8">
 
-              <div className="group">
-                <label className="block text-[10px] font-black text-zinc-500 uppercase tracking-[0.2em] mb-4 ml-2 group-focus-within:text-brand-orange transition-colors">Short Teaser</label>
-                <textarea
-                  name="description"
-                  value={formData.description}
-                  onChange={handleChange}
-                  className="w-full bg-white/5 border border-white/5 rounded-2xl py-5 px-8 text-white placeholder:text-zinc-700 focus:outline-none focus:border-brand-orange/50 focus:ring-4 focus:ring-brand-orange/10 transition-all font-medium resize-none"
-                  rows="2"
-                  placeholder="One catchy sentence to grab attention..."
-                  required
-                ></textarea>
-              </div>
-
-              <div className="group">
-                <label className="block text-[10px] font-black text-zinc-500 uppercase tracking-[0.2em] mb-4 ml-2 group-focus-within:text-brand-orange transition-colors">Event Narrative</label>
-                <textarea
-                  name="fullDescription"
-                  value={formData.fullDescription}
-                  onChange={handleChange}
-                  className="w-full bg-white/5 border border-white/5 rounded-2xl py-5 px-8 text-white placeholder:text-zinc-700 focus:outline-none focus:border-brand-orange/50 focus:ring-4 focus:ring-brand-orange/10 transition-all font-medium"
-                  rows="6"
-                  placeholder="Describe the experience in detail..."
-                  required
-                ></textarea>
-              </div>
+            <div className="group">
+              <label className="block text-[10px] font-black text-zinc-500 uppercase tracking-[0.2em] mb-4 ml-2 group-focus-within:text-brand-orange transition-colors">Event Title</label>
+              <input
+                type="text"
+                name="title"
+                value={formData.title}
+                onChange={handleChange}
+                className="w-full bg-white/5 border border-white/5 rounded-2xl py-5 px-8 text-white placeholder:text-zinc-700 focus:outline-none focus:border-brand-orange/50 focus:ring-4 focus:ring-brand-orange/10 transition-all font-bold text-lg"
+                placeholder="e.g. Midnight Jazz Symphony"
+                required
+              />
             </div>
 
             <div className="group">
-              <label className="block text-[10px] font-black text-zinc-500 uppercase tracking-[0.2em] mb-4 ml-2 group-focus-within:text-brand-orange transition-colors">Category</label>
+              <label className="block text-[10px] font-black text-zinc-500 uppercase tracking-[0.2em] mb-4 ml-2 group-focus-within:text-brand-orange transition-colors">Event Description</label>
+              <textarea
+                name="description"
+                value={formData.description}
+                onChange={handleChange}
+                className="w-full bg-white/5 border border-white/5 rounded-2xl py-5 px-8 text-white placeholder:text-zinc-700 focus:outline-none focus:border-brand-orange/50 focus:ring-4 focus:ring-brand-orange/10 transition-all font-medium"
+                rows="3"
+                placeholder="Brief summary..."
+                required
+              ></textarea>
+            </div>
+          </div>
+        </motion.section>
+
+        {/* Classification & Capacity */}
+        <motion.section 
+          variants={sectionVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+          className="bg-zinc-950 border border-white/5 rounded-[2.5rem] p-10 backdrop-blur-3xl"
+        >
+          <div className="flex items-center gap-4 mb-10">
+            <div className="w-12 h-12 rounded-2xl bg-amber-500/10 flex items-center justify-center text-amber-500">
+              <FiTag className="text-2xl" />
+            </div>
+            <h2 className="text-xl font-black text-white uppercase tracking-tight">Classification & Capacity</h2>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div className="group">
+              <label className="block text-[10px] font-black text-zinc-500 uppercase tracking-[0.2em] mb-4 ml-2 group-focus-within:text-amber-500 transition-colors">Category</label>
               <div className="relative">
                 <FiTag className="absolute left-8 top-1/2 -translate-y-1/2 text-zinc-500 pointer-events-none" />
                 <select
                   name="category"
                   value={formData.category}
                   onChange={handleChange}
-                  className="w-full bg-white/5 border border-white/5 rounded-2xl py-5 pl-16 pr-8 text-white focus:outline-none focus:border-brand-orange/50 focus:ring-4 focus:ring-brand-orange/10 transition-all appearance-none font-bold cursor-pointer"
+                  className="w-full bg-white/5 border border-white/5 rounded-2xl py-5 pl-16 pr-8 text-white focus:outline-none focus:border-amber-500/50 focus:ring-4 focus:ring-amber-500/10 transition-all appearance-none font-bold cursor-pointer"
                   required
                 >
                   <option value="" className="bg-zinc-950">Select a genre</option>
@@ -260,7 +292,7 @@ const CreateEvent = () => {
             </div>
 
             <div className="group">
-              <label className="block text-[10px] font-black text-zinc-500 uppercase tracking-[0.2em] mb-4 ml-2 group-focus-within:text-brand-orange transition-colors">Total Attendance</label>
+              <label className="block text-[10px] font-black text-zinc-500 uppercase tracking-[0.2em] mb-4 ml-2 group-focus-within:text-amber-500 transition-colors">Total Attendance</label>
               <div className="relative">
                 <FiUsers className="absolute left-8 top-1/2 -translate-y-1/2 text-zinc-500 pointer-events-none" />
                 <input
@@ -268,7 +300,7 @@ const CreateEvent = () => {
                   name="capacity"
                   value={formData.capacity}
                   onChange={handleChange}
-                  className="w-full bg-white/5 border border-white/5 rounded-2xl py-5 pl-16 pr-8 text-white placeholder:text-zinc-700 focus:outline-none focus:border-brand-orange/50 focus:ring-4 focus:ring-brand-orange/10 transition-all font-bold"
+                  className="w-full bg-white/5 border border-white/5 rounded-2xl py-5 pl-16 pr-8 text-white placeholder:text-zinc-700 focus:outline-none focus:border-amber-500/50 focus:ring-4 focus:ring-amber-500/10 transition-all font-bold"
                   placeholder="e.g. 500"
                   required
                 />
@@ -386,19 +418,13 @@ const CreateEvent = () => {
                 </div>
             </div>
             <div className="group md:col-span-2">
-                <label className="block text-[10px] font-black text-zinc-500 uppercase tracking-[0.2em] mb-4 ml-2 group-focus-within:text-emerald-500 transition-colors">Google Maps URL</label>
-                <div className="relative">
-                  <FiMapPin className="absolute left-8 top-1/2 -translate-y-1/2 text-zinc-500 pointer-events-none" />
-                  <input
-                    type="url"
-                    name="googleMapUrl"
-                    value={formData.googleMapUrl}
-                    onChange={handleChange}
-                    className="w-full bg-white/5 border border-white/5 rounded-2xl py-5 pl-16 pr-8 text-white placeholder:text-zinc-700 focus:outline-none focus:border-emerald-500/50 focus:ring-4 focus:ring-emerald-500/10 transition-all font-bold"
-                    placeholder="https://www.google.com/maps/embed?pb=..."
-                  />
-                </div>
-                <p className="mt-2 text-[10px] text-zinc-600 font-medium ml-2">Tip: Use the "Embed a map" URL from Google Maps for best results.</p>
+                <label className="block text-[10px] font-black text-zinc-500 uppercase tracking-[0.2em] mb-4 ml-2 group-focus-within:text-emerald-500 transition-colors">Live Location</label>
+                <MapPicker 
+                  apiKey={GOOGLE_MAPS_API_KEY} 
+                  value={formData.googleMapUrl} 
+                  onChange={(val) => setFormData({ ...formData, googleMapUrl: val })} 
+                />
+                <p className="mt-2 text-[10px] text-zinc-600 font-medium ml-2">Click on the map or use the crosshair icon to pin the exact live location.</p>
             </div>
           </div>
         </motion.section>
@@ -508,8 +534,8 @@ const CreateEvent = () => {
                       <input
                         type="number"
                         value={ticket.available}
-                        onChange={(e) => handleTicketChange(index, 'available', e.target.value)}
-                        className="w-full bg-zinc-900/50 border border-white/5 rounded-xl py-4 px-6 text-white focus:outline-none focus:border-brand-orange/50 transition-all font-bold"
+                        readOnly
+                        className="w-full bg-zinc-900/50 border border-white/5 rounded-xl py-4 px-6 text-white focus:outline-none focus:border-brand-orange/50 transition-all font-bold opacity-50 cursor-not-allowed"
                         placeholder="100"
                         required
                       />

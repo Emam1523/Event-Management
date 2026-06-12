@@ -50,7 +50,6 @@ const Navbar = () => {
         }`}
       >
         <div className="flex justify-between items-center h-16 sm:h-20 px-4 sm:px-10">
-          {/* Logo */}
           <Link to="/" className="group flex items-center gap-4">
             <div className="w-10 h-10 bg-brand-orange rounded-2xl flex items-center justify-center text-white font-black text-xl shadow-2xl shadow-brand-orange/40 group-hover:rotate-[15deg] transition-all duration-500">
               <HiSparkles />
@@ -60,7 +59,6 @@ const Navbar = () => {
             </span>
           </Link>
 
-          {/* Desktop Nav Links */}
           <div className="hidden md:flex items-center space-x-2">
             {[ { label: 'Home', to: '/' }, ...navLinks ].map((link) => (
               <Link
@@ -82,7 +80,6 @@ const Navbar = () => {
             ))}
           </div>
 
-          {/* Right side */}
           <div className="flex items-center gap-3 sm:gap-6">
             <Link to="/cart" className="relative p-2 text-zinc-500 hover:text-white transition-all transform hover:scale-110 active:scale-90 flex-shrink-0">
               <FiShoppingCart className="text-xl sm:text-2xl" />
@@ -155,7 +152,6 @@ const Navbar = () => {
               </div>
             )}
 
-            {/* Mobile Menu Toggle */}
             <div className="md:hidden flex-shrink-0">
               <button
                 onClick={() => setMobileOpen(!mobileOpen)}
@@ -167,7 +163,6 @@ const Navbar = () => {
           </div>
         </div>
 
-        {/* Mobile Menu */}
         <AnimatePresence>
           {mobileOpen && (
             <motion.div

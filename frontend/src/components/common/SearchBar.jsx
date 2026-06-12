@@ -37,7 +37,7 @@ const SearchBar = ({
     }, isDeleting ? 50 : 100);
 
     return () => clearTimeout(timeout);
-  }, [text, isDeleting, placeholderIndex]);
+  }, [text, isDeleting, placeholderIndex, suggestions]);
 
   return (
     <form

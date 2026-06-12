@@ -1,4 +1,3 @@
-// Modal.jsx - Reusable modal/dialog component
 import { useEffect } from 'react';
 import { FiX } from 'react-icons/fi';
 
@@ -38,15 +37,15 @@ const Modal = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-      {/* Backdrop */}
+      
       <div
         className="absolute inset-0 bg-black bg-opacity-50 transition-opacity"
         onClick={closeOnBackdrop ? onClose : undefined}
       />
 
-      {/* Modal */}
+     
       <div className={`relative bg-white rounded-2xl shadow-2xl w-full ${size} max-h-[90vh] overflow-hidden`}>
-        {/* Header */}
+    
         {(title || showClose) && (
           <div className="flex items-center justify-between p-6 border-b border-gray-100">
             {title && <h3 className="text-xl font-bold text-gray-900">{title}</h3>}
@@ -61,7 +60,7 @@ const Modal = ({
           </div>
         )}
 
-        {/* Content */}
+        
         <div className="overflow-y-auto max-h-[calc(90vh-80px)]">
           {children}
         </div>

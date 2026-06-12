@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { FiFileText, FiAlertCircle, FiCheckCircle, FiInfo } from 'react-icons/fi';
+import { FiAlertCircle, FiInfo } from 'react-icons/fi';
 
 const TermsOfService = () => {
   const terms = [

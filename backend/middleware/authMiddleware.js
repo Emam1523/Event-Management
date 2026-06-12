@@ -12,7 +12,7 @@ const protect = asyncHandler(async (req, res, next) => {
       // Attach user info to request
       req.user = { id: decoded.id, role: decoded.role || 'user' };
       next();
-    } catch (error) {
+    } catch {
       res.status(401);
       throw new Error('Not authorized, token failed');
     }

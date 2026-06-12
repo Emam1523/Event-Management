@@ -56,6 +56,7 @@ const Checkout = () => {
   useEffect(() => {
     if (isAuthenticated && requiresCheckoutVerification && !awaitingEmailVerification) {
       authAPI.requestVerificationCode({ email: user.email, purpose: 'checkout' }).catch(() => {});
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setAwaitingEmailVerification(true);
       setError('We sent a verification code to your email before checkout.');
     }

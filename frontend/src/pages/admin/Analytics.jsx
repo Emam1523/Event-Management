@@ -1,11 +1,28 @@
-import { useState, useEffect } from 'react';
-import { FiTrendingUp, FiDollarSign, FiUsers, FiCalendar, FiArrowUpRight, FiArrowDownRight, FiActivity, FiLayers } from 'react-icons/fi';
-import { motion, AnimatePresence } from 'framer-motion';
+import { useState, useEffect, useCallback } from 'react';
+import { FiTrendingUp, FiDollarSign, FiUsers, FiCalendar, FiActivity, FiLayers } from 'react-icons/fi';
+import { motion } from 'framer-motion';
 import { adminAPI } from '../../services/api';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
+const CustomTooltip = ({ active, payload, label, chartType }) => {
+  if (active && payload && payload.length) {
+    return (
+      <div className="bg-black/80 backdrop-blur-xl border border-white/10 p-4 rounded-2xl shadow-2xl">
+        <p className="text-[10px] font-black text-gray-500 uppercase tracking-widest mb-2">{label}</p>
+        <p className="text-xl font-black text-white">
+          {chartType === 'revenue' ? `৳${payload[0].value.toLocaleString()}` : `${payload[0].value} Passes`}
+        </p>
+        <p className="text-[10px] text-brand-orange font-bold uppercase mt-1">
+          {chartType === 'revenue' ? 'Gross Wealth' : 'Ticket Volume'}
+        </p>
+      </div>
+    );
+  }
+  return null;
+};
+
 const Analytics = () => {
-  const [timeframe, setTimeframe] = useState('month');
+  const [timeframe] = useState('month');
   const [chartType, setChartType] = useState('revenue'); // 'revenue' or 'tickets'
   const [revenueData, setRevenueData] = useState([]);
   const [topEvents, setTopEvents] = useState([]);
@@ -17,11 +34,7 @@ const Analytics = () => {
     events:    { current: 0, previous: 0, growth: 0 },
   });
 
-  useEffect(() => {
-    fetchAnalytics();
-  }, [timeframe]);
-
-  const fetchAnalytics = async () => {
+  const fetchAnalytics = useCallback(async () => {
     try {
       setIsLoading(true);
       const res = await adminAPI.getAnalytics({ timeframe });
@@ -35,24 +48,12 @@ const Analytics = () => {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [timeframe]);
 
-  const CustomTooltip = ({ active, payload, label }) => {
-    if (active && payload && payload.length) {
-      return (
-        <div className="bg-black/80 backdrop-blur-xl border border-white/10 p-4 rounded-2xl shadow-2xl">
-          <p className="text-[10px] font-black text-gray-500 uppercase tracking-widest mb-2">{label}</p>
-          <p className="text-xl font-black text-white">
-            {chartType === 'revenue' ? `৳${payload[0].value.toLocaleString()}` : `${payload[0].value} Passes`}
-          </p>
-          <p className="text-[10px] text-brand-orange font-bold uppercase mt-1">
-            {chartType === 'revenue' ? 'Gross Wealth' : 'Ticket Volume'}
-          </p>
-        </div>
-      );
-    }
-    return null;
-  };
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    fetchAnalytics();
+  }, [fetchAnalytics]);
 
   const statCards = [
     {
@@ -101,6 +102,14 @@ const Analytics = () => {
     hidden: { y: 20, opacity: 0 },
     visible: { y: 0, opacity: 1 }
   };
+
+  if (isLoading) {
+    return (
+      <div className="min-h-[400px] flex flex-col items-center justify-center gap-4">
+        <div className="w-12 h-12 border-4 border-white/5 border-t-brand-orange rounded-full animate-spin" />
+      </div>
+    );
+  }
 
   return (
     <motion.div 
@@ -197,7 +206,7 @@ const Analytics = () => {
                   tick={{ fill: '#6b7280', fontSize: 10, fontWeight: 900 }}
                   tickFormatter={(value) => chartType === 'revenue' ? `৳${value/1000}k` : value}
                 />
-                <Tooltip content={<CustomTooltip />} cursor={{ stroke: '#F55F1D', strokeWidth: 1 }} />
+                <Tooltip content={<CustomTooltip chartType={chartType} />} cursor={{ stroke: '#F55F1D', strokeWidth: 1 }} />
                 <Area 
                   type="monotone" 
                   dataKey={chartType} 

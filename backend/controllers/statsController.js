@@ -5,25 +5,12 @@ exports.getGlobalStats = asyncHandler(async (req, res) => {
   const totalUsers = await prisma.user.count();
 
   const bookings = await prisma.booking.aggregate({
-    where: { status: 'confirmed' },
+    where: { status: { in: ['confirmed', 'paid'] } },
     _sum: { quantity: true }
   });
   const ticketsSold = bookings._sum.quantity || 0;
 
-  const events = await prisma.event.findMany({
-    select: { location: true }
-  });
-
-  const cityMap = {};
-  events.forEach(e => {
-    const parts = e.location.split(',');
-    const city = parts.length > 1 ? parts[parts.length - 2].trim() : parts[0].trim();
-    cityMap[city] = (cityMap[city] || 0) + 1;
-  });
-
-  const majorCities = Object.keys(cityMap).map(city => ({
-    name: city, count: cityMap[city]
-  })).sort((a, b) => b.count - a.count).slice(0, 4);
+  const totalCities = await prisma.location.count();
 
   const reviewStats = await prisma.review.aggregate({
     _avg: { rating: true },
@@ -38,19 +25,16 @@ exports.getGlobalStats = asyncHandler(async (req, res) => {
     data: {
       totalUsers,
       ticketsSold,
-      majorCities,
+      totalCities,
       rating: averageRating,
       totalReviews
     }
   });
 });
 
-// @desc    Get Sales Report (Daily, Weekly, Monthly)
-// @route   GET /api/stats/sales
-// @access  Private/Admin
 exports.getSalesReport = asyncHandler(async (req, res) => {
   const bookings = await prisma.booking.findMany({
-    where: { status: 'confirmed' },
+    where: { status: { in: ['confirmed', 'paid'] } },
     select: {
       createdAt: true,
       totalPrice: true,
@@ -87,9 +71,9 @@ exports.getSalesReport = asyncHandler(async (req, res) => {
   res.json({
     success: true,
     data: {
-      daily: formatData(daily).slice(-14), // Last 2 weeks daily
-      weekly: formatData(weekly).slice(-8), // Last 8 weeks
-      monthly: formatData(monthly).slice(-12) // Last 12 months
+      daily: formatData(daily).slice(-14), 
+      weekly: formatData(weekly).slice(-8), 
+      monthly: formatData(monthly).slice(-12) 
     }
   });
 });

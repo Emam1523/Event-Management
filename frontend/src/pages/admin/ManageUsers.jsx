@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react';
-import { FiMail, FiUser, FiPhone, FiShield, FiSearch, FiMoreHorizontal, FiTrash2, FiActivity } from 'react-icons/fi';
+import { FiMail, FiUser, FiPhone, FiShield, FiSearch, FiTrash2, FiSlash } from 'react-icons/fi';
 import { motion, AnimatePresence } from 'framer-motion';
 import api, { adminAPI } from '../../services/api';
+import { useAuth } from '../../context/AuthContext';
 
 const ManageUsers = () => {
+  const { user: currentUser } = useAuth();
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
@@ -28,6 +30,10 @@ const ManageUsers = () => {
   );
 
   const handleDeleteUser = async (userId) => {
+    if (currentUser && currentUser.id === userId) {
+      alert("Self-termination is prohibited!");
+      return;
+    }
     if (!window.confirm('Strike this member from the directory permanently?')) return;
     try {
       await api.delete(`/admin/users/${userId}`);
@@ -38,12 +44,32 @@ const ManageUsers = () => {
   };
 
   const handleToggleRole = async (userId, currentRole) => {
-    const newRole = currentRole === 'admin' ? 'user' : 'admin';
+    if (currentRole === 'admin') {
+      alert("Cannot modify an administrator role here.");
+      return;
+    }
+    const newRole = currentRole === 'user' ? 'admin' : 'user';
+    if (!window.confirm(`Are you sure you want to make this user an ${newRole}?`)) return;
     try {
       await api.put(`/admin/users/${userId}/role`, { role: newRole });
       setUsers(prev => prev.map(u => u.id === userId ? { ...u, role: newRole } : u));
     } catch (err) {
       console.error('Failed to update role:', err);
+    }
+  };
+
+  const handleToggleBlock = async (userId, currentRole) => {
+    if (currentRole === 'admin') {
+      alert("You cannot block an administrator.");
+      return;
+    }
+    const newRole = currentRole === 'blocked' ? 'user' : 'blocked';
+    if (!window.confirm(`Are you sure you want to ${currentRole === 'blocked' ? 'unblock' : 'block'} this user?`)) return;
+    try {
+      await api.put(`/admin/users/${userId}/role`, { role: newRole });
+      setUsers(prev => prev.map(u => u.id === userId ? { ...u, role: newRole } : u));
+    } catch (err) {
+      console.error('Failed to update status:', err);
     }
   };
 
@@ -151,24 +177,35 @@ const ManageUsers = () => {
                       </td>
                       <td className="px-8 py-6 text-right">
                         <div className="flex items-center justify-end gap-2">
-                          <button 
-                            onClick={() => handleToggleRole(u.id, u.role)}
-                            className={`w-9 h-9 rounded-xl flex items-center justify-center transition-all border ${
-                              u.role === 'admin' 
-                                ? 'bg-purple-500/10 text-purple-400 border-purple-500/20 hover:bg-purple-500/20' 
-                                : 'bg-white/5 text-gray-500 border-white/10 hover:text-purple-400'
-                            }`}
-                            title="Toggle Rank"
-                          >
-                            <FiShield />
-                          </button>
-                          <button 
-                            onClick={() => handleDeleteUser(u.id)}
-                            className="w-9 h-9 rounded-xl bg-red-500/10 border border-red-500/20 flex items-center justify-center text-red-500 hover:bg-red-500/20 transition-all"
-                            title="Strike Member"
-                          >
-                            <FiTrash2 />
-                          </button>
+                          {u.role !== 'admin' && (
+                            <>
+                              <button 
+                                onClick={() => handleToggleRole(u.id, u.role)}
+                                className="w-9 h-9 rounded-xl bg-purple-500/10 border border-purple-500/20 flex items-center justify-center text-purple-400 hover:bg-purple-500/20 transition-all"
+                                title="Make Admin"
+                              >
+                                <FiShield />
+                              </button>
+                              <button 
+                                onClick={() => handleToggleBlock(u.id, u.role)}
+                                className={`w-9 h-9 rounded-xl flex items-center justify-center transition-all border ${
+                                  u.role === 'blocked' 
+                                    ? 'bg-orange-500/10 text-brand-orange border-brand-orange/20 hover:bg-orange-500/20' 
+                                    : 'bg-white/5 text-gray-500 border-white/10 hover:text-brand-orange'
+                                }`}
+                                title={u.role === 'blocked' ? "Unblock Member" : "Block Member"}
+                              >
+                                <FiSlash />
+                              </button>
+                              <button 
+                                onClick={() => handleDeleteUser(u.id)}
+                                className="w-9 h-9 rounded-xl bg-red-500/10 border border-red-500/20 flex items-center justify-center text-red-500 hover:bg-red-500/20 transition-all"
+                                title="Strike Member"
+                              >
+                                <FiTrash2 />
+                              </button>
+                            </>
+                          )}
                         </div>
                       </td>
                     </motion.tr>

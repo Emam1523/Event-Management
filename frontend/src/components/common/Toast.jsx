@@ -1,10 +1,9 @@
-// Toast.jsx - Toast notification component
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { FiCheck, FiX, FiAlertCircle, FiInfo } from 'react-icons/fi';
 
 const Toast = ({
   message,
-  type = 'info', // success, error, warning, info
+  type = 'info',
   duration = 4000,
   onClose,
   position = 'top-right'
@@ -35,6 +34,14 @@ const Toast = ({
     'bottom-center': 'bottom-4 left-1/2 transform -translate-x-1/2'
   };
 
+  const handleClose = useCallback(() => {
+    setIsExiting(true);
+    setTimeout(() => {
+      setIsVisible(false);
+      onClose?.();
+    }, 300);
+  }, [onClose]);
+
   useEffect(() => {
     if (duration > 0) {
       const timer = setTimeout(() => {
@@ -42,15 +49,7 @@ const Toast = ({
       }, duration);
       return () => clearTimeout(timer);
     }
-  }, [duration]);
-
-  const handleClose = () => {
-    setIsExiting(true);
-    setTimeout(() => {
-      setIsVisible(false);
-      onClose?.();
-    }, 300);
-  };
+  }, [duration, handleClose]);
 
   if (!isVisible) return null;
 

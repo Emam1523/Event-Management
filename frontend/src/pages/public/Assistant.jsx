@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
 import { motion} from 'framer-motion';
 import {
   FiSend,
@@ -49,7 +49,7 @@ const Assistant = () => {
     scrollToBottom();
   }, [messages, isLoading]);
 
-  const handleSendMessage = async (textToSend) => {
+  const handleSendMessage = useCallback(async (textToSend) => {
     const query = textToSend.trim();
     if (!query || isLoading) return;
 
@@ -102,18 +102,19 @@ const Assistant = () => {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [isLoading, showNotification]);
 
   useEffect(() => {
     if (queryProcessedRef.current) return;
     const params = new URLSearchParams(location.search);
     const initialQuery = params.get('q') || params.get('query');
     if (initialQuery) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       handleSendMessage(initialQuery);
       queryProcessedRef.current = true;
     }
  
-  },[location.search]);
+  }, [location.search, handleSendMessage]);
 
   const formatTime = (isoString) => {
     try {

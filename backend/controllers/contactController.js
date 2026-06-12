@@ -1,9 +1,7 @@
 const asyncHandler = require('../utils/asyncHandler');
 const { sendContactFormEmail } = require('../services/emailService');
 
-// @desc    Send contact form message
-// @route   POST /api/contact
-// @access  Public
+
 exports.submitContactForm = asyncHandler(async (req, res) => {
   const { name, email, subject, message } = req.body;
 

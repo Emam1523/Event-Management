@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { FiEdit, FiTrash2, FiEye, FiPlus, FiFilter, FiSearch } from 'react-icons/fi';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -11,11 +11,7 @@ const ManageEvents = () => {
   const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    fetchEvents();
-  }, []);
-
-  const fetchEvents = async () => {
+  const fetchEvents = useCallback(async () => {
     try {
       setIsLoading(true);
       const res = await eventsAPI.getAll();
@@ -27,7 +23,12 @@ const ManageEvents = () => {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    fetchEvents();
+  }, [fetchEvents]);
 
   const handleDelete = async (eventId) => {
     if (!window.confirm('Are you sure you want to delete this event? This action cannot be undone.')) return;

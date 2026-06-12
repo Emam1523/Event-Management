@@ -1,9 +1,8 @@
 const prisma = require('../config/prisma');
 const asyncHandler = require('../utils/asyncHandler');
+const { createNotification } = require('./notificationController');
 
-// @desc    Create new booking
-// @route   POST /api/bookings
-// @access  Private
+
 exports.createBooking = asyncHandler(async (req, res) => {
   if (req.user.role === 'admin') {
     res.status(403);
@@ -21,12 +20,27 @@ exports.createBooking = asyncHandler(async (req, res) => {
     throw new Error('Event not found');
   }
 
-  // Update ticket count
-  await prisma.ticketType.updateMany({
+  // Find the ticket type and check capacity
+  const ticket = await prisma.ticketType.findFirst({
     where: {
       eventId,
       name: ticketType
-    },
+    }
+  });
+
+  if (!ticket) {
+    res.status(404);
+    throw new Error('Ticket type not found for this event');
+  }
+
+  if (ticket.sold + Number(quantity) > ticket.capacity) {
+    res.status(400);
+    throw new Error(`Not enough tickets available. Only ${ticket.capacity - ticket.sold} remaining.`);
+  }
+
+  // Update ticket count
+  await prisma.ticketType.update({
+    where: { id: ticket.id },
     data: {
       sold: {
         increment: Number(quantity)
@@ -48,12 +62,12 @@ exports.createBooking = asyncHandler(async (req, res) => {
     }
   });
 
+  await createNotification(req.user.id, `Ticket booking confirmed for event: ${event.title}! Enjoy the experience!`);
+
   res.status(201).json(booking);
 });
 
-// @desc    Get user bookings
-// @route   GET /api/bookings/mybookings
-// @access  Private
+
 exports.getMyBookings = asyncHandler(async (req, res) => {
   const bookings = await prisma.booking.findMany({
     where: { userId: req.user.id },
@@ -68,9 +82,7 @@ exports.getMyBookings = asyncHandler(async (req, res) => {
   res.json(bookings);
 });
 
-// @desc    Get booking by ID
-// @route   GET /api/bookings/:id
-// @access  Private
+
 exports.getBookingById = asyncHandler(async (req, res) => {
   const booking = await prisma.booking.findUnique({
     where: { id: req.params.id },
@@ -94,9 +106,7 @@ exports.getBookingById = asyncHandler(async (req, res) => {
   }
 });
 
-// @desc    Cancel a booking
-// @route   PUT /api/bookings/:id/cancel
-// @access  Private
+
 exports.cancelBooking = asyncHandler(async (req, res) => {
   const booking = await prisma.booking.findUnique({
     where: { id: req.params.id }
@@ -112,10 +122,37 @@ exports.cancelBooking = asyncHandler(async (req, res) => {
     throw new Error('Not authorized to cancel this booking');
   }
 
+  if (booking.status === 'cancelled') {
+    res.status(400);
+    throw new Error('Booking is already cancelled');
+  }
+
+  // Release tickets by decrementing sold count on the TicketType
+  const ticket = await prisma.ticketType.findFirst({
+    where: {
+      eventId: booking.eventId,
+      name: booking.ticketType
+    }
+  });
+
+  if (ticket) {
+    await prisma.ticketType.update({
+      where: { id: ticket.id },
+      data: {
+        sold: {
+          decrement: Math.min(booking.quantity, ticket.sold)
+        }
+      }
+    });
+  }
+
   const updatedBooking = await prisma.booking.update({
     where: { id: req.params.id },
-    data: { status: 'cancelled' }
+    data: { status: 'cancelled' },
+    include: { event: true }
   });
+
+  await createNotification(booking.userId, `Your booking for event: ${updatedBooking.event?.title || 'Event'} has been successfully cancelled.`);
 
   res.json(updatedBooking);
 });

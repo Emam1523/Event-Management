@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { FiCalendar, FiClock, FiMapPin, FiArrowRight, FiActivity, FiStar, FiZap, FiBell, FiChevronRight } from 'react-icons/fi';
 import { BsTicketPerforated } from 'react-icons/bs';
@@ -13,11 +13,7 @@ const UserDashboard = () => {
   const [stats, setStats] = useState({ totalTickets: 0, upcomingEvents: 0, pastEvents: 0 });
   const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
-    fetchUserData();
-  }, []);
-
-  const fetchUserData = async () => {
+  const fetchUserData = useCallback(async () => {
     try {
       setIsLoading(true);
       const res = await bookingsAPI.getMyBookings();
@@ -38,7 +34,12 @@ const UserDashboard = () => {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    fetchUserData();
+  }, [fetchUserData]);
 
   if (isLoading) {
     return (

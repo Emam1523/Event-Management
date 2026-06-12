@@ -8,16 +8,15 @@ const MainLayout = () => {
   const { isAuthenticated } = useAuth();
   const location = useLocation();
 
-  // Paths where we hide the main Navbar & Footer if the user is authenticated
-  const hideNavbarPaths = ['/profile', '/my-tickets', '/dashboard', '/events', '/cart', '/checkout', '/payment-success'];
+  const isEventDetail = location.pathname.startsWith('/events/') && location.pathname !== '/events';
+  const isEventsPage = location.pathname === '/events';
+
+  const hideNavbarPaths = ['/profile', '/my-tickets', '/dashboard', '/cart', '/checkout', '/payment-success'];
   
-  const shouldHideNavbar = isAuthenticated && (
-    hideNavbarPaths.includes(location.pathname) || 
-    location.pathname.startsWith('/events/')
-  );
+  const shouldHideNavbar = (isAuthenticated && (hideNavbarPaths.includes(location.pathname) || isEventsPage)) || isEventDetail;
 
   const userProfilePaths = ['/profile', '/my-tickets', '/dashboard'];
-  const showFloatingDock = shouldHideNavbar && !userProfilePaths.includes(location.pathname);
+  const showFloatingDock = shouldHideNavbar && !userProfilePaths.includes(location.pathname) && !isEventDetail && !isEventsPage;
 
   return (
     <div className="min-h-screen flex flex-col">
