@@ -43,20 +43,7 @@ const ManageUsers = () => {
     }
   };
 
-  const handleToggleRole = async (userId, currentRole) => {
-    if (currentRole === 'admin') {
-      alert("Cannot modify an administrator role here.");
-      return;
-    }
-    const newRole = currentRole === 'user' ? 'admin' : 'user';
-    if (!window.confirm(`Are you sure you want to make this user an ${newRole}?`)) return;
-    try {
-      await api.put(`/admin/users/${userId}/role`, { role: newRole });
-      setUsers(prev => prev.map(u => u.id === userId ? { ...u, role: newRole } : u));
-    } catch (err) {
-      console.error('Failed to update role:', err);
-    }
-  };
+
 
   const handleToggleBlock = async (userId, currentRole) => {
     if (currentRole === 'admin') {
@@ -179,13 +166,6 @@ const ManageUsers = () => {
                         <div className="flex items-center justify-end gap-2">
                           {u.role !== 'admin' && (
                             <>
-                              <button 
-                                onClick={() => handleToggleRole(u.id, u.role)}
-                                className="w-9 h-9 rounded-xl bg-purple-500/10 border border-purple-500/20 flex items-center justify-center text-purple-400 hover:bg-purple-500/20 transition-all"
-                                title="Make Admin"
-                              >
-                                <FiShield />
-                              </button>
                               <button 
                                 onClick={() => handleToggleBlock(u.id, u.role)}
                                 className={`w-9 h-9 rounded-xl flex items-center justify-center transition-all border ${

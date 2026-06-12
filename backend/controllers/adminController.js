@@ -79,6 +79,10 @@ exports.getAllUsers = asyncHandler(async (req, res) => {
 
 exports.updateUserRole = asyncHandler(async (req, res) => {
   const { role } = req.body;
+  if (role === 'admin') {
+    res.status(400);
+    throw new Error('Cannot promote user to admin role');
+  }
   const user = await prisma.user.update({
     where: { id: req.params.id },
     data: { role }
