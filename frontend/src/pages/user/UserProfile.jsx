@@ -4,7 +4,7 @@ import {
   FiUser, FiMail, FiLock, FiShield, FiEdit3, FiSave,
   FiCheckCircle, FiPhone,
   FiCalendar, FiMapPin, FiArrowRight, FiEye, FiEyeOff,
-  FiStar, FiTrendingUp, FiZap, FiMessageSquare, FiAlertCircle,
+  FiStar, FiTrendingUp, FiZap, FiMessageSquare, FiAlertCircle, FiLogOut,
 } from 'react-icons/fi';
 import { BsTicketPerforated } from 'react-icons/bs';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -42,7 +42,7 @@ const fadeUp = {
 
 /* ═══════════════════════════════════════════════════════════════ */
 const UserProfile = () => {
-  const { user, updateProfile } = useAuth();
+  const { user, updateProfile, logout } = useAuth();
   const { showNotification } = useNotifications();
   const navigate = useNavigate();
 
@@ -212,6 +212,11 @@ const UserProfile = () => {
     ]),
   ];
 
+  const handleLogout = () => {
+    logout();
+    navigate('/login');
+  };
+
   return (
     <div className="min-h-screen bg-[#05050a] text-slate-200 pt-28 pb-24 relative overflow-hidden">
       {/* Background blobs */}
@@ -303,6 +308,14 @@ const UserProfile = () => {
                   {activeTab === t.id && <div className="ml-auto w-1.5 h-1.5 rounded-full bg-brand-orange animate-pulse" />}
                 </button>
               ))}
+              
+              <div className="pt-2 mt-2 border-t border-white/5">
+                <button onClick={handleLogout}
+                  className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold transition-all cursor-pointer text-red-500 hover:text-white hover:bg-red-500/20 border border-transparent">
+                  <span className="text-base"><FiLogOut /></span>
+                  Logout
+                </button>
+              </div>
             </div>
 
             {/* Account badge */}

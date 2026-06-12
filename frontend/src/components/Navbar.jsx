@@ -50,7 +50,7 @@ const Navbar = () => {
         }`}
       >
         <div className="flex justify-between items-center h-16 sm:h-20 px-4 sm:px-10">
-          <Link to="/" className="group flex items-center gap-4">
+          <Link to={isAuthenticated ? (user?.role === 'admin' ? '/admin' : '/dashboard') : "/"} className="group flex items-center gap-4">
             <div className="w-10 h-10 bg-brand-orange rounded-2xl flex items-center justify-center text-white font-black text-xl shadow-2xl shadow-brand-orange/40 group-hover:rotate-[15deg] transition-all duration-500">
               <HiSparkles />
             </div>
@@ -59,26 +59,28 @@ const Navbar = () => {
             </span>
           </Link>
 
-          <div className="hidden md:flex items-center space-x-2">
-            {[ { label: 'Home', to: '/' }, ...navLinks ].map((link) => (
-              <Link
-                key={link.to}
-                to={link.to}
-                className={`relative px-6 py-2.5 text-[10px] font-black uppercase tracking-[0.2em] transition-all duration-500 rounded-2xl ${
-                  location.pathname === link.to ? 'text-white' : 'text-zinc-500 hover:text-zinc-200'
-                }`}
-              >
-                {link.label}
-                {location.pathname === link.to && (
-                  <motion.div
-                    layoutId="nav-active"
-                    className="absolute inset-0 bg-white/5 border border-white/10 rounded-2xl shadow-inner"
-                    transition={{ type: 'spring', bounce: 0.2, duration: 0.6 }}
-                  />
-                )}
-              </Link>
-            ))}
-          </div>
+          {!isAuthenticated && (
+            <div className="hidden md:flex items-center space-x-2">
+              {[ { label: 'Home', to: '/' }, ...navLinks ].map((link) => (
+                <Link
+                  key={link.to}
+                  to={link.to}
+                  className={`relative px-6 py-2.5 text-[10px] font-black uppercase tracking-[0.2em] transition-all duration-500 rounded-2xl ${
+                    location.pathname === link.to ? 'text-white' : 'text-zinc-500 hover:text-zinc-200'
+                  }`}
+                >
+                  {link.label}
+                  {location.pathname === link.to && (
+                    <motion.div
+                      layoutId="nav-active"
+                      className="absolute inset-0 bg-white/5 border border-white/10 rounded-2xl shadow-inner"
+                      transition={{ type: 'spring', bounce: 0.2, duration: 0.6 }}
+                    />
+                  )}
+                </Link>
+              ))}
+            </div>
+          )}
 
           <div className="flex items-center gap-3 sm:gap-6">
             <Link to="/cart" className="relative p-2 text-zinc-500 hover:text-white transition-all transform hover:scale-110 active:scale-90 flex-shrink-0">
@@ -172,7 +174,7 @@ const Navbar = () => {
               className="md:hidden border-t border-white/5 overflow-hidden bg-black/40"
             >
               <div className="p-10 space-y-6">
-                {[ { label: 'Home', to: '/' }, ...navLinks ].map((link) => (
+                {!isAuthenticated && [{ label: 'Home', to: '/' }, ...navLinks ].map((link) => (
                   <Link
                     key={link.to}
                     to={link.to}
