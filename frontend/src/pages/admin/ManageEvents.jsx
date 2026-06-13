@@ -14,7 +14,7 @@ const ManageEvents = () => {
   const fetchEvents = useCallback(async () => {
     try {
       setIsLoading(true);
-      const res = await eventsAPI.getAll();
+      const res = await eventsAPI.getAll({ all: 'true' });
       // Ensure backend returns direct array or structure it properly
       const eventData = Array.isArray(res.data) ? res.data : (res.data.events || []);
       setEvents(eventData);

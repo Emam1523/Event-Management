@@ -3,7 +3,13 @@ const asyncHandler = require('../utils/asyncHandler');
 
 
 exports.getFeaturedEvents = asyncHandler(async (req, res) => {
+  const todayStr = new Date().toISOString().split('T')[0];
   const events = await prisma.event.findMany({
+    where: {
+      date: {
+        gte: todayStr
+      }
+    },
     take: 6,
     include: {
       tickets: true
@@ -18,11 +24,19 @@ exports.getFeaturedEvents = asyncHandler(async (req, res) => {
 
 
 exports.getEvents = asyncHandler(async (req, res) => {
-  const { category, location, search, page = 1, limit = 9 } = req.query;
+  const { category, location, search, page = 1, limit = 9, all } = req.query;
   const skip = (Number(page) - 1) * Number(limit);
   const take = Number(limit);
 
+  const todayStr = new Date().toISOString().split('T')[0];
+
   const where = {};
+  if (all !== 'true') {
+    where.date = {
+      gte: todayStr
+    };
+  }
+
   if (category && category !== 'All') {
     where.category = category;
   }

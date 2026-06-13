@@ -10,6 +10,10 @@ const Footer = () => {
     { Icon: FiLinkedin, url: 'https://www.linkedin.com/in/emam-hassan-6131592a5/', label: 'LinkedIn' },
   ];
 
+  const scrollToTop = () => {
+    window.scrollTo(0, 0);
+  };
+
   return (
     <footer className="bg-[#09090b] text-white mt-0 pt-12 pb-8 overflow-hidden relative border-t border-zinc-800/50">
       <div className="absolute -bottom-24 -left-24 w-96 h-96 bg-brand-orange/5 rounded-full blur-[120px] pointer-events-none" />
@@ -20,10 +24,10 @@ const Footer = () => {
         <div className="flex flex-col items-center gap-4 pb-6 border-b border-zinc-900">
           <div className="text-xs font-black uppercase tracking-[0.3em] text-brand-orange">Support</div>
           <div className="flex flex-wrap items-center justify-center gap-x-10 gap-y-3 text-zinc-500 font-semibold text-sm">
-            <Link to="/about" className="hover:text-white transition-colors">About</Link>
-            <Link to="/contact" className="hover:text-white transition-colors">Contact</Link>
-            <Link to="/privacy" className="hover:text-white transition-colors">Privacy</Link>
-            <Link to="/terms" className="hover:text-white transition-colors">Terms</Link>
+            <Link to="/about" onClick={scrollToTop} className="hover:text-white transition-colors">About</Link>
+            <Link to="/contact" onClick={scrollToTop} className="hover:text-white transition-colors">Contact</Link>
+            <Link to="/privacy" onClick={scrollToTop} className="hover:text-white transition-colors">Privacy</Link>
+            <Link to="/terms" onClick={scrollToTop} className="hover:text-white transition-colors">Terms</Link>
           </div>
         </div>
 

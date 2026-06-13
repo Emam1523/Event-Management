@@ -112,22 +112,10 @@ const EditEvent = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    if (name === 'capacity') {
-      const updatedCapacity = value;
-      setFormData(prev => ({
-        ...prev,
-        [name]: value,
-        ticketTypes: prev.ticketTypes.map(t => ({
-          ...t,
-          available: updatedCapacity
-        }))
-      }));
-    } else {
-      setFormData(prev => ({
-        ...prev,
-        [name]: value
-      }));
-    }
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
   };
 
   const handleImageChange = (e) => {
@@ -165,12 +153,13 @@ const EditEvent = () => {
   };
 
   const addTicketType = () => {
+    const updatedTickets = [
+      ...formData.ticketTypes,
+      { name: '', price: '', available: '', description: '' }
+    ];
     setFormData({
       ...formData,
-      ticketTypes: [
-        ...formData.ticketTypes,
-        { name: '', price: '', available: formData.capacity || '', description: '' }
-      ]
+      ticketTypes: updatedTickets
     });
   };
 
@@ -188,6 +177,16 @@ const EditEvent = () => {
     setIsSaving(true);
 
     try {
+      if (!formData.title || !formData.date || !formData.time || !formData.location || !formData.capacity) {
+        throw new Error('Please fill in all required fields (including Total Audience)');
+      }
+
+      const totalCapacity = Number(formData.capacity || 0);
+      const sumTierCapacity = formData.ticketTypes.reduce((sum, t) => sum + Number(t.available || 0), 0);
+      if (sumTierCapacity !== totalCapacity) {
+        throw new Error(`The sum of all ticket tier quantities (${sumTierCapacity}) must be equal to the total audience capacity (${totalCapacity}).`);
+      }
+
       let finalImageUrl = formData.imagePreview; // fallback
 
       // 1. Upload new image if it's a file
@@ -565,6 +564,40 @@ const EditEvent = () => {
             </button>
           </div>
           
+          {formData.capacity && (
+            <div className="mb-8 p-6 bg-white/[0.02] border border-white/5 rounded-3xl flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div>
+                <p className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500">Allocated Audience</p>
+                <h3 className="text-lg font-bold text-white mt-1 font-mono">
+                  {formData.ticketTypes.reduce((sum, t) => sum + Number(t.available || 0), 0)} / {formData.capacity}
+                </h3>
+              </div>
+              {(() => {
+                const allocated = formData.ticketTypes.reduce((sum, t) => sum + Number(t.available || 0), 0);
+                const total = Number(formData.capacity);
+                if (allocated === total) {
+                  return (
+                    <span className="px-4 py-2 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-[10px] font-black uppercase tracking-widest rounded-xl">
+                      Perfect Match 🎉
+                    </span>
+                  );
+                } else if (allocated < total) {
+                  return (
+                    <span className="px-4 py-2 bg-amber-500/10 border border-amber-500/20 text-amber-400 text-[10px] font-black uppercase tracking-widest rounded-xl">
+                      Under Allocated ({total - allocated} left)
+                    </span>
+                  );
+                } else {
+                  return (
+                    <span className="px-4 py-2 bg-red-500/10 border border-red-500/20 text-red-500 text-[10px] font-black uppercase tracking-widest rounded-xl">
+                      Over Allocated ({allocated - total} too many)
+                    </span>
+                  );
+                }
+              })()}
+            </div>
+          )}
+          
           <div className="space-y-6">
             <AnimatePresence mode="popLayout">
               {formData.ticketTypes.map((ticket, index) => (
@@ -603,8 +636,8 @@ const EditEvent = () => {
                       <input
                         type="number"
                         value={ticket.available}
-                        readOnly
-                        className="w-full bg-zinc-900/50 border border-white/5 rounded-xl py-4 px-6 text-white focus:outline-none focus:border-brand-orange/50 transition-all font-bold opacity-50 cursor-not-allowed"
+                        onChange={(e) => handleTicketChange(index, 'available', e.target.value)}
+                        className="w-full bg-zinc-900/50 border border-white/5 rounded-xl py-4 px-6 text-white focus:outline-none focus:border-brand-orange/50 transition-all font-bold"
                         placeholder="100"
                         required
                       />

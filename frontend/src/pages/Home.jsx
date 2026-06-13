@@ -11,7 +11,6 @@ import {
   FiCalendar,
   FiMapPin,
   FiMessageSquare,
-  FiStar,
 } from 'react-icons/fi';
 import { BsTicketPerforated } from 'react-icons/bs';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -41,7 +40,8 @@ const Home = () => {
     totalReviews: 0,
   });
   const [statsLoading, setStatsLoading] = useState(true);
-  const [appReviews, setAppReviews] = useState([]);
+  const [ setAppReviews] = useState([]);
+  const [upcomingEvents, setUpcomingEvents] = useState([]);
   const navigate = useNavigate();
   const eventTags = [
     'Concerts',
@@ -92,8 +92,9 @@ const Home = () => {
     let isMounted = true;
     const loadHomeData = async () => {
       try {
-        const [featuredResponse, statsResponse] = await Promise.all([
+        const [featuredResponse, upcomingResponse, statsResponse] = await Promise.all([
           eventService.getFeaturedEvents(),
+          eventService.getAllEvents({ limit: 3 }),
           statsAPI.getGlobalStats(),
         ]);
 
@@ -104,6 +105,12 @@ const Home = () => {
           : featuredResponse?.events;
 
         setFeaturedEvents(events || []);
+
+        const upcoming = Array.isArray(upcomingResponse?.events)
+          ? upcomingResponse.events
+          : (upcomingResponse || []);
+
+        setUpcomingEvents(upcoming.slice(0, 3));
         setIsLoading(false);
 
         const statsData = statsResponse?.data?.data;
@@ -114,6 +121,7 @@ const Home = () => {
       } catch {
         if (!isMounted) return;
         setFeaturedEvents([]);
+        setUpcomingEvents([]);
         setIsLoading(false);
         setStatsLoading(false);
       }
@@ -196,11 +204,6 @@ const Home = () => {
       year: 'numeric',
     });
   };
-
-  const upcomingEvents = [...featuredEvents]
-    .filter((event) => event?.date)
-    .sort((a, b) => new Date(a.date) - new Date(b.date))
-    .slice(0, 3);
 
   const activeUpcoming = upcomingEvents[upcomingIndex] || null;
 
@@ -615,7 +618,7 @@ const Home = () => {
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              {featuredEvents.map((event, i) => (
+              {featuredEvents.slice(0, 6).map((event, i) => (
                 <motion.div
                   key={event.id}
                   {...fadeInUp}
@@ -629,78 +632,6 @@ const Home = () => {
           )}
         </div>
       </section>
-
-      {/* ── User Reviews ──────────────────────────────────────────────────────── */}
-      {appReviews.length > 0 && (
-        <section className="pt-6 pb-12 bg-slate-900/10 relative overflow-hidden">
-          <div className="absolute -top-20 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-amber-500/8 rounded-full blur-[120px]" />
-          <div className="container-custom">
-            <div className="text-center mb-16">
-              <div className="inline-flex items-center gap-3 px-4 py-2 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-400 text-[10px] font-black uppercase tracking-[0.3em] mb-6">
-                <FiStar style={{ fill: 'currentColor' }} /> Community Voice
-              </div>
-              <h2 className="text-4xl md:text-5xl font-black text-white tracking-tighter mb-4 uppercase">
-                What People <span className="text-amber-400">Say.</span>
-              </h2>
-              <p className="text-slate-400 text-base font-medium max-w-xl mx-auto">
-                Real reviews from real AuraPass members across Bangladesh.
-              </p>
-              {/* Average rating */}
-              <div className="flex items-center justify-center gap-3 mt-6">
-                <div className="flex gap-1">
-                  {[1,2,3,4,5].map(s => {
-                    const avg = appReviews.reduce((a,r) => a+r.rating,0)/appReviews.length;
-                    return (
-                      <FiStar key={s} size={20}
-                        className={s <= Math.round(avg) ? 'text-amber-400' : 'text-slate-700'}
-                        style={{ fill: s <= Math.round(avg) ? 'currentColor' : 'none' }}
-                      />
-                    );
-                  })}
-                </div>
-                <span className="text-2xl font-black text-white">
-                  {(appReviews.reduce((a,r) => a+r.rating,0)/appReviews.length).toFixed(1)}
-                </span>
-                <span className="text-slate-500 text-sm font-medium">({appReviews.length} reviews)</span>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {appReviews.slice(0, 6).map((review, i) => (
-                <motion.div key={review.id}
-                  initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }} transition={{ delay: i * 0.1 }}
-                  className="relative p-6 rounded-[2rem] bg-white/[0.03] border border-white/8 hover:border-amber-500/20 hover:bg-white/[0.05] transition-all group"
-                >
-                  <div className="absolute top-0 right-0 w-24 h-24 bg-amber-500/5 rounded-full blur-2xl opacity-0 group-hover:opacity-100 transition-opacity" />
-                  {/* Stars */}
-                  <div className="flex gap-1 mb-4">
-                    {[1,2,3,4,5].map(s => (
-                      <FiStar key={s} size={14}
-                        className={s <= review.rating ? 'text-amber-400' : 'text-slate-700'}
-                        style={{ fill: s <= review.rating ? 'currentColor' : 'none' }}
-                      />
-                    ))}
-                  </div>
-                  <p className="text-slate-300 text-sm leading-relaxed mb-6 line-clamp-4">&ldquo;{review.comment}&rdquo;</p>
-                  <div className="flex items-center gap-3 pt-4 border-t border-white/5">
-                    <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-brand-orange to-rose-500 flex items-center justify-center text-white font-black text-sm shrink-0">
-                      {review.user?.name?.charAt(0)?.toUpperCase() || 'U'}
-                    </div>
-                    <div>
-                      <p className="text-white font-black text-sm">{review.user?.name || 'Anonymous'}</p>
-                      <p className="text-slate-600 text-[10px] font-medium">Verified Member</p>
-                    </div>
-                    <div className="ml-auto text-[10px] font-black text-amber-400 bg-amber-400/10 px-2.5 py-1 rounded-full">
-                      {review.rating}/5
-                    </div>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
 
       {/* ── Organizer CTA ─────────────────────────────────────────────────────── */}
       <section className="pt-10 pb-4 bg-slate-900/10 relative overflow-hidden">

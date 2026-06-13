@@ -23,7 +23,7 @@ const EventCard = ({ event }) => {
       
       <div className="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
       
-      /* Image Section */
+      {/* Image Section */}
       <div className="relative h-64 overflow-hidden shrink-0 bg-zinc-950">
         <motion.img
           initial={{ opacity: 0, scale: 1.05 }}
@@ -37,12 +37,12 @@ const EventCard = ({ event }) => {
           }}
         />
         
-        /* Overlay Gradients */
+        {/* Overlay Gradients */}
         <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-transparent opacity-80 pointer-events-none" />
         <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-transparent opacity-40 pointer-events-none" />
       </div>
 
-      /* Content Section */
+      {/* Content Section */}
       <div className="p-7 flex flex-col flex-1 relative justify-center">
         <h3 className="text-2xl font-black text-white mb-3 leading-[1.1] group-hover:text-primary transition-colors line-clamp-2 uppercase tracking-tighter">
           {event.title}
@@ -56,4 +56,3 @@ const EventCard = ({ event }) => {
 };
 
 export default EventCard;
-

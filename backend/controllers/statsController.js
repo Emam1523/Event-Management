@@ -12,7 +12,7 @@ exports.getGlobalStats = asyncHandler(async (req, res) => {
 
   const totalCities = await prisma.location.count();
 
-  const reviewStats = await prisma.review.aggregate({
+  const reviewStats = await prisma.appReview.aggregate({
     _avg: { rating: true },
     _count: true
   });
