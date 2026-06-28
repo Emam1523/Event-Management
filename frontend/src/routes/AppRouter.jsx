@@ -29,6 +29,8 @@ import UserDashboard from '../pages/user/UserDashboard';
 import UserProfile from '../pages/user/UserProfile';
 import MyTickets from '../pages/user/MyTickets';
 import PaymentSuccess from '../pages/user/PaymentSuccess';
+import PaymentFailed from '../pages/user/PaymentFailed';
+import PaymentCancelled from '../pages/user/PaymentCancelled';
 import TicketDetail from '../pages/user/TicketDetail';
 import UserNotifications from '../pages/user/UserNotifications';
 
@@ -76,6 +78,8 @@ const AppRouter = () => {
             <Route path="/my-tickets/:id" element={<TicketDetail />} />
             <Route path="/notifications" element={<UserNotifications />} />
             <Route path="/payment-success" element={<PaymentSuccess />} />
+            <Route path="/payment-failed" element={<PaymentFailed />} />
+            <Route path="/payment-cancelled" element={<PaymentCancelled />} />
           </Route>
         </Route>
       </Route>

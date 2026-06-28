@@ -1,7 +1,7 @@
 /* eslint-disable react-refresh/only-export-components */
 import { createContext, useContext, useState, useCallback } from 'react';
 
-export const NotificationContext = createContext();
+const NotificationContext = createContext();
 
 export const useNotifications = () => {
   const context = useContext(NotificationContext);
@@ -86,7 +86,7 @@ export const NotificationProvider = ({ children }) => {
 };
 
 // Predefined notification types
-export const notificationTypes = {
+const notificationTypes = {
   BOOKING_SUCCESS: 'booking_success',
   BOOKING_CANCELLED: 'booking_cancelled',
   EVENT_REMINDER: 'event_reminder',

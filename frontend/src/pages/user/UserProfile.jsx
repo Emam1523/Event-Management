@@ -4,7 +4,7 @@ import {
   FiUser, FiMail, FiLock, FiShield, FiEdit3, FiSave,
   FiCheckCircle, FiPhone,
   FiCalendar, FiMapPin, FiArrowRight, FiEye, FiEyeOff,
-  FiStar, FiTrendingUp, FiZap, FiMessageSquare, FiAlertCircle, FiLogOut,
+  FiStar, FiZap, FiMessageSquare, FiAlertCircle, FiLogOut,
 } from 'react-icons/fi';
 import { BsTicketPerforated } from 'react-icons/bs';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -191,18 +191,10 @@ const UserProfile = () => {
   const avatarLetter = user?.name?.charAt(0)?.toUpperCase() || 'U';
   const isAdmin = user?.role === 'admin';
 
-  const statCards = isAdmin
-    ? [
-        { label: 'Total Events', value: stats.total, icon: <FiCalendar />, color: 'from-violet-500 to-purple-600' },
-        { label: 'Total Users', value: stats.upcoming, icon: <FiUser />, color: 'from-blue-500 to-cyan-500' },
-        { label: 'Revenue', value: `৳${Number(stats.spent||0).toLocaleString()}`, icon: <FiTrendingUp />, color: 'from-emerald-500 to-teal-500' },
-      ]
-    : [
-        { label: 'Total Passes', value: stats.total, icon: <BsTicketPerforated />, color: 'from-brand-orange to-rose-500' },
-        { label: 'Upcoming', value: stats.upcoming, icon: <FiCalendar />, color: 'from-violet-500 to-purple-600' },
-        { label: 'Total Spent', value: `৳${Number(stats.spent||0).toLocaleString()}`, icon: <FiTrendingUp />, color: 'from-emerald-500 to-teal-500' },
-      ];
-
+  const statCards = !isAdmin ? [
+    { label: 'Total Passes', value: stats.total, icon: <BsTicketPerforated />, color: 'from-brand-orange to-rose-500' },
+    { label: 'Upcoming', value: stats.upcoming, icon: <FiCalendar />, color: 'from-violet-500 to-purple-600' },
+  ] : [];
   const tabs = [
     { id: 'profile',  label: 'Profile',  icon: <FiUser /> },
     { id: 'security', label: 'Security', icon: <FiShield /> },
@@ -308,14 +300,16 @@ const UserProfile = () => {
                   {activeTab === t.id && <div className="ml-auto w-1.5 h-1.5 rounded-full bg-brand-orange animate-pulse" />}
                 </button>
               ))}
-              
-              <div className="pt-2 mt-2 border-t border-white/5">
-                <button onClick={handleLogout}
-                  className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold transition-all cursor-pointer text-red-500 hover:text-white hover:bg-red-500/20 border border-transparent">
-                  <span className="text-base"><FiLogOut /></span>
-                  Logout
-                </button>
-              </div>
+
+              {!isAdmin && (
+                <div className="pt-2 mt-2 border-t border-white/5">
+                  <button onClick={handleLogout}
+                    className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold transition-all cursor-pointer text-red-500 hover:text-white hover:bg-red-500/20 border border-transparent">
+                    <span className="text-base"><FiLogOut /></span>
+                    Logout
+                  </button>
+                </div>
+              )}
             </div>
 
             {/* Account badge */}

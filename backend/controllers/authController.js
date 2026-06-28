@@ -23,7 +23,7 @@ const createVerificationCode = async ({ email, purpose, metadata = {} }) => {
   return code;
 };
 
-const verifyStoredCode = async ({ email, purpose, code }) => {
+const verifyStoredCode = async ({ email, purpose, code, consume = true }) => {
   const record = await prisma.verificationCode.findFirst({
     where: {
       email,
@@ -38,10 +38,12 @@ const verifyStoredCode = async ({ email, purpose, code }) => {
     return null;
   }
 
-  await prisma.verificationCode.update({
-    where: { id: record.id },
-    data: { consumedAt: new Date() },
-  });
+  if (consume) {
+    await prisma.verificationCode.update({
+      where: { id: record.id },
+      data: { consumedAt: new Date() },
+    });
+  }
 
   return record;
 };
@@ -210,7 +212,8 @@ exports.verifyCode = asyncHandler(async (req, res) => {
     throw new Error('Email, purpose, and code are required');
   }
 
-  const record = await verifyStoredCode({ email, purpose, code });
+  const consume = purpose !== 'password-change';
+  const record = await verifyStoredCode({ email, purpose, code, consume });
   if (!record) {
     res.status(400);
     throw new Error('Invalid or expired verification code');

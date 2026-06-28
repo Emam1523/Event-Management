@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { FiFacebook, FiInstagram, FiLinkedin } from 'react-icons/fi';
+import { FiFacebook, FiInstagram} from 'react-icons/fi';
 import { FaWhatsapp } from 'react-icons/fa';
 
 const Footer = () => {
@@ -7,7 +7,6 @@ const Footer = () => {
     { Icon: FiFacebook, url: 'https://www.facebook.com/emam.hassan.7330763', label: 'Facebook' },
     { Icon: FiInstagram, url: 'https://www.instagram.com/emam_hassan1523/', label: 'Instagram' },
     { Icon: FaWhatsapp, url: 'https://wa.me/8801307947274', label: 'WhatsApp' },
-    { Icon: FiLinkedin, url: 'https://www.linkedin.com/in/emam-hassan-6131592a5/', label: 'LinkedIn' },
   ];
 
   const scrollToTop = () => {

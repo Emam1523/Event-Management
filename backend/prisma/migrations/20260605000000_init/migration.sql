@@ -30,6 +30,7 @@ CREATE TABLE "Event" (
     "googleMapUrl" TEXT,
     "price" DOUBLE PRECISION NOT NULL,
     "image" TEXT,
+    "serviceCharge" DOUBLE PRECISION NOT NULL DEFAULT 0,
     "organizerId" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,

@@ -369,11 +369,8 @@ const Register = () => {
                 className="text-[10px] font-bold text-slate-500 uppercase tracking-widest leading-relaxed cursor-pointer"
               >
                 I agree to the{' '}
-                <span className="text-primary hover:underline">Terms</span> and{' '}
-                <span className="text-primary hover:underline">
-                  Privacy Policy
-                </span>
-                .
+                <span className="text-primary hover:underline"><Link to="/terms">Terms</Link></span> and{' '}
+                <span className="text-primary hover:underline"><Link to="/privacy">Privacy Policy.</Link></span>
               </label>
             </motion.div>
 

@@ -61,12 +61,6 @@ const PrivacyPolicy = () => {
               </motion.div>
             ))}
           </div>
-
-          <div className="glass-card p-12 bg-slate-900/50 border-white/5 text-center">
-            <h3 className="text-xl font-bold text-white mb-4 uppercase tracking-widest">Questions about your privacy?</h3>
-            <p className="text-slate-500 mb-8">If you have any concerns or questions regarding our privacy practices, please contact our Data Protection Officer.</p>
-            <a href="mailto:privacy@aurapass.com" className="text-primary font-black hover:underline tracking-widest text-sm uppercase">privacy@aurapass.com</a>
-          </div>
         </div>
       </div>
     </div>

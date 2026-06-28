@@ -167,7 +167,7 @@ const upsertFilters = async (category, location) => {
 
 
 exports.createEvent = asyncHandler(async (req, res) => {
-  const { title, description, fullDescription, capacity, category, date, time, location, googleMapUrl, price, image, tickets } = req.body;
+  const { title, description, fullDescription, capacity, category, date, time, location, googleMapUrl, price, image, tickets, serviceCharge } = req.body;
 
   const event = await prisma.event.create({
     data: {
@@ -182,6 +182,7 @@ exports.createEvent = asyncHandler(async (req, res) => {
       googleMapUrl,
       price: Number(price),
       image,
+      serviceCharge: Number(serviceCharge) || 0,
       organizerId: req.user.id,
       tickets: {
         create: tickets || []
@@ -200,7 +201,7 @@ exports.createEvent = asyncHandler(async (req, res) => {
 
 exports.updateEvent = asyncHandler(async (req, res) => {
   const { id } = req.params;
-  const { title, description, fullDescription, capacity, category, date, time, endTime, location, googleMapUrl, price, image, tickets } = req.body;
+  const { title, description, fullDescription, capacity, category, date, time, endTime, location, googleMapUrl, price, image, tickets, serviceCharge } = req.body;
 
   let event = await prisma.event.findUnique({ where: { id } });
 
@@ -225,6 +226,7 @@ exports.updateEvent = asyncHandler(async (req, res) => {
       googleMapUrl,
       price: Number(price),
       image,
+      serviceCharge: Number(serviceCharge) || 0,
       tickets: {
         deleteMany: {}, // Simplest way is to replace tickets
         create: tickets || []

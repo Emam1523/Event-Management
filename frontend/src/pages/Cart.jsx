@@ -7,6 +7,11 @@ const Cart = () => {
   const { cartItems, removeFromCart, updateQuantity, getCartTotal } = useCart();
   const navigate = useNavigate();
 
+  const totalServiceFee = cartItems.reduce((sum, item) => {
+    const rate = item.event.serviceCharge || 0;
+    return sum + Math.round((item.ticketType.price * item.quantity) * (rate / 100));
+  }, 0);
+
   if (cartItems.length === 0) {
     return (
       <div className="min-h-screen bg-dark-bg flex items-center justify-center text-center px-4">
@@ -120,13 +125,13 @@ const Cart = () => {
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-xs font-black text-slate-500 uppercase tracking-widest">Service Fee</span>
-                  <span className="text-lg font-bold text-white">৳{Math.round(getCartTotal() * 0.05).toLocaleString()}</span>
+                  <span className="text-lg font-bold text-white">৳{totalServiceFee.toLocaleString()}</span>
                 </div>
                 <div className="border-t border-white/5 pt-8">
                   <div className="flex justify-between items-center">
                     <span className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Total Amount</span>
                     <span className="text-4xl font-black text-primary tracking-tighter">
-                      ৳{(getCartTotal() + Math.round(getCartTotal() * 0.05)).toLocaleString()}
+                      ৳{(getCartTotal() + totalServiceFee).toLocaleString()}
                     </span>
                   </div>
                 </div>
@@ -147,7 +152,7 @@ const Cart = () => {
               <div className="mt-12 pt-8 border-t border-white/5">
                 <p className="text-[9px] font-black text-slate-600 uppercase tracking-widest mb-6 text-center">SECURE PAYMENTS</p>
                 <div className="flex flex-wrap justify-center gap-3">
-                  {['VISA', 'MASTERCARD', 'BKASH', 'NAGAD'].map(tag => (
+                  {['VISA', 'MASTERCARD', 'AMARPAY', 'BKASH', 'NAGAD'].map(tag => (
                     <span key={tag} className="px-3 py-1.5 bg-white/5 rounded-lg text-[9px] font-black text-slate-500 border border-white/5">
                       {tag}
                     </span>

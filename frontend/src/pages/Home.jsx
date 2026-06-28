@@ -136,7 +136,7 @@ const Home = () => {
     return () => {
       isMounted = false;
     };
-  }, []);
+  }, [setAppReviews]);
 
   useEffect(() => {
     const interval = setInterval(() => {

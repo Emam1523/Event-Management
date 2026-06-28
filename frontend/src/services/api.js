@@ -81,6 +81,7 @@ export const reviewsAPI = {
 // ── Payments ──────────────────────────────────────────────────────────────────
 export const paymentAPI = {
   process: (data) => api.post('/payments', data),
+  initiateAmarPay: (data) => api.post('/payments/amar-pay/initiate', data),
 };
 
 // ── Stats ─────────────────────────────────────────────────────────────────────

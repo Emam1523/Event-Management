@@ -43,6 +43,7 @@ model Event {
   googleMapUrl String?
   price        Float
   image        String?
+  serviceCharge Float       @default(0)
   organizerId  String
   organizer    User         @relation("OrganizerEvents", fields: [organizerId], references: [id], onDelete: Cascade)
   createdAt    DateTime     @default(now())

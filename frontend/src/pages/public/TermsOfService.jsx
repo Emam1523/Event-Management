@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { FiAlertCircle, FiInfo } from 'react-icons/fi';
+import { FiInfo } from 'react-icons/fi';
 
 const TermsOfService = () => {
   const terms = [
@@ -58,14 +58,6 @@ const TermsOfService = () => {
                 </div>
               </motion.div>
             ))}
-          </div>
-
-          <div className="p-10 rounded-[3rem] bg-gradient-to-br from-violet-600/10 to-rose-600/10 border border-white/5 text-center">
-            <FiAlertCircle className="text-4xl text-primary mx-auto mb-6" />
-            <p className="text-slate-300 font-medium italic">
-              "We reserve the right to modify these terms at any time. Continued use of the platform constitutes acceptance of updated terms."
-            </p>
-            <p className="text-slate-500 mt-6 text-sm font-bold uppercase tracking-widest">Last Updated: May 2026</p>
           </div>
         </div>
       </div>

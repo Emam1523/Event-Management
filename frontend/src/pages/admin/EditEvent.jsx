@@ -25,6 +25,7 @@ const EditEvent = () => {
     venue: '',
     address: '',
     category: '',
+    serviceCharge: '',
     image: null,
     imagePreview: null,
     capacity: '',
@@ -89,6 +90,7 @@ const EditEvent = () => {
           venue: cityName,
           address: data.address || '',
           category: data.category || '',
+          serviceCharge: data.serviceCharge || '',
           capacity: data.capacity || '',
           image: null,
           imagePreview: data.image ? (data.image.startsWith('http') ? data.image : `http://localhost:5005${data.image}`) : null,
@@ -217,6 +219,7 @@ const EditEvent = () => {
         googleMapUrl: formData.googleMapUrl,
         price: Number(formData.ticketTypes[0]?.price || 0),
         image: finalImageUrl,
+        serviceCharge: Number(formData.serviceCharge) || 0,
         tickets: formData.ticketTypes.map(t => ({
           name: t.name,
           price: Number(t.price),
@@ -371,6 +374,24 @@ const EditEvent = () => {
                   className="w-full bg-white/5 border border-white/5 rounded-2xl py-5 pl-16 pr-8 text-white placeholder:text-zinc-700 focus:outline-none focus:border-amber-500/50 focus:ring-4 focus:ring-amber-500/10 transition-all font-bold"
                   placeholder="e.g. 500"
                   required
+                />
+              </div>
+            </div>
+
+            <div className="group">
+              <label className="block text-[10px] font-black text-zinc-500 uppercase tracking-[0.2em] mb-4 ml-2 group-focus-within:text-amber-500 transition-colors">Service Charge (%)</label>
+              <div className="relative">
+                <FiTag className="absolute left-8 top-1/2 -translate-y-1/2 text-zinc-500 pointer-events-none" />
+                <input
+                  type="number"
+                  name="serviceCharge"
+                  value={formData.serviceCharge}
+                  onChange={handleChange}
+                  className="w-full bg-white/5 border border-white/5 rounded-2xl py-5 pl-16 pr-8 text-white placeholder:text-zinc-700 focus:outline-none focus:border-amber-500/50 focus:ring-4 focus:ring-amber-500/10 transition-all font-bold"
+                  placeholder="e.g. 5"
+                  min="0"
+                  max="100"
+                  step="0.01"
                 />
               </div>
             </div>

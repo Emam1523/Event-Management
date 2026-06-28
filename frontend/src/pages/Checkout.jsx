@@ -14,7 +14,7 @@ import {
 import { format, isValid } from 'date-fns';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
-import { authAPI, bookingsAPI } from '../services/api';
+import { authAPI, bookingsAPI, paymentAPI } from '../services/api';
 
 const Checkout = () => {
   const { cartItems, getCartTotal, clearCart } = useCart();
@@ -67,7 +67,10 @@ const Checkout = () => {
   }
 
   const subtotal = getCartTotal();
-  const serviceFee = Math.round(subtotal * 0.05);
+  const serviceFee = cartItems.reduce((sum, item) => {
+    const rate = item.event.serviceCharge || 0;
+    return sum + Math.round((item.ticketType.price * item.quantity) * (rate / 100));
+  }, 0);
   const total = subtotal + serviceFee;
 
   const formatCardNumber = (value) => {
@@ -173,6 +176,18 @@ const Checkout = () => {
       }
 
       const bookings = await createBookings();
+
+      if (formData.paymentMethod === 'amarPay') {
+        const { data } = await paymentAPI.initiateAmarPay({ bookingId: bookings[0]?.id });
+        if (data?.success && data?.paymentUrl) {
+          clearCart();
+          window.location.href = data.paymentUrl;
+          return;
+        } else {
+          throw new Error(data?.message || 'Failed to initiate amarPay');
+        }
+      }
+
       clearCart();
       navigate(`/payment-success?booking=${bookings[0]?.id || ''}`);
     } catch {
@@ -184,6 +199,7 @@ const Checkout = () => {
 
   const paymentMethods = [
     { id: 'card', label: 'Credit / Debit Card', sub: 'Visa, Mastercard, Amex', icon: <FiCreditCard /> },
+    { id: 'amarPay', label: 'amarPay', sub: 'Pay with amarPay (Cards, Mobile Banking)', icon: <FiSmartphone /> },
     { id: 'bkash', label: 'bKash', sub: 'Pay with bKash mobile wallet' },
     { id: 'nagad', label: 'Nagad', sub: 'Pay with Nagad mobile wallet' },
   ];
@@ -341,6 +357,12 @@ const Checkout = () => {
                       placeholder="01XXXXXXXXX" className="w-full rounded-xl border border-slate-300 bg-white py-3 px-3 text-sm text-slate-900 outline-none focus:ring-2 focus:ring-slate-200" required />
                   </div>
                 )}
+
+                {formData.paymentMethod === 'amarPay' && (
+                  <div className="rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-800">
+                    You will be redirected to amarPay secure payment page to complete the transaction.
+                  </div>
+                )}
               </div>
 
               {/* Security Notice */}
@@ -397,7 +419,7 @@ const Checkout = () => {
                   <span>৳{subtotal.toLocaleString()}</span>
                 </div>
                 <div className="flex justify-between text-sm text-slate-600">
-                  <span>Service Fee (5%)</span>
+                  <span>Service Fee</span>
                   <span>৳{serviceFee.toLocaleString()}</span>
                 </div>
                 <div className="flex justify-between text-base font-bold text-slate-900 pt-2 border-t">
@@ -409,7 +431,7 @@ const Checkout = () => {
               <div className="mt-4 pt-4 border-t">
                 <p className="text-xs text-slate-500 mb-2 font-medium">Accepted payments:</p>
                 <div className="flex flex-wrap gap-2">
-                  {['Visa', 'Mastercard', 'bKash', 'Nagad'].map((m) => (
+                  {['Visa', 'Mastercard', 'amarPay', 'bKash', 'Nagad'].map((m) => (
                     <span key={m} className="px-2 py-1 bg-slate-100 rounded text-xs text-slate-600">{m}</span>
                   ))}
                 </div>

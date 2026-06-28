@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { FiShoppingCart, FiMenu, FiX, FiUser, FiLogOut } from 'react-icons/fi';
+import { FiShoppingCart, FiMenu, FiX, FiUser } from 'react-icons/fi';
 import { BsTicketPerforated } from 'react-icons/bs';
 import { HiSparkles } from 'react-icons/hi2';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -12,7 +12,7 @@ const Navbar = () => {
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const userMenuRef = useRef(null);
-  const { user, logout, isAuthenticated } = useAuth();
+  const { user, isAuthenticated } = useAuth();
   const { getCartCount } = useCart();
   const navigate = useNavigate();
   const location = useLocation();
@@ -32,11 +32,6 @@ const Navbar = () => {
     document.addEventListener('mousedown', handler);
     return () => document.removeEventListener('mousedown', handler);
   }, []);
-
-  const handleLogout = () => {
-    logout();
-    navigate('/');
-  };
 
   const navLinks = [
     { label: 'Explore', to: '/events' },
@@ -139,14 +134,6 @@ const Navbar = () => {
                               <span className="uppercase tracking-[0.2em]">{item.label}</span>
                            </Link>
                         ))}
-                        
-                        <button
-                          onClick={handleLogout}
-                          className="w-full flex items-center gap-4 px-4 py-4 text-[10px] font-black text-red-500 hover:bg-red-500/10 rounded-2xl transition-all mt-4 border-t border-white/5"
-                        >
-                          <FiLogOut className="text-lg" /> 
-                          <span className="uppercase tracking-[0.2em]">Terminate Session</span>
-                        </button>
                       </div>
                     </motion.div>
                   )}

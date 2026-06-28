@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { useState } from "react";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import {
   FiMail,
   FiLock,
@@ -7,14 +7,14 @@ import {
   FiEyeOff,
   FiArrowRight,
   FiCheckCircle,
-} from 'react-icons/fi';
-import { motion } from 'framer-motion';
+} from "react-icons/fi";
+import { motion } from "framer-motion";
 
-import { useAuth } from '../../context/AuthContext';
-import { useNotifications } from '../../context/NotificationContext';
+import { useAuth } from "../../context/AuthContext";
+import { useNotifications } from "../../context/NotificationContext";
 
 const Login = () => {
-  const [formData, setFormData] = useState({ email: '', password: '' });
+  const [formData, setFormData] = useState({ email: "", password: "" });
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -23,7 +23,7 @@ const Login = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const from = location.state?.from?.pathname || '/dashboard';
+  const from = location.state?.from?.pathname || "/dashboard";
 
   // ✅ Input Handler
   const handleChange = (e) => {
@@ -44,25 +44,25 @@ const Login = () => {
       const result = await login(formData);
 
       if (result.success) {
-        showNotification('Successfully logged in!', 'success');
+        showNotification("Successfully logged in!", "success");
 
-        if (from !== '/dashboard') {
+        if (from !== "/dashboard") {
           navigate(from, { replace: true });
         } else {
           const role = result.user?.role;
-          navigate(role === 'admin' ? '/admin' : '/dashboard', {
+          navigate(role === "admin" ? "/admin" : "/dashboard", {
             replace: true,
           });
         }
       } else {
-        showNotification(result.message, 'error');
+        showNotification(result.message, "error");
       }
     } catch (error) {
       showNotification(
         error?.response?.data?.message ||
-        error?.message ||
-          'Login failed. Please check your credentials.',
-        'error'
+          error?.message ||
+          "Login failed. Please check your credentials.",
+        "error",
       );
     } finally {
       setIsLoading(false);
@@ -97,7 +97,7 @@ const Login = () => {
         <motion.div
           initial={{ scale: 1.1, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
-          transition={{ duration: 1.5, ease: 'easeOut' }}
+          transition={{ duration: 1.5, ease: "easeOut" }}
           className="absolute inset-0 z-0"
         >
           <img
@@ -130,9 +130,9 @@ const Login = () => {
               className="space-y-6"
             >
               {[
-                'Access your booked events instantly',
-                'Manage tickets and active QR codes',
-                'Receive priority updates and entry passes',
+                "Access your booked events instantly",
+                "Manage tickets and active QR codes",
+                "Receive priority updates and entry passes",
               ].map((text, i) => (
                 <div
                   key={i}
@@ -155,7 +155,8 @@ const Login = () => {
             transition={{ delay: 1.1 }}
             className="text-slate-500 text-xs font-bold uppercase tracking-widest mt-auto"
           >
-            &copy; {new Date().getFullYear()} AURA PASS PLATFORM. ALL RIGHTS RESERVED.
+            &copy; {new Date().getFullYear()} AURA PASS PLATFORM. ALL RIGHTS
+            RESERVED.
           </motion.p>
         </div>
       </div>
@@ -189,7 +190,10 @@ const Login = () => {
           <form onSubmit={handleSubmit} className="space-y-5">
             {/* Email */}
             <motion.div variants={itemVariants} className="space-y-2">
-              <label htmlFor="email" className="text-[10px] font-black text-slate-500 uppercase tracking-[0.3em] ml-1">
+              <label
+                htmlFor="email"
+                className="text-[10px] font-black text-slate-500 uppercase tracking-[0.3em] ml-1"
+              >
                 Email
               </label>
               <div className="relative group">
@@ -213,14 +217,17 @@ const Login = () => {
             {/* Password */}
             <motion.div variants={itemVariants} className="space-y-2">
               <div className="flex justify-between items-center">
-                <label htmlFor="password" className="text-[10px] font-black text-slate-500 uppercase tracking-[0.3em] ml-1">
+                <label
+                  htmlFor="password"
+                  className="text-[10px] font-bold text-slate-500 uppercase tracking-[0.3em] ml-1"
+                >
                   Password
                 </label>
                 <Link
                   to="/forgot-password"
-                  className="text-[10px] font-black text-primary uppercase tracking-[0.2em] hover:underline"
+                  className="text-[10px] font-bold text-slate-300 uppercase tracking-[0.2em] hover:underline"
                 >
-                  Forgot?
+                  Forgot Password?
                 </Link>
               </div>
               <div className="relative group">
@@ -230,7 +237,7 @@ const Login = () => {
                 />
                 <input
                   id="password"
-                  type={showPassword ? 'text' : 'password'}
+                  type={showPassword ? "text" : "password"}
                   name="password"
                   required
                   value={formData.password}
@@ -245,11 +252,7 @@ const Login = () => {
                   className="absolute right-5 top-1/2 -translate-y-1/2 text-slate-600 hover:text-white transition-colors cursor-pointer"
                   onClick={() => setShowPassword(!showPassword)}
                 >
-                  {showPassword ? (
-                    <FiEyeOff size={18} />
-                  ) : (
-                    <FiEye size={18} />
-                  )}
+                  {showPassword ? <FiEyeOff size={18} /> : <FiEye size={18} />}
                 </button>
               </div>
             </motion.div>
@@ -266,7 +269,7 @@ const Login = () => {
                   <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
                 ) : (
                   <>
-                    SIGN IN{' '}
+                    SIGN IN{" "}
                     <FiArrowRight className="group-hover:translate-x-1 transition-transform" />
                   </>
                 )}
@@ -277,7 +280,7 @@ const Login = () => {
           {/* Footer */}
           <motion.div variants={itemVariants} className="mt-6 text-center">
             <p className="text-slate-500 font-medium">
-              New to Aura Pass?{' '}
+              New to Aura Pass?{" "}
               <Link
                 to="/register"
                 className="text-primary font-black uppercase tracking-widest text-xs hover:underline decoration-2 underline-offset-4 transition-all"
