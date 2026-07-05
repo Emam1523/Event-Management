@@ -12,7 +12,6 @@ const UserOnlyRoute = () => {
     );
   }
 
-  // Admins are not allowed in the user/public frontend area
   if (isAdmin) {
     return <Navigate to="/admin" replace />;
   }

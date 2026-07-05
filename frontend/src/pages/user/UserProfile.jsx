@@ -318,7 +318,7 @@ const UserProfile = () => {
                 <div className="w-8 h-8 rounded-xl bg-brand-orange/20 flex items-center justify-center">
                   <FiStar className="text-brand-orange text-sm" />
                 </div>
-                <p className="text-xs font-black text-white">{isAdmin ? 'Administrator' : 'Aura Member'}</p>
+                <p className="text-xs font-black text-white">{isAdmin ? 'Administrator' : 'NEXTDHAKA Member'}</p>
               </div>
               <p className="text-[10px] text-slate-500 font-medium leading-relaxed">
                 {isAdmin ? 'You have full platform access and management privileges.' : 'Enjoy exclusive access to premium events across Bangladesh.'}
@@ -640,7 +640,7 @@ const UserProfile = () => {
                       <FiMessageSquare className="text-lg" />
                     </div>
                     <div>
-                      <h2 className="text-xl font-black text-white">Rate AuraPass</h2>
+                      <h2 className="text-xl font-black text-white">Rate NEXTDHAKA</h2>
                       <p className="text-xs text-slate-500 mt-0.5">Share your experience with the platform — shown on the home page</p>
                     </div>
                   </div>
@@ -690,7 +690,7 @@ const UserProfile = () => {
                           value={reviewForm.comment}
                           onChange={(e) => setReviewForm(p => ({ ...p, comment: e.target.value }))}
                           rows={5}
-                          placeholder="Share your experience with AuraPass — what did you love? What could be better?"
+                          placeholder="Share your experience with NEXTDHAKA — what did you love? What could be better?"
                           className="w-full rounded-2xl border border-white/10 bg-white/[0.03] px-5 py-4 text-white placeholder:text-slate-700 font-semibold text-sm focus:outline-none focus:border-amber-500/40 focus:ring-2 focus:ring-amber-500/10 resize-none transition-all"
                         />
                         <p className="text-[10px] text-slate-600 text-right">{reviewForm.comment.length} chars</p>

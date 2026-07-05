@@ -5,7 +5,7 @@ import { FaWhatsapp } from 'react-icons/fa';
 const Footer = () => {
   const socialLinks = [
     { Icon: FiFacebook, url: 'https://www.facebook.com/emam.hassan.7330763', label: 'Facebook' },
-    { Icon: FiInstagram, url: 'https://www.instagram.com/emam_hassan1523/', label: 'Instagram' },
+    { Icon: FiInstagram, url: 'https://www.instagram.com/p/DaXsNoQnyuY/', label: 'Instagram' },
     { Icon: FaWhatsapp, url: 'https://wa.me/8801307947274', label: 'WhatsApp' },
   ];
 
@@ -32,7 +32,7 @@ const Footer = () => {
 
         <div className="pt-6 flex flex-col items-center gap-4">
           <p className="text-zinc-600 text-[11px] font-black tracking-widest uppercase">
-            © 2026 AuraPass. CRAFTED FOR THE BOLD.
+            © 2026 NEXTDHAKA. CRAFTED FOR THE BOLD.
           </p>
           <div className="flex gap-4">
             {socialLinks.map((social, i) => (

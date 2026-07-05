@@ -39,13 +39,13 @@ const About = () => {
         <div className="container-custom">
           <div className="max-w-3xl">
             <div className="inline-flex items-center gap-3 px-4 py-2 rounded-full bg-white/5 border border-white/10 text-white text-[10px] font-black uppercase tracking-[0.3em] mb-6">
-              About AuraPass
+              About NEXTDHAKA
             </div>
             <h1 className="text-5xl md:text-7xl font-black text-white tracking-tighter mb-6">
               Crafted for bold explorers
             </h1>
             <p className="text-slate-400 text-lg md:text-xl font-medium max-w-2xl">
-              AuraPass is Bangladesh's premium platform for discovering and booking elite events. We connect
+              NEXTDHAKA is Bangladesh's premium platform for discovering and booking elite events. We connect
               audiences with verified hosts, secure ticketing, and curated experiences across the country.
             </p>
           </div>
@@ -57,10 +57,10 @@ const About = () => {
           <div className="bg-white/5 border border-white/10 rounded-[2.5rem] p-10 md:p-14 card-glow">
             <div className="text-xs font-black uppercase tracking-[0.3em] text-brand-orange mb-4">Introduction</div>
             <h2 className="text-3xl md:text-4xl font-black text-white tracking-tight mb-4">
-              What is AuraPass?
+              What is NEXTDHAKA?
             </h2>
             <p className="text-slate-400 text-lg font-medium leading-relaxed max-w-4xl">
-              AuraPass is a Bangladesh-first event platform that lets people discover, book, and manage tickets in one place.
+              NEXTDHAKA is a Bangladesh-first event platform that lets people discover, book, and manage tickets in one place.
               Event organizers can publish events and ticket types, while users browse by category, secure seats instantly,
               and access digital passes on their phones.
             </p>

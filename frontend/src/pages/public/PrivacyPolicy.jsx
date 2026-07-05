@@ -16,7 +16,7 @@ const PrivacyPolicy = () => {
     {
       icon: <FiShield />,
       title: "Security Measures",
-      content: "AuraPass employs industry-standard encryption and security protocols to protect your data. Your payment information is handled through secure, PCI-compliant gateways."
+      content: "NEXTDHAKA employs industry-standard encryption and security protocols to protect your data. Your payment information is handled through secure, PCI-compliant gateways."
     },
     {
       icon: <FiUserCheck />,
@@ -38,7 +38,7 @@ const PrivacyPolicy = () => {
               PRIVACY <span className="text-primary">POLICY.</span>
             </h1>
             <p className="text-xl text-slate-400 font-medium max-w-2xl mx-auto leading-relaxed">
-              Your trust is our most valuable asset. Learn how we protect your privacy and secure your data at AuraPass.
+              Your trust is our most valuable asset. Learn how we protect your privacy and secure your data at NEXTDHAKA.
             </p>
           </motion.div>
 

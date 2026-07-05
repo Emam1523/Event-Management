@@ -24,7 +24,7 @@ const Assistant = () => {
     {
       id: 'welcome',
       role: 'assistant',
-      text: "Hello! I am AuraPass AI. I can recommend premium events, answer ticket booking queries, or help with general questions. What are you looking for today?",
+      text: "Hello! I am NEXTDHAKA AI. I can recommend premium events, answer ticket booking queries, or help with general questions. What are you looking for today?",
       timestamp: new Date().toISOString(),
     },
   ]);
@@ -88,7 +88,7 @@ const Assistant = () => {
       }
     } catch (error) {
       console.error('Chat error:', error);
-      showNotification('Unable to connect to AuraPass AI. Try again.', 'error');
+      showNotification('Unable to connect to NEXTDHAKA AI. Try again.', 'error');
       
       setMessages((prev) => [
         ...prev,
@@ -151,7 +151,7 @@ const Assistant = () => {
               <div className="flex items-center gap-2">
                 <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
                 <h1 className="text-xl font-black text-white uppercase tracking-tight">
-                  AuraPass AI
+                  NEXTDHAKA AI
                 </h1>
               </div>
             </div>
@@ -195,7 +195,7 @@ const Assistant = () => {
               </div>
 
               <div className="pt-4 border-t border-white/5 text-[10px] text-slate-600 font-bold uppercase tracking-wider text-center">
-                AuraPass Intelligence
+                NEXTDHAKA Intelligence
               </div>
             </div>
           </aside>
@@ -344,7 +344,7 @@ const Assistant = () => {
               >
                 <input
                   type="text"
-                  placeholder="Ask AuraPass AI anything..."
+                  placeholder="Ask NEXTDHAKA AI anything..."
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
                   disabled={isLoading}

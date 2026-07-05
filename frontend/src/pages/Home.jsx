@@ -238,9 +238,9 @@ const Home = () => {
               className="text-left"
             >
               <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-[7.5rem] font-black text-white leading-[0.95] sm:leading-[0.9] lg:leading-[0.85] tracking-tighter mb-6 text-glow">
-                AURA <br />
+                NEXT <br />
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-500 via-rose-500 to-amber-500 animate-gradient-x">
-                  PASS.
+                  DHAKA
                 </span>
               </h1>
 
@@ -344,7 +344,7 @@ const Home = () => {
                       <span className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-emerald-500 border-2 border-[#0c0c10] rounded-full animate-pulse" />
                     </div>
                     <div className="text-left">
-                      <div className="text-sm font-black text-white">AuraPass AI</div>
+                      <div className="text-sm font-black text-white">NEXTDHAKA AI</div>
                       <div className="text-[11px] text-slate-400">Online &bull; Ready to help</div>
                     </div>
                   </div>
@@ -666,7 +666,7 @@ const Home = () => {
                   to="/register"
                   className="w-full sm:w-auto px-10 py-4 bg-white text-black rounded-2xl font-black text-[11px] uppercase tracking-widest hover:scale-105 transition-transform shadow-2xl"
                 >
-                  Join AuraPass
+                  Join NEXTDHAKA
                 </Link>
                 <Link
                   to="/events"

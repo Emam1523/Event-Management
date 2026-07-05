@@ -155,7 +155,7 @@ const Login = () => {
             transition={{ delay: 1.1 }}
             className="text-slate-500 text-xs font-bold uppercase tracking-widest mt-auto"
           >
-            &copy; {new Date().getFullYear()} AURA PASS PLATFORM. ALL RIGHTS
+            &copy; {new Date().getFullYear()} NEXT DHAKA PLATFORM. ALL RIGHTS
             RESERVED.
           </motion.p>
         </div>
@@ -280,7 +280,7 @@ const Login = () => {
           {/* Footer */}
           <motion.div variants={itemVariants} className="mt-6 text-center">
             <p className="text-slate-500 font-medium">
-              New to Aura Pass?{" "}
+              New to NEXT DHAKA?{" "}
               <Link
                 to="/register"
                 className="text-primary font-black uppercase tracking-widest text-xs hover:underline decoration-2 underline-offset-4 transition-all"

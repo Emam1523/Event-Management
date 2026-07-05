@@ -105,7 +105,7 @@ const UserDashboard = () => {
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-orange opacity-75"></span>
                 <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-brand-orange"></span>
               </span>
-              <span className="text-brand-orange text-[11px] font-black uppercase tracking-[0.3em]">AuraPass Live</span>
+              <span className="text-brand-orange text-[11px] font-black uppercase tracking-[0.3em]">NEXTDHAKA Live</span>
             </motion.div>
             
             <motion.div variants={itemVariants} className="space-y-4">
@@ -354,14 +354,14 @@ const UserDashboard = () => {
                  </div>
                  <div className="text-right">
                     <span className="px-5 py-2 rounded-full bg-brand-orange text-[10px] font-black text-white uppercase tracking-[0.2em] shadow-lg shadow-brand-orange/40">
-                       Aura Elite
+                       NEXTDHAKA Elite
                     </span>
                  </div>
                </div>
                
                <div className="space-y-4">
                  <p className="text-[10px] font-black text-zinc-600 uppercase tracking-[0.4em] pl-1">Access Identity</p>
-                 <p className="text-3xl font-mono text-white tracking-[0.2em] group-hover/card:text-brand-orange transition-colors">#AUR-8829-X2</p>
+                 <p className="text-3xl font-mono text-white tracking-[0.2em] group-hover/card:text-brand-orange transition-colors">#NEXT-8829-X2</p>
                </div>
                
                <div className="grid grid-cols-2 gap-8 pt-10 border-t border-white/10">

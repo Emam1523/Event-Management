@@ -176,7 +176,7 @@ const Register = () => {
             transition={{ delay: 1.1 }}
             className="text-slate-500 text-xs font-bold uppercase tracking-widest mt-auto"
           >
-            &copy; {new Date().getFullYear()} AURA PASS PLATFORM. ALL RIGHTS RESERVED.
+            &copy; {new Date().getFullYear()} NEXT DHAKA PLATFORM. ALL RIGHTS RESERVED.
           </motion.p>
         </div>
       </div>

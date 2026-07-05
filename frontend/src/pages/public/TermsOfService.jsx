@@ -5,11 +5,11 @@ const TermsOfService = () => {
   const terms = [
     {
       title: "Acceptance of Terms",
-      content: "By accessing or using the AuraPass platform, you agree to be bound by these Terms of Service and all applicable laws and regulations."
+      content: "By accessing or using the NEXTDHAKA platform, you agree to be bound by these Terms of Service and all applicable laws and regulations."
     },
     {
       title: "Ticket Purchases",
-      content: "All ticket sales are final unless otherwise stated by the event organizer. AuraPass acts as a platform and is not responsible for event cancellations or modifications."
+      content: "All ticket sales are final unless otherwise stated by the event organizer. NEXTDHAKA acts as a platform and is not responsible for event cancellations or modifications."
     },
     {
       title: "User Conduct",
@@ -17,7 +17,7 @@ const TermsOfService = () => {
     },
     {
       title: "Intellectual Property",
-      content: "All content, logos, and software on AuraPass are the property of AuraPass or its licensors and are protected by copyright and other intellectual property laws."
+      content: "All content, logos, and software on NEXTDHAKA are the property of NEXTDHAKA or its licensors and are protected by copyright and other intellectual property laws."
     }
   ];
 
@@ -34,7 +34,7 @@ const TermsOfService = () => {
               TERMS OF <span className="text-primary">SERVICE.</span>
             </h1>
             <p className="text-xl text-slate-400 font-medium max-w-2xl mx-auto leading-relaxed">
-              The rules and regulations for using the AuraPass platform. Please read these carefully before using our services.
+              The rules and regulations for using the NEXTDHAKA platform. Please read these carefully before using our services.
             </p>
           </motion.div>
 
