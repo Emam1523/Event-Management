@@ -1,6 +1,6 @@
-import { useState, useEffect, useCallback } from 'react';
-import { useSearchParams } from 'react-router-dom';
-import { motion, AnimatePresence } from 'framer-motion';
+import { useState, useEffect, useCallback } from "react";
+import { useSearchParams } from "react-router-dom";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   FiSearch,
   FiMapPin,
@@ -9,12 +9,10 @@ import {
   FiZap,
   FiCompass,
   FiSliders,
-} from 'react-icons/fi';
-import EventCard from '../components/EventCard';
-import Pagination from '../components/common/Pagination';
-import eventService from '../services/eventService';
-
-
+} from "react-icons/fi";
+import EventCard from "../components/EventCard";
+import Pagination from "../components/common/Pagination";
+import eventService from "../services/eventService";
 
 const Events = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -24,18 +22,18 @@ const Events = () => {
   const [totalEvents, setTotalEvents] = useState(0);
 
   // Dynamic filters from database
-  const [categories, setCategories] = useState(['All']);
-  const [locations, setLocations] = useState(['All']);
+  const [categories, setCategories] = useState(["All"]);
+  const [locations, setLocations] = useState(["All"]);
 
   // Filter states
-  const [search, setSearch] = useState(searchParams.get('search') || '');
+  const [search, setSearch] = useState(searchParams.get("search") || "");
   const [category, setCategory] = useState(
-    searchParams.get('category') || 'All'
+    searchParams.get("category") || "All",
   );
   const [location, setLocation] = useState(
-    searchParams.get('location') || 'All'
+    searchParams.get("location") || "All",
   );
-  const [page, setPage] = useState(parseInt(searchParams.get('page')) || 1);
+  const [page, setPage] = useState(parseInt(searchParams.get("page")) || 1);
 
   useEffect(() => {
     const fetchFilters = async () => {
@@ -43,14 +41,14 @@ const Events = () => {
         const data = await eventService.getFilters();
         if (data && data.success) {
           if (data.categories && data.categories.length > 0) {
-            setCategories(['All', ...data.categories]);
+            setCategories(["All", ...data.categories]);
           }
           if (data.locations && data.locations.length > 0) {
-            setLocations(['All', ...data.locations]);
+            setLocations(["All", ...data.locations]);
           }
         }
       } catch (error) {
-        console.error('Error fetching filters from DB:', error);
+        console.error("Error fetching filters from DB:", error);
       }
     };
     fetchFilters();
@@ -61,16 +59,16 @@ const Events = () => {
     setIsLoading(true);
     try {
       const params = {
-        search: searchParams.get('search'),
+        search: searchParams.get("search"),
         category:
-          searchParams.get('category') !== 'All'
-            ? searchParams.get('category')
+          searchParams.get("category") !== "All"
+            ? searchParams.get("category")
             : undefined,
         location:
-          searchParams.get('location') !== 'All'
-            ? searchParams.get('location')
+          searchParams.get("location") !== "All"
+            ? searchParams.get("location")
             : undefined,
-        page: searchParams.get('page') || 1,
+        page: searchParams.get("page") || 1,
         limit: 9,
       };
 
@@ -78,7 +76,7 @@ const Events = () => {
       setEvents(data.events || []);
       setTotalEvents(data.total || 0);
     } catch (error) {
-      console.error('Error fetching events:', error);
+      console.error("Error fetching events:", error);
       setEvents([]);
     } finally {
       setIsLoading(false);
@@ -100,7 +98,7 @@ const Events = () => {
   const updateParams = (newParams) => {
     const updatedParams = new URLSearchParams(searchParams);
     Object.keys(newParams).forEach((key) => {
-      if (newParams[key] === 'All' || !newParams[key]) {
+      if (newParams[key] === "All" || !newParams[key]) {
         updatedParams.delete(key);
       } else {
         updatedParams.set(key, newParams[key]);
@@ -110,9 +108,9 @@ const Events = () => {
   };
 
   const clearFilters = () => {
-    setSearch('');
-    setCategory('All');
-    setLocation('All');
+    setSearch("");
+    setCategory("All");
+    setLocation("All");
     setPage(1);
     setSearchParams({});
   };
@@ -137,15 +135,15 @@ const Events = () => {
   };
 
   return (
-    <div className="bg-dark-bg min-h-screen relative overflow-hidden">
+    <div className="bg-aurora min-h-screen relative overflow-hidden pt-10 pb-4">
       {/* Background Decorative Elements */}
       <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none z-0">
         <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-primary/5 rounded-full blur-[120px]" />
         <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-indigo-500/5 rounded-full blur-[120px]" />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-aurora opacity-20 animate-aurora" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full opacity-20" />
       </div>
 
-      <div className="container-custom relative z-10 pt-24 sm:pt-28 md:pt-32 lg:pt-36 pb-8">
+      <div className="container-custom relative z-10 pt-32 pb-8">
         {/* Header Section */}
         <div className="mb-10 text-left">
           <motion.div
@@ -154,15 +152,14 @@ const Events = () => {
             className="flex flex-col lg:flex-row lg:items-center justify-between gap-8"
           >
             <div className="max-w-2xl">
-              <div className="flex items-center gap-2 mb-3">
-                <div className="w-10 h-[2px] bg-primary" />
-                <span className="text-primary text-[10px] font-black uppercase tracking-[0.4em]">
-                  Curated Experiences
-                </span>
-              </div>
               <h1 className="text-5xl md:text-7xl font-black text-white tracking-tighter mb-3 uppercase leading-[0.9]">
-                FIND YOUR <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-orange-400">NEXT</span> <br />
-                MEMORABLE <span className="relative">
+                FIND YOUR{" "}
+                <span className="text-transparent bg-clip-text bg-linear-to-r from-primary to-orange-400">
+                  NEXT
+                </span>{" "}
+                <br />
+                MEMORABLE{" "}
+                <span className="relative">
                   EVENT
                   <svg
                     className="absolute -bottom-1 left-0 w-full h-3 text-primary/30"
@@ -178,24 +175,24 @@ const Events = () => {
                   </svg>
                 </span>
               </h1>
-              <p className="text-slate-400 text-base font-medium max-w-lg leading-relaxed mt-3">
+              <p className="text-zinc-400 text-base font-medium max-w-lg leading-relaxed mt-3">
                 Discover workshops, concerts, and conferences happening near you
                 across Bangladesh.
               </p>
             </div>
 
             {/* Quick Search */}
-            <div className="flex flex-col gap-4 w-full max-w-md">
+            <div className="flex flex-col gap-4 w-full lg:max-w-lg">
               <form onSubmit={handleSearch} className="relative group">
-                <div className="absolute -inset-1 bg-gradient-to-r from-primary to-orange-600 rounded-2xl blur opacity-20 group-focus-within:opacity-40 transition duration-500" />
+                <div className="absolute -inset-1 bg-linear-to-r from-primary to-orange-600 rounded-2xl blur opacity-20 group-focus-within:opacity-40 transition duration-500" />
                 <div className="relative flex items-center bg-[#0b0b11]/80 backdrop-blur-xl border border-white/10 rounded-2xl p-1.5 shadow-2xl">
-                  <FiSearch className="ml-4 text-slate-500 text-xl" />
+                  <FiSearch className="ml-4 text-zinc-500 text-xl" />
                   <input
                     type="text"
                     placeholder="Search by name or keyword..."
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
-                    className="flex-1 bg-transparent border-none outline-none px-3 py-3 text-white font-semibold placeholder:text-slate-600 text-sm"
+                    className="flex-1 bg-transparent border-none outline-none px-3 py-3 text-white font-semibold placeholder:text-zinc-600 text-sm"
                   />
                   <button
                     type="submit"
@@ -208,20 +205,20 @@ const Events = () => {
 
               <div className="flex items-center justify-between px-2">
                 <div className="flex items-center gap-4">
-                  <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">
+                  <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest">
                     Trending:
                   </span>
                   <div className="flex gap-3">
-                    {['Concerts', 'Tech'].map((tag) => (
+                    {["Concerts", "Tech"].map((tag) => (
                       <button
                         key={tag}
                         onClick={() => {
                           const cat =
-                            tag === 'Concerts' ? 'Concert' : 'Conference';
+                            tag === "Concerts" ? "Concert" : "Conference";
                           setCategory(cat);
                           updateParams({ category: cat, page: 1 });
                         }}
-                        className="text-[10px] font-black text-slate-400 hover:text-primary transition-colors cursor-pointer"
+                        className="text-[10px] font-black text-zinc-400 hover:text-primary transition-colors cursor-pointer"
                       >
                         #{tag}
                       </button>
@@ -241,15 +238,17 @@ const Events = () => {
           </motion.div>
         </div>
 
-        <div className="bg-[#0b0b11]/40 border border-white/10 rounded-[2.5rem] p-6 md:p-8 backdrop-blur-xl shadow-2xl relative overflow-hidden">
+        <div className="bg-[#0b0b11]/40 border border-white/10 rounded-4xl p-6 md:p-8 backdrop-blur-xl shadow-2xl relative overflow-hidden">
           {/* Results Info Bar */}
           <div className="flex items-center justify-between mb-8 pb-6 border-b border-white/10">
             <div className="flex items-center gap-3">
               <div className="bg-primary/20 p-2.5 rounded-xl">
                 <FiZap className="text-primary text-sm" />
               </div>
-              <h3 className="text-xs font-black uppercase tracking-[0.3em] text-slate-400">
-                Showing <span className="text-white font-black">{totalEvents}</span> Results
+              <h3 className="text-xs font-black uppercase tracking-[0.3em] text-zinc-400">
+                Showing{" "}
+                <span className="text-white font-black">{totalEvents}</span>{" "}
+                Results
               </h3>
             </div>
           </div>
@@ -274,11 +273,11 @@ const Events = () => {
                     >
                       {categories.map((cat) => (
                         <option key={cat} value={cat} className="bg-slate-900">
-                          {cat === 'All' ? 'All Categories' : cat}
+                          {cat === "All" ? "All Categories" : cat}
                         </option>
                       ))}
                     </select>
-                    <FiChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 pointer-events-none group-hover:text-white transition-colors" />
+                    <FiChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-500 pointer-events-none group-hover:text-white transition-colors" />
                   </div>
                 </div>
 
@@ -298,18 +297,18 @@ const Events = () => {
                     >
                       {locations.map((loc) => (
                         <option key={loc} value={loc} className="bg-slate-900">
-                          {loc === 'All' ? 'Everywhere' : loc}
+                          {loc === "All" ? "Everywhere" : loc}
                         </option>
                       ))}
                     </select>
-                    <FiChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 pointer-events-none group-hover:text-white transition-colors" />
+                    <FiChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-500 pointer-events-none group-hover:text-white transition-colors" />
                   </div>
                 </div>
 
                 {/* Reset All */}
                 <button
                   onClick={clearFilters}
-                  className="w-full py-2.5 rounded-xl border border-white/10 text-slate-500 text-[10px] font-black uppercase tracking-[0.2em] hover:bg-white/5 hover:text-white hover:border-white/20 transition-all flex items-center justify-center gap-2 cursor-pointer"
+                  className="w-full py-2.5 rounded-xl border border-white/10 text-zinc-500 text-[10px] font-black uppercase tracking-[0.2em] hover:bg-white/5 hover:text-white hover:border-white/20 transition-all flex items-center justify-center gap-2 cursor-pointer"
                 >
                   <FiX /> Reset Filters
                 </button>
@@ -317,7 +316,10 @@ const Events = () => {
             </aside>
 
             {/* Events Grid Area - Scrollable block */}
-            <div id="events-grid-container" className="flex-1 lg:max-h-[68vh] lg:overflow-y-auto pr-2 custom-scrollbar">
+            <div
+              id="events-grid-container"
+              className="flex-1 lg:max-h-[68vh] lg:overflow-y-auto pr-2 custom-scrollbar"
+            >
               <AnimatePresence mode="wait">
                 {isLoading ? (
                   <motion.div
@@ -330,7 +332,7 @@ const Events = () => {
                     {[...Array(6)].map((_, i) => (
                       <div
                         key={i}
-                        className="bg-[#0b0b11]/50 rounded-[2.25rem] h-[450px] animate-pulse border border-white/5"
+                        className="bg-[#0b0b11]/50 rounded-4xl h-[450px] animate-pulse border border-white/5"
                       />
                     ))}
                   </motion.div>
@@ -353,30 +355,31 @@ const Events = () => {
                     key="empty"
                     initial={{ opacity: 0, scale: 0.97 }}
                     animate={{ opacity: 1, scale: 1 }}
-                    className="glass-card p-20 text-center bg-white/[0.01] border border-white/5 rounded-[3.5rem] relative overflow-hidden"
+                    className="glass-card p-20 text-center bg-white/1 border border-white/5 rounded-[3.5rem] relative overflow-hidden"
                   >
-                    <div className="absolute top-0 left-0 w-full h-[3px] bg-gradient-to-r from-transparent via-primary/50 to-transparent" />
-                    
+                    <div className="absolute top-0 left-0 w-full h-[3px] bg-linear-to-r from-transparent via-primary/50 to-transparent" />
+
                     {/* Glow Backdrop inside empty card */}
                     <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-44 h-44 bg-primary/10 rounded-full blur-[70px] pointer-events-none" />
 
                     <div className="bg-white/5 w-24 h-24 rounded-3xl flex items-center justify-center mx-auto mb-8 border border-white/10 relative">
-                      <FiSearch className="text-4xl text-slate-500" />
+                      <FiSearch className="text-4xl text-zinc-500" />
                     </div>
-                    
+
                     <h3 className="text-3xl font-black text-white mb-4 tracking-tight uppercase">
                       No results found
                     </h3>
-                    <p className="text-slate-500 mb-10 font-medium max-w-sm mx-auto text-sm leading-relaxed">
-                      We couldn't find any events matching your search filters. Try clearing filters or using different keywords.
+                    <p className="text-zinc-500 mb-10 font-medium max-w-sm mx-auto text-sm leading-relaxed">
+                      We couldn't find any events matching your search filters.
+                      Try clearing filters or using different keywords.
                     </p>
-                    
+
                     <button
                       onClick={clearFilters}
                       className="btn-primary py-4 px-10 rounded-xl group font-black tracking-widest text-xs cursor-pointer"
                     >
                       <span className="flex items-center gap-2">
-                        Clear All Filters{' '}
+                        Clear All Filters{" "}
                         <FiX className="group-hover:rotate-90 transition-transform" />
                       </span>
                     </button>
@@ -394,9 +397,11 @@ const Events = () => {
                     onPageChange={(newPage) => {
                       setPage(newPage);
                       updateParams({ page: newPage });
-                      const container = document.getElementById('events-grid-container');
+                      const container = document.getElementById(
+                        "events-grid-container",
+                      );
                       if (container) {
-                        container.scrollTo({ top: 0, behavior: 'smooth' });
+                        container.scrollTo({ top: 0, behavior: "smooth" });
                       }
                     }}
                   />
@@ -419,10 +424,10 @@ const Events = () => {
               className="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-[100]"
             />
             <motion.div
-              initial={{ x: '100%' }}
+              initial={{ x: "100%" }}
               animate={{ x: 0 }}
-              exit={{ x: '100%' }}
-              transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+              exit={{ x: "100%" }}
+              transition={{ type: "spring", damping: 25, stiffness: 200 }}
               className="fixed right-0 top-0 h-full w-[85%] max-w-md bg-slate-900 border-l border-white/10 z-[101] p-8 overflow-y-auto text-left"
             >
               <div className="flex items-center justify-between mb-10">
@@ -452,7 +457,7 @@ const Events = () => {
                   >
                     {categories.map((cat) => (
                       <option key={cat} value={cat} className="bg-slate-900">
-                        {cat === 'All' ? 'All Categories' : cat}
+                        {cat === "All" ? "All Categories" : cat}
                       </option>
                     ))}
                   </select>

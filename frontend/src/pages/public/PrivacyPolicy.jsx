@@ -1,32 +1,36 @@
-import { motion } from 'framer-motion';
-import { FiShield, FiLock, FiEye, FiUserCheck } from 'react-icons/fi';
+import { motion } from "framer-motion";
+import { FiShield, FiLock, FiEye, FiUserCheck } from "react-icons/fi";
 
 const PrivacyPolicy = () => {
   const sections = [
     {
       icon: <FiEye />,
       title: "Data Collection",
-      content: "We collect information you provide directly to us, such as when you create an account, purchase tickets, or communicate with us. This may include your name, email address, payment information, and event preferences."
+      content:
+        "We collect information you provide directly to us, such as when you create an account, purchase tickets, or communicate with us. This may include your name, email address, payment information, and event preferences.",
     },
     {
       icon: <FiLock />,
       title: "How We Use Your Data",
-      content: "Your data helps us personalize your experience, process transactions securely, and provide you with relevant event recommendations. We never sell your personal information to third parties."
+      content:
+        "Your data helps us personalize your experience, process transactions securely, and provide you with relevant event recommendations. We never sell your personal information to third parties.",
     },
     {
       icon: <FiShield />,
       title: "Security Measures",
-      content: "NEXTDHAKA employs industry-standard encryption and security protocols to protect your data. Your payment information is handled through secure, PCI-compliant gateways."
+      content:
+        "NEXTDHAKA employs industry-standard encryption and security protocols to protect your data. Your payment information is handled through secure, PCI-compliant gateways.",
     },
     {
       icon: <FiUserCheck />,
       title: "Your Rights",
-      content: "You have the right to access, correct, or delete your personal data at any time. You can manage your privacy settings directly from your account dashboard."
-    }
+      content:
+        "You have the right to access, correct, or delete your personal data at any time. You can manage your privacy settings directly from your account dashboard.",
+    },
   ];
 
   return (
-    <div className="bg-dark-bg min-h-screen pt-32 pb-24 text-slate-200">
+    <div className="bg-dark-bg min-h-screen pt-32 pb-24 text-zinc-200">
       <div className="container-custom">
         <div className="max-w-4xl mx-auto">
           <motion.div
@@ -37,8 +41,9 @@ const PrivacyPolicy = () => {
             <h1 className="text-5xl md:text-7xl font-black text-white tracking-tighter mb-8 uppercase">
               PRIVACY <span className="text-primary">POLICY.</span>
             </h1>
-            <p className="text-xl text-slate-400 font-medium max-w-2xl mx-auto leading-relaxed">
-              Your trust is our most valuable asset. Learn how we protect your privacy and secure your data at NEXTDHAKA.
+            <p className="text-xl text-zinc-400 font-medium max-w-2xl mx-auto leading-relaxed">
+              Your trust is our most valuable asset. Learn how we protect your
+              privacy and secure your data at NEXTDHAKA.
             </p>
           </motion.div>
 
@@ -55,8 +60,12 @@ const PrivacyPolicy = () => {
                   {section.icon}
                 </div>
                 <div>
-                  <h3 className="text-2xl font-black text-white mb-4 tracking-tight uppercase">{section.title}</h3>
-                  <p className="text-slate-400 font-medium leading-relaxed text-lg">{section.content}</p>
+                  <h3 className="text-2xl font-black text-white mb-4 tracking-tight uppercase">
+                    {section.title}
+                  </h3>
+                  <p className="text-zinc-400 font-medium leading-relaxed text-lg">
+                    {section.content}
+                  </p>
                 </div>
               </motion.div>
             ))}

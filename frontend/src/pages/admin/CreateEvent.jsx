@@ -1,9 +1,20 @@
-import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { FiPlus, FiTrash2, FiUpload, FiCalendar, FiClock, FiMapPin, FiTag, FiUsers, FiInfo, FiArrowLeft } from 'react-icons/fi';
-import { motion, AnimatePresence } from 'framer-motion';
-import api, { eventsAPI } from '../../services/api';
-import MapPicker from '../../components/common/MapPicker';
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import {
+  FiPlus,
+  FiTrash2,
+  FiUpload,
+  FiCalendar,
+  FiClock,
+  FiMapPin,
+  FiTag,
+  FiUsers,
+  FiInfo,
+  FiArrowLeft,
+} from "react-icons/fi";
+import { motion, AnimatePresence } from "framer-motion";
+import api, { eventsAPI } from "../../services/api";
+import MapPicker from "../../components/common/MapPicker";
 
 const CreateEvent = () => {
   const navigate = useNavigate();
@@ -11,24 +22,24 @@ const CreateEvent = () => {
   const [categories, setCategories] = useState([]);
   const [cities, setCities] = useState([]);
   const [formData, setFormData] = useState({
-    title: '',
-    description: '',
-    fullDescription: '',
-    date: '',
-    time: '',
-    endTime: '',
-    location: '',
-    googleMapUrl: '',
-    venue: '',
-    address: '',
-    category: '',
-    serviceCharge: '',
+    title: "",
+    description: "",
+    fullDescription: "",
+    date: "",
+    time: "",
+    endTime: "",
+    location: "",
+    googleMapUrl: "",
+    venue: "",
+    address: "",
+    category: "",
+    serviceCharge: "",
     image: null,
-    capacity: '',
+    capacity: "",
     tags: [],
     ticketTypes: [
-      { name: 'General Admission', price: '', available: '', description: '' }
-    ]
+      { name: "General Admission", price: "", available: "", description: "" },
+    ],
   });
 
   const processEnv = import.meta.env;
@@ -47,7 +58,7 @@ const CreateEvent = () => {
           }
         }
       } catch (err) {
-        console.error('Error fetching categories and cities:', err);
+        console.error("Error fetching categories and cities:", err);
       }
     };
     fetchFilters();
@@ -55,33 +66,43 @@ const CreateEvent = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   };
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/webp', 'image/gif'];
+      const allowedTypes = [
+        "image/jpeg",
+        "image/png",
+        "image/jpg",
+        "image/webp",
+        "image/gif",
+      ];
       if (!allowedTypes.includes(file.type)) {
-        alert('Invalid file format. Only JPEG, PNG, WEBP, and GIF images are allowed!');
-        e.target.value = '';
+        alert(
+          "Invalid file format. Only JPEG, PNG, WEBP, and GIF images are allowed!",
+        );
+        e.target.value = "";
         return;
       }
 
       const maxSize = 5 * 1024 * 1024;
       if (file.size > maxSize) {
-        alert('File size exceeds the 5MB limit. Please upload a smaller image.');
-        e.target.value = '';
+        alert(
+          "File size exceeds the 5MB limit. Please upload a smaller image.",
+        );
+        e.target.value = "";
         return;
       }
 
       setFormData({
         ...formData,
         image: file,
-        imagePreview: URL.createObjectURL(file)
+        imagePreview: URL.createObjectURL(file),
       });
     }
   };
@@ -91,18 +112,18 @@ const CreateEvent = () => {
     updatedTickets[index][field] = value;
     setFormData({
       ...formData,
-      ticketTypes: updatedTickets
+      ticketTypes: updatedTickets,
     });
   };
 
   const addTicketType = () => {
     const updatedTickets = [
       ...formData.ticketTypes,
-      { name: '', price: '', available: '', description: '' }
+      { name: "", price: "", available: "", description: "" },
     ];
     setFormData({
       ...formData,
-      ticketTypes: updatedTickets
+      ticketTypes: updatedTickets,
     });
   };
 
@@ -111,7 +132,7 @@ const CreateEvent = () => {
     const updatedTickets = formData.ticketTypes.filter((_, i) => i !== index);
     setFormData({
       ...formData,
-      ticketTypes: updatedTickets
+      ticketTypes: updatedTickets,
     });
   };
 
@@ -120,24 +141,37 @@ const CreateEvent = () => {
     setIsLoading(true);
 
     try {
-      if (!formData.title || !formData.date || !formData.time || !formData.location || !formData.capacity) {
-        throw new Error('Please fill in all required fields (including Total Audience)');
+      if (
+        !formData.title ||
+        !formData.date ||
+        !formData.time ||
+        !formData.location ||
+        !formData.capacity
+      ) {
+        throw new Error(
+          "Please fill in all required fields (including Total Audience)",
+        );
       }
 
       const totalCapacity = Number(formData.capacity || 0);
-      const sumTierCapacity = formData.ticketTypes.reduce((sum, t) => sum + Number(t.available || 0), 0);
+      const sumTierCapacity = formData.ticketTypes.reduce(
+        (sum, t) => sum + Number(t.available || 0),
+        0,
+      );
       if (sumTierCapacity !== totalCapacity) {
-        throw new Error(`The sum of all ticket tier quantities (${sumTierCapacity}) must be equal to the total audience capacity (${totalCapacity}).`);
+        throw new Error(
+          `The sum of all ticket tier quantities (${sumTierCapacity}) must be equal to the total audience capacity (${totalCapacity}).`,
+        );
       }
 
       let imageUrl = formData.image;
-      
+
       // 1. Upload image if it's a file
       if (formData.image instanceof File) {
         const uploadData = new FormData();
-        uploadData.append('image', formData.image);
-        const uploadRes = await api.post('/upload', uploadData, {
-          headers: { 'Content-Type': 'multipart/form-data' }
+        uploadData.append("image", formData.image);
+        const uploadRes = await api.post("/upload", uploadData, {
+          headers: { "Content-Type": "multipart/form-data" },
         });
         imageUrl = uploadRes.data?.url || uploadRes.data;
       }
@@ -152,26 +186,32 @@ const CreateEvent = () => {
         date: formData.date,
         time: formData.time,
         endTime: formData.endTime,
-        location: formData.venue ? `${formData.location}, ${formData.venue}` : formData.location,
+        location: formData.venue
+          ? `${formData.location}, ${formData.venue}`
+          : formData.location,
         googleMapUrl: formData.googleMapUrl,
         price: Number(formData.ticketTypes[0]?.price || 0),
         image: imageUrl,
         serviceCharge: Number(formData.serviceCharge) || 0,
-        tickets: formData.ticketTypes.map(t => ({
+        tickets: formData.ticketTypes.map((t) => ({
           name: t.name,
           price: Number(t.price),
           capacity: Number(t.available || 0),
-          description: t.description
-        }))
+          description: t.description,
+        })),
       };
-      
-      await api.post('/events', eventData);
-      
-      alert('Event created successfully!');
-      navigate('/admin/manage-events');
+
+      await api.post("/events", eventData);
+
+      alert("Event created successfully!");
+      navigate("/admin/manage-events");
     } catch (error) {
-      console.error('Error creating event:', error);
-      alert(error.response?.data?.message || error.message || 'Failed to create event.');
+      console.error("Error creating event:", error);
+      alert(
+        error.response?.data?.message ||
+          error.message ||
+          "Failed to create event.",
+      );
     } finally {
       setIsLoading(false);
     }
@@ -179,32 +219,33 @@ const CreateEvent = () => {
 
   const sectionVariants = {
     hidden: { opacity: 0, y: 20 },
-    visible: { opacity: 1, y: 0 }
+    visible: { opacity: 1, y: 0 },
   };
 
   return (
     <div className="max-w-6xl mx-auto pb-24 pt-4 px-2 sm:px-6 lg:px-8">
-      
       <div className="mb-12">
-        <button 
-          onClick={() => navigate('/admin/manage-events')}
+        <button
+          onClick={() => navigate("/admin/manage-events")}
           className="flex items-center gap-2 text-zinc-500 hover:text-white transition-colors mb-6 group w-fit"
         >
           <FiArrowLeft className="group-hover:-translate-x-1 transition-transform" />
-          <span className="text-[10px] font-black uppercase tracking-widest">Back to Ledger</span>
+          <span className="text-[10px] font-black uppercase tracking-widest">
+            Back to Ledger
+          </span>
         </button>
         <h1 className="text-4xl md:text-5xl font-black text-white tracking-tight mb-4 uppercase">
           Create <span className="text-brand-orange">Masterpiece</span>
         </h1>
         <p className="text-zinc-400 font-medium text-lg max-w-2xl">
-          Design an experience that will be remembered for a lifetime. Configure the details below to initialize a new exhibition.
+          Design an experience that will be remembered for a lifetime. Configure
+          the details below to initialize a new exhibition.
         </p>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-12">
-        
         {/* Concept & Vision */}
-        <motion.section 
+        <motion.section
           variants={sectionVariants}
           initial="hidden"
           whileInView="visible"
@@ -216,17 +257,21 @@ const CreateEvent = () => {
               <FiInfo className="text-2xl" />
             </div>
             <div>
-              <h2 className="text-2xl font-black text-white uppercase tracking-tight">Basic Info</h2>
+              <h2 className="text-2xl font-black text-white uppercase tracking-tight">
+                Basic Info
+              </h2>
               <p className="text-zinc-500 text-sm mt-3 font-medium leading-relaxed">
-                Name your event and tell attendees why they should come. Add a category and capacity to help people find it.
+                Name your event and tell attendees why they should come. Add a
+                category and capacity to help people find it.
               </p>
             </div>
           </div>
-          
-          <div className="lg:col-span-2 bg-zinc-950/50 border border-white/5 rounded-[2.5rem] p-8 md:p-10 shadow-2xl backdrop-blur-xl space-y-8">
 
+          <div className="lg:col-span-2 bg-zinc-950/50 border border-white/5 rounded-4xl p-8 md:p-10 shadow-2xl backdrop-blur-xl space-y-8">
             <div className="group">
-              <label className="block text-[10px] font-black text-zinc-500 uppercase tracking-[0.2em] mb-4 ml-2 group-focus-within:text-brand-orange transition-colors">Event Title</label>
+              <label className="block text-[10px] font-black text-zinc-500 uppercase tracking-[0.2em] mb-4 ml-2 group-focus-within:text-brand-orange transition-colors">
+                Event Title
+              </label>
               <input
                 type="text"
                 name="title"
@@ -239,7 +284,9 @@ const CreateEvent = () => {
             </div>
 
             <div className="group">
-              <label className="block text-[10px] font-black text-zinc-500 uppercase tracking-[0.2em] mb-4 ml-2 group-focus-within:text-brand-orange transition-colors">Event Description</label>
+              <label className="block text-[10px] font-black text-zinc-500 uppercase tracking-[0.2em] mb-4 ml-2 group-focus-within:text-brand-orange transition-colors">
+                Event Description
+              </label>
               <textarea
                 name="description"
                 value={formData.description}
@@ -254,23 +301,27 @@ const CreateEvent = () => {
         </motion.section>
 
         {/* Classification & Capacity */}
-        <motion.section 
+        <motion.section
           variants={sectionVariants}
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true }}
-          className="bg-zinc-950 border border-white/5 rounded-[2.5rem] p-10 backdrop-blur-3xl"
+          className="bg-zinc-950 border border-white/5 rounded-4xl p-10 backdrop-blur-3xl"
         >
           <div className="flex items-center gap-4 mb-10">
             <div className="w-12 h-12 rounded-2xl bg-amber-500/10 flex items-center justify-center text-amber-500">
               <FiTag className="text-2xl" />
             </div>
-            <h2 className="text-xl font-black text-white uppercase tracking-tight">Classification & Capacity</h2>
+            <h2 className="text-xl font-black text-white uppercase tracking-tight">
+              Classification & Capacity
+            </h2>
           </div>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div className="group">
-              <label className="block text-[10px] font-black text-zinc-500 uppercase tracking-[0.2em] mb-4 ml-2 group-focus-within:text-amber-500 transition-colors">Category</label>
+              <label className="block text-[10px] font-black text-zinc-500 uppercase tracking-[0.2em] mb-4 ml-2 group-focus-within:text-amber-500 transition-colors">
+                Category
+              </label>
               <div className="relative">
                 <FiTag className="absolute left-8 top-1/2 -translate-y-1/2 text-zinc-500 pointer-events-none" />
                 <select
@@ -280,16 +331,22 @@ const CreateEvent = () => {
                   className="w-full bg-white/5 border border-white/5 rounded-2xl py-5 pl-16 pr-8 text-white focus:outline-none focus:border-amber-500/50 focus:ring-4 focus:ring-amber-500/10 transition-all appearance-none font-bold cursor-pointer"
                   required
                 >
-                  <option value="" className="bg-zinc-950">Select a genre</option>
+                  <option value="" className="bg-zinc-950">
+                    Select a genre
+                  </option>
                   {categories.map((cat) => (
-                    <option key={cat} value={cat} className="bg-zinc-950">{cat}</option>
+                    <option key={cat} value={cat} className="bg-zinc-950">
+                      {cat}
+                    </option>
                   ))}
                 </select>
               </div>
             </div>
 
             <div className="group">
-              <label className="block text-[10px] font-black text-zinc-500 uppercase tracking-[0.2em] mb-4 ml-2 group-focus-within:text-amber-500 transition-colors">Total Attendance</label>
+              <label className="block text-[10px] font-black text-zinc-500 uppercase tracking-[0.2em] mb-4 ml-2 group-focus-within:text-amber-500 transition-colors">
+                Total Attendance
+              </label>
               <div className="relative">
                 <FiUsers className="absolute left-8 top-1/2 -translate-y-1/2 text-zinc-500 pointer-events-none" />
                 <input
@@ -305,7 +362,9 @@ const CreateEvent = () => {
             </div>
 
             <div className="group">
-              <label className="block text-[10px] font-black text-zinc-500 uppercase tracking-[0.2em] mb-4 ml-2 group-focus-within:text-amber-500 transition-colors">Service Charge (%)</label>
+              <label className="block text-[10px] font-black text-zinc-500 uppercase tracking-[0.2em] mb-4 ml-2 group-focus-within:text-amber-500 transition-colors">
+                Service Charge (%)
+              </label>
               <div className="relative">
                 <FiTag className="absolute left-8 top-1/2 -translate-y-1/2 text-zinc-500 pointer-events-none" />
                 <input
@@ -325,23 +384,27 @@ const CreateEvent = () => {
         </motion.section>
 
         {/* Schedule */}
-        <motion.section 
+        <motion.section
           variants={sectionVariants}
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true }}
-          className="bg-zinc-950 border border-white/5 rounded-[2.5rem] p-10 backdrop-blur-3xl"
+          className="bg-zinc-950 border border-white/5 rounded-4xl p-10 backdrop-blur-3xl"
         >
           <div className="flex items-center gap-4 mb-10">
             <div className="w-12 h-12 rounded-2xl bg-blue-500/10 flex items-center justify-center text-blue-500">
               <FiCalendar className="text-2xl" />
             </div>
-            <h2 className="text-xl font-black text-white uppercase tracking-tight">Timeline</h2>
+            <h2 className="text-xl font-black text-white uppercase tracking-tight">
+              Timeline
+            </h2>
           </div>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div className="group">
-              <label className="block text-[10px] font-black text-zinc-500 uppercase tracking-[0.2em] mb-4 ml-2 group-focus-within:text-blue-500 transition-colors">Date</label>
+              <label className="block text-[10px] font-black text-zinc-500 uppercase tracking-[0.2em] mb-4 ml-2 group-focus-within:text-blue-500 transition-colors">
+                Date
+              </label>
               <div className="relative">
                 <FiCalendar className="absolute left-8 top-1/2 -translate-y-1/2 text-zinc-500 pointer-events-none" />
                 <input
@@ -356,7 +419,9 @@ const CreateEvent = () => {
             </div>
 
             <div className="group">
-              <label className="block text-[10px] font-black text-zinc-500 uppercase tracking-[0.2em] mb-4 ml-2 group-focus-within:text-blue-500 transition-colors">Start Time</label>
+              <label className="block text-[10px] font-black text-zinc-500 uppercase tracking-[0.2em] mb-4 ml-2 group-focus-within:text-blue-500 transition-colors">
+                Start Time
+              </label>
               <div className="relative">
                 <FiClock className="absolute left-8 top-1/2 -translate-y-1/2 text-zinc-500 pointer-events-none" />
                 <input
@@ -371,7 +436,9 @@ const CreateEvent = () => {
             </div>
 
             <div className="group">
-              <label className="block text-[10px] font-black text-zinc-500 uppercase tracking-[0.2em] mb-4 ml-2 group-focus-within:text-blue-500 transition-colors">End Time</label>
+              <label className="block text-[10px] font-black text-zinc-500 uppercase tracking-[0.2em] mb-4 ml-2 group-focus-within:text-blue-500 transition-colors">
+                End Time
+              </label>
               <div className="relative">
                 <FiClock className="absolute left-8 top-1/2 -translate-y-1/2 text-zinc-500 pointer-events-none" />
                 <input
@@ -387,94 +454,126 @@ const CreateEvent = () => {
         </motion.section>
 
         {/* Location */}
-        <motion.section 
+        <motion.section
           variants={sectionVariants}
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true }}
-          className="bg-zinc-950 border border-white/5 rounded-[2.5rem] p-10 backdrop-blur-3xl"
+          className="bg-zinc-950 border border-white/5 rounded-4xl p-10 backdrop-blur-3xl"
         >
           <div className="flex items-center gap-4 mb-10">
             <div className="w-12 h-12 rounded-2xl bg-emerald-500/10 flex items-center justify-center text-emerald-500">
               <FiMapPin className="text-2xl" />
             </div>
-            <h2 className="text-xl font-black text-white uppercase tracking-tight">Precise Coordinates</h2>
+            <h2 className="text-xl font-black text-white uppercase tracking-tight">
+              Precise Coordinates
+            </h2>
           </div>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div className="group">
-                <label className="block text-[10px] font-black text-zinc-500 uppercase tracking-[0.2em] mb-4 ml-2 group-focus-within:text-emerald-500 transition-colors">Location Name</label>
-                <input
-                  type="text"
-                  name="location"
-                  value={formData.location}
-                  onChange={handleChange}
-                  className="w-full bg-white/5 border border-white/5 rounded-2xl py-5 px-8 text-white placeholder:text-zinc-700 focus:outline-none focus:border-emerald-500/50 focus:ring-4 focus:ring-emerald-500/10 transition-all font-bold"
-                  placeholder="e.g. Royal Grand Ballroom"
-                  required
-                />
+              <label className="block text-[10px] font-black text-zinc-500 uppercase tracking-[0.2em] mb-4 ml-2 group-focus-within:text-emerald-500 transition-colors">
+                Location Name
+              </label>
+              <input
+                type="text"
+                name="location"
+                value={formData.location}
+                onChange={handleChange}
+                className="w-full bg-white/5 border border-white/5 rounded-2xl py-5 px-8 text-white placeholder:text-zinc-700 focus:outline-none focus:border-emerald-500/50 focus:ring-4 focus:ring-emerald-500/10 transition-all font-bold"
+                placeholder="e.g. Royal Grand Ballroom"
+                required
+              />
             </div>
             <div className="group">
-                <label className="block text-[10px] font-black text-zinc-500 uppercase tracking-[0.2em] mb-4 ml-2 group-focus-within:text-emerald-500 transition-colors">City</label>
-                <div className="relative">
-                  <FiMapPin className="absolute left-8 top-1/2 -translate-y-1/2 text-zinc-500 pointer-events-none" />
-                  <select
-                    name="venue"
-                    value={formData.venue}
-                    onChange={handleChange}
-                    className="w-full bg-white/5 border border-white/5 rounded-2xl py-5 pl-16 pr-8 text-white focus:outline-none focus:border-emerald-500/50 focus:ring-4 focus:ring-emerald-500/10 transition-all appearance-none font-bold cursor-pointer"
-                    required
-                  >
-                    <option value="" className="bg-zinc-950">Select a city</option>
-                    {cities.map((city) => (
-                      <option key={city} value={city} className="bg-zinc-950">{city}</option>
-                    ))}
-                  </select>
-                </div>
+              <label className="block text-[10px] font-black text-zinc-500 uppercase tracking-[0.2em] mb-4 ml-2 group-focus-within:text-emerald-500 transition-colors">
+                City
+              </label>
+              <div className="relative">
+                <FiMapPin className="absolute left-8 top-1/2 -translate-y-1/2 text-zinc-500 pointer-events-none" />
+                <select
+                  name="venue"
+                  value={formData.venue}
+                  onChange={handleChange}
+                  className="w-full bg-white/5 border border-white/5 rounded-2xl py-5 pl-16 pr-8 text-white focus:outline-none focus:border-emerald-500/50 focus:ring-4 focus:ring-emerald-500/10 transition-all appearance-none font-bold cursor-pointer"
+                  required
+                >
+                  <option value="" className="bg-zinc-950">
+                    Select a city
+                  </option>
+                  {cities.map((city) => (
+                    <option key={city} value={city} className="bg-zinc-950">
+                      {city}
+                    </option>
+                  ))}
+                </select>
+              </div>
             </div>
             <div className="group md:col-span-2">
-                <label className="block text-[10px] font-black text-zinc-500 uppercase tracking-[0.2em] mb-4 ml-2 group-focus-within:text-emerald-500 transition-colors">Live Location</label>
-                <MapPicker 
-                  apiKey={processEnv.VITE_GOOGLE_MAPS_API_KEY || processEnv.GOOGLE_MAPS_API_KEY} 
-                  value={formData.googleMapUrl} 
-                  onChange={(val) => setFormData({ ...formData, googleMapUrl: val })} 
-                />
-                <p className="mt-2 text-[10px] text-zinc-600 font-medium ml-2">Click on the map or use the crosshair icon to pin the exact live location.</p>
+              <label className="block text-[10px] font-black text-zinc-500 uppercase tracking-[0.2em] mb-4 ml-2 group-focus-within:text-emerald-500 transition-colors">
+                Live Location
+              </label>
+              <MapPicker
+                apiKey={
+                  processEnv.VITE_GOOGLE_MAPS_API_KEY ||
+                  processEnv.GOOGLE_MAPS_API_KEY
+                }
+                value={formData.googleMapUrl}
+                onChange={(val) =>
+                  setFormData({ ...formData, googleMapUrl: val })
+                }
+              />
+              <p className="mt-2 text-[10px] text-zinc-300/60 font-medium ml-2">
+                Click on the map or use the crosshair icon to pin the exact live
+                location.
+              </p>
             </div>
           </div>
         </motion.section>
 
         {/* Visual Identity */}
-        <motion.section 
+        <motion.section
           variants={sectionVariants}
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true }}
-          className="bg-zinc-950 border border-white/5 rounded-[2.5rem] p-10 backdrop-blur-3xl"
+          className="bg-zinc-950 border border-white/5 rounded-4xl p-10 backdrop-blur-3xl"
         >
           <div className="flex items-center gap-4 mb-10">
             <div className="w-12 h-12 rounded-2xl bg-purple-500/10 flex items-center justify-center text-purple-500">
               <FiUpload className="text-2xl" />
             </div>
-            <h2 className="text-xl font-black text-white uppercase tracking-tight">Visual Identity</h2>
+            <h2 className="text-xl font-black text-white uppercase tracking-tight">
+              Visual Identity
+            </h2>
           </div>
-          
-          <div className="flex flex-col items-center justify-center border-2 border-dashed border-white/10 rounded-[2rem] p-12 hover:border-brand-orange/50 transition-all cursor-pointer group relative overflow-hidden bg-white/[0.02]">
+
+          <div className="flex flex-col items-center justify-center border-2 border-dashed border-white/10 rounded-4xl p-12 hover:border-brand-orange/50 transition-all cursor-pointer group relative overflow-hidden bg-white/2">
             {formData.imagePreview ? (
               <div className="relative w-full aspect-video rounded-2xl overflow-hidden shadow-2xl">
-                <img src={formData.imagePreview} alt="Preview" className="w-full h-full object-cover" />
+                <img
+                  src={formData.imagePreview}
+                  alt="Preview"
+                  className="w-full h-full object-cover"
+                />
                 <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-all">
-                  <p className="text-white font-black uppercase tracking-widest text-[10px]">Replace Media Asset</p>
+                  <p className="text-white font-black uppercase tracking-widest text-[10px]">
+                    Replace Media Asset
+                  </p>
                 </div>
               </div>
             ) : (
               <div className="flex flex-col items-center gap-4">
-                <div className="w-20 h-20 rounded-full bg-white/5 flex items-center justify-center text-zinc-600 group-hover:text-brand-orange transition-colors">
+                <div className="w-20 h-20 rounded-full bg-white/5 flex items-center justify-center text-zinc-300/60 group-hover:text-brand-orange transition-colors">
                   <FiUpload className="text-3xl" />
                 </div>
                 <div className="text-center">
-                  <p className="text-white font-black uppercase tracking-[0.2em] text-[10px] mb-2">Upload Core Artifact</p>
-                  <p className="text-zinc-600 font-medium text-xs">High resolution assets (1920x1080) recommended</p>
+                  <p className="text-white font-black uppercase tracking-[0.2em] text-[10px] mb-2">
+                    Upload Core Artifact
+                  </p>
+                  <p className="text-zinc-300/60 font-medium text-xs">
+                    High resolution assets (1920x1080) recommended
+                  </p>
                 </div>
               </div>
             )}
@@ -488,19 +587,21 @@ const CreateEvent = () => {
         </motion.section>
 
         {/* Tickets */}
-        <motion.section 
+        <motion.section
           variants={sectionVariants}
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true }}
-          className="bg-zinc-950 border border-white/5 rounded-[2.5rem] p-10 backdrop-blur-3xl"
+          className="bg-zinc-950 border border-white/5 rounded-4xl p-10 backdrop-blur-3xl"
         >
           <div className="flex items-center justify-between mb-10">
             <div className="flex items-center gap-4">
               <div className="w-12 h-12 rounded-2xl bg-orange-500/10 flex items-center justify-center text-orange-500">
                 <FiTag className="text-2xl" />
               </div>
-              <h2 className="text-xl font-black text-white uppercase tracking-tight">Elite Pass Tiers</h2>
+              <h2 className="text-xl font-black text-white uppercase tracking-tight">
+                Elite Pass Tiers
+              </h2>
             </div>
             <button
               type="button"
@@ -510,17 +611,26 @@ const CreateEvent = () => {
               <FiPlus /> New Tier
             </button>
           </div>
-          
+
           {formData.capacity && (
-            <div className="mb-8 p-6 bg-white/[0.02] border border-white/5 rounded-3xl flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div className="mb-8 p-6 bg-white/2 border border-white/5 rounded-3xl flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div>
-                <p className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500">Allocated Audience</p>
+                <p className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500">
+                  Allocated Audience
+                </p>
                 <h3 className="text-lg font-bold text-white mt-1 font-mono">
-                  {formData.ticketTypes.reduce((sum, t) => sum + Number(t.available || 0), 0)} / {formData.capacity}
+                  {formData.ticketTypes.reduce(
+                    (sum, t) => sum + Number(t.available || 0),
+                    0,
+                  )}{" "}
+                  / {formData.capacity}
                 </h3>
               </div>
               {(() => {
-                const allocated = formData.ticketTypes.reduce((sum, t) => sum + Number(t.available || 0), 0);
+                const allocated = formData.ticketTypes.reduce(
+                  (sum, t) => sum + Number(t.available || 0),
+                  0,
+                );
                 const total = Number(formData.capacity);
                 if (allocated === total) {
                   return (
@@ -544,11 +654,11 @@ const CreateEvent = () => {
               })()}
             </div>
           )}
-          
+
           <div className="space-y-6">
             <AnimatePresence mode="popLayout">
               {formData.ticketTypes.map((ticket, index) => (
-                <motion.div 
+                <motion.div
                   key={index}
                   initial={{ opacity: 0, scale: 0.95 }}
                   animate={{ opacity: 1, scale: 1 }}
@@ -557,40 +667,52 @@ const CreateEvent = () => {
                 >
                   <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
                     <div className="md:col-span-2">
-                      <label className="block text-[10px] font-black text-zinc-500 uppercase tracking-[0.2em] mb-4">Pass Name</label>
+                      <label className="block text-[10px] font-black text-zinc-500 uppercase tracking-[0.2em] mb-4">
+                        Pass Name
+                      </label>
                       <input
                         type="text"
                         value={ticket.name}
-                        onChange={(e) => handleTicketChange(index, 'name', e.target.value)}
+                        onChange={(e) =>
+                          handleTicketChange(index, "name", e.target.value)
+                        }
                         className="w-full bg-zinc-900/50 border border-white/5 rounded-xl py-4 px-6 text-white focus:outline-none focus:border-brand-orange/50 transition-all font-bold"
                         placeholder="e.g. Black Tier Diamond"
                         required
                       />
                     </div>
                     <div>
-                      <label className="block text-[10px] font-black text-zinc-500 uppercase tracking-[0.2em] mb-4">Price (৳)</label>
+                      <label className="block text-[10px] font-black text-zinc-500 uppercase tracking-[0.2em] mb-4">
+                        Price (৳)
+                      </label>
                       <input
                         type="number"
                         value={ticket.price}
-                        onChange={(e) => handleTicketChange(index, 'price', e.target.value)}
+                        onChange={(e) =>
+                          handleTicketChange(index, "price", e.target.value)
+                        }
                         className="w-full bg-zinc-900/50 border border-white/5 rounded-xl py-4 px-6 text-white focus:outline-none focus:border-brand-orange/50 transition-all font-bold"
                         placeholder="0"
                         required
                       />
                     </div>
                     <div>
-                      <label className="block text-[10px] font-black text-zinc-500 uppercase tracking-[0.2em] mb-4">Quantity</label>
+                      <label className="block text-[10px] font-black text-zinc-500 uppercase tracking-[0.2em] mb-4">
+                        Quantity
+                      </label>
                       <input
                         type="number"
                         value={ticket.available}
-                        onChange={(e) => handleTicketChange(index, 'available', e.target.value)}
+                        onChange={(e) =>
+                          handleTicketChange(index, "available", e.target.value)
+                        }
                         className="w-full bg-zinc-900/50 border border-white/5 rounded-xl py-4 px-6 text-white focus:outline-none focus:border-brand-orange/50 transition-all font-bold"
                         placeholder="100"
                         required
                       />
                     </div>
                   </div>
-                  
+
                   {formData.ticketTypes.length > 1 && (
                     <button
                       type="button"
@@ -611,21 +733,23 @@ const CreateEvent = () => {
           <button
             type="submit"
             disabled={isLoading}
-            className="flex-3 group relative px-12 py-6 bg-brand-orange text-white rounded-[2rem] font-black flex items-center justify-center gap-4 overflow-hidden shadow-2xl shadow-brand-orange/20 active:scale-[0.98] transition-all disabled:opacity-50"
+            className="flex-3 group relative px-12 py-6 bg-brand-orange text-white rounded-4xl font-black flex items-center justify-center gap-4 overflow-hidden shadow-2xl shadow-brand-orange/20 active:scale-[0.98] transition-all disabled:opacity-50"
           >
             {isLoading ? (
               <div className="w-6 h-6 border-4 border-white/30 border-t-white rounded-full animate-spin" />
             ) : (
               <>
                 <FiPlus className="text-2xl" />
-                <span className="uppercase tracking-[0.3em] text-sm">Initialize Exhibition</span>
+                <span className="uppercase tracking-[0.3em] text-sm">
+                  Initialize Exhibition
+                </span>
               </>
             )}
           </button>
           <button
             type="button"
-            onClick={() => navigate('/admin/manage-events')}
-            className="flex-1 px-12 py-6 bg-white/5 hover:bg-white/10 text-white rounded-[2rem] font-black uppercase tracking-[0.2em] text-sm border border-white/10 transition-all"
+            onClick={() => navigate("/admin/manage-events")}
+            className="flex-1 px-12 py-6 bg-white/5 hover:bg-white/10 text-white rounded-4xl font-black uppercase tracking-[0.2em] text-sm border border-white/10 transition-all"
           >
             Abort
           </button>

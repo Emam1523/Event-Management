@@ -1,6 +1,11 @@
-import { FiChevronLeft, FiChevronRight } from 'react-icons/fi';
+import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
 
-const Pagination = ({ currentPage, totalItems, itemsPerPage, onPageChange }) => {
+const Pagination = ({
+  currentPage,
+  totalItems,
+  itemsPerPage,
+  onPageChange,
+}) => {
   const totalPages = Math.ceil(totalItems / itemsPerPage);
 
   if (totalPages <= 1) return null;
@@ -29,20 +34,20 @@ const Pagination = ({ currentPage, totalItems, itemsPerPage, onPageChange }) => 
       <button
         onClick={() => onPageChange(currentPage - 1)}
         disabled={currentPage === 1}
-        className="w-12 h-12 flex items-center justify-center rounded-2xl border border-white/5 bg-white/5 text-slate-400 hover:bg-primary hover:text-white disabled:opacity-20 disabled:hover:bg-white/5 disabled:hover:text-slate-400 transition-all duration-300 shadow-xl"
+        className="w-12 h-12 flex items-center justify-center rounded-2xl border border-white/5 bg-white/5 text-zinc-400 hover:bg-primary hover:text-white disabled:opacity-20 disabled:hover:bg-white/5 disabled:hover:text-zinc-400 transition-all duration-300 shadow-xl"
         aria-label="Previous page"
       >
         <FiChevronLeft size={20} />
       </button>
 
-      {getPageNumbers().map(number => (
+      {getPageNumbers().map((number) => (
         <button
           key={number}
           onClick={() => onPageChange(number)}
           className={`w-12 h-12 rounded-2xl text-[13px] font-black transition-all duration-300 border ${
             currentPage === number
-              ? 'bg-primary text-white border-primary shadow-lg shadow-primary/20 scale-110'
-              : 'bg-white/5 text-slate-400 border-white/5 hover:border-white/20 hover:text-white'
+              ? "bg-primary text-white border-primary shadow-lg shadow-primary/20 scale-110"
+              : "bg-white/5 text-zinc-400 border-white/5 hover:border-white/20 hover:text-white"
           }`}
         >
           {number}
@@ -52,7 +57,7 @@ const Pagination = ({ currentPage, totalItems, itemsPerPage, onPageChange }) => 
       <button
         onClick={() => onPageChange(currentPage + 1)}
         disabled={currentPage === totalPages}
-        className="w-12 h-12 flex items-center justify-center rounded-2xl border border-white/5 bg-white/5 text-slate-400 hover:bg-primary hover:text-white disabled:opacity-20 disabled:hover:bg-white/5 disabled:hover:text-slate-400 transition-all duration-300 shadow-xl"
+        className="w-12 h-12 flex items-center justify-center rounded-2xl border border-white/5 bg-white/5 text-zinc-400 hover:bg-primary hover:text-white disabled:opacity-20 disabled:hover:bg-white/5 disabled:hover:text-zinc-400 transition-all duration-300 shadow-xl"
         aria-label="Next page"
       >
         <FiChevronRight size={20} />
@@ -62,4 +67,3 @@ const Pagination = ({ currentPage, totalItems, itemsPerPage, onPageChange }) => 
 };
 
 export default Pagination;
-

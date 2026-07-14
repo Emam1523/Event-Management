@@ -1,11 +1,11 @@
-import { useState, useEffect, useCallback } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import { FiCalendar, FiMapPin, FiUsers, FiShield, FiTag,} from 'react-icons/fi';
-import { format } from 'date-fns';
-import { useCart } from '../context/CartContext';
-import { useAuth } from '../context/AuthContext';
-import { motion } from 'framer-motion';
-import api, { API_ROOT } from '../services/api';
+import { useState, useEffect, useCallback } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import { FiCalendar, FiMapPin, FiUsers, FiShield, FiTag } from "react-icons/fi";
+import { format } from "date-fns";
+import { useCart } from "../context/CartContext";
+import { useAuth } from "../context/AuthContext";
+import { motion } from "framer-motion";
+import api, { API_ROOT } from "../services/api";
 
 const EventDetail = () => {
   const { id } = useParams();
@@ -18,25 +18,25 @@ const EventDetail = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   const getImageUrl = (url) => {
-    if (!url) return 'https://images.unsplash.com/photo-1501281668745-f7f57925c3b4?w=1200';
-    if (url.startsWith('http')) return url;
+    if (!url)
+      return "https://images.unsplash.com/photo-1501281668745-f7f57925c3b4?w=1200";
+    if (url.startsWith("http")) return url;
     return `${API_ROOT}${url}`;
   };
 
   const fetchEventDetails = useCallback(async () => {
     try {
-       const { data } = await api.get(`/events/${id}`);
-       setEvent(data);
-       if (data.tickets && data.tickets.length > 0) {
-         setSelectedTicket(data.tickets[0]);
-       }
+      const { data } = await api.get(`/events/${id}`);
+      setEvent(data);
+      if (data.tickets && data.tickets.length > 0) {
+        setSelectedTicket(data.tickets[0]);
+      }
     } catch (error) {
-      console.error('Error fetching event:', error);
+      console.error("Error fetching event:", error);
     } finally {
       setIsLoading(false);
     }
   }, [id]);
-
 
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
@@ -46,7 +46,7 @@ const EventDetail = () => {
   const handleAddToCart = () => {
     if (!selectedTicket) return;
     addToCart(event, selectedTicket, quantity);
-    navigate('/cart');
+    navigate("/cart");
   };
 
   if (isLoading) {
@@ -61,8 +61,12 @@ const EventDetail = () => {
     return (
       <div className="min-h-screen bg-dark-bg flex items-center justify-center text-center px-4">
         <div>
-          <h2 className="text-4xl font-black text-white mb-6 uppercase tracking-tighter">Event Not Found</h2>
-          <button onClick={() => navigate('/events')} className="btn-primary">Back to Explore</button>
+          <h2 className="text-4xl font-black text-white mb-6 uppercase tracking-tighter">
+            Event Not Found
+          </h2>
+          <button onClick={() => navigate("/events")} className="btn-primary">
+            Back to Explore
+          </button>
         </div>
       </div>
     );
@@ -77,11 +81,11 @@ const EventDetail = () => {
           alt={event.title}
           className="w-full h-full object-cover scale-105"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-dark-bg via-dark-bg/40 to-transparent"></div>
-        <div className="absolute inset-0 bg-gradient-to-r from-dark-bg/60 to-transparent"></div>
-        
+        <div className="absolute inset-0 bg-linear-to-t from-dark-bg via-dark-bg/40 to-transparent"></div>
+        <div className="absolute inset-0 bg-linear-to-r from-dark-bg/60 to-transparent"></div>
+
         <div className="absolute bottom-0 left-0 right-0 container-custom pb-12">
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             className="max-w-4xl"
@@ -90,25 +94,27 @@ const EventDetail = () => {
               <span className="bg-primary text-white px-4 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-widest shadow-xl shadow-primary/20">
                 {event.category}
               </span>
-              <span className="bg-white/10 backdrop-blur-md text-slate-300 px-4 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-widest border border-white/5">
+              <span className="bg-white/10 backdrop-blur-md text-zinc-300 px-4 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-widest border border-white/5">
                 #EXCLUSIVEEVENT
               </span>
             </div>
             <h1 className="text-5xl md:text-7xl lg:text-8xl font-black text-white mb-6 leading-[0.9] tracking-tighter uppercase">
               {event.title}
             </h1>
-            <div className="flex flex-wrap items-center gap-8 text-slate-400">
+            <div className="flex flex-wrap items-center gap-8 text-zinc-400">
               <div className="flex items-center gap-3 group">
                 <div>
-                  <span className="text-slate-500">(Verified)</span>
+                  <span className="text-zinc-500">(Verified)</span>
                 </div>
               </div>
-              <div className="flex items-center gap-3 group"> 
+              <div className="flex items-center gap-3 group">
                 <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center border border-white/5 group-hover:border-indigo-500/30 transition-all">
                   <FiUsers className="text-indigo-400" />
                 </div>
                 <div>
-                  <p className="text-[10px] font-black uppercase tracking-widest">Entry</p>
+                  <p className="text-[10px] font-black uppercase tracking-widest">
+                    Entry
+                  </p>
                   <p className="text-sm font-bold text-white">Live Session</p>
                 </div>
               </div>
@@ -129,12 +135,16 @@ const EventDetail = () => {
                   <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary border border-primary/20">
                     <FiCalendar className="text-2xl" />
                   </div>
-                  <h3 className="text-xs font-black uppercase tracking-[0.2em] text-white">Date & Time</h3>
+                  <h3 className="text-xs font-black uppercase tracking-[0.2em] text-white">
+                    Date & Time
+                  </h3>
                 </div>
                 <p className="text-xl font-bold text-white mb-1">
-                  {format(new Date(event.date), 'EEEE, MMMM d, yyyy')}
+                  {format(new Date(event.date), "EEEE, MMMM d, yyyy")}
                 </p>
-                <p className="text-slate-400 font-medium">{event.time} {event.endTime ? `– ${event.endTime}` : ''}</p>
+                <p className="text-zinc-400 font-medium">
+                  {event.time} {event.endTime ? `– ${event.endTime}` : ""}
+                </p>
               </div>
 
               {/* Classification & Capacity */}
@@ -143,12 +153,18 @@ const EventDetail = () => {
                   <div className="w-12 h-12 rounded-2xl bg-amber-500/10 flex items-center justify-center text-amber-400 border border-amber-500/20">
                     <FiTag className="text-2xl" />
                   </div>
-                  <h3 className="text-xs font-black uppercase tracking-[0.2em] text-white">Classification & Capacity</h3>
+                  <h3 className="text-xs font-black uppercase tracking-[0.2em] text-white">
+                    Classification & Capacity
+                  </h3>
                 </div>
                 <p className="text-xl font-bold text-white mb-1">
                   {event.category}
                 </p>
-                <p className="text-slate-400 font-medium">{event.capacity ? `${event.capacity} Total Spots` : 'Unlimited Spots'}</p>
+                <p className="text-zinc-400 font-medium">
+                  {event.capacity
+                    ? `${event.capacity} Total Spots`
+                    : "Unlimited Spots"}
+                </p>
               </div>
 
               {/* Location */}
@@ -157,14 +173,20 @@ const EventDetail = () => {
                   <div className="w-12 h-12 rounded-2xl bg-indigo-500/10 flex items-center justify-center text-indigo-400 border border-indigo-500/20">
                     <FiMapPin className="text-2xl" />
                   </div>
-                  <h3 className="text-xs font-black uppercase tracking-[0.2em] text-white">Location</h3>
+                  <h3 className="text-xs font-black uppercase tracking-[0.2em] text-white">
+                    Location
+                  </h3>
                 </div>
-                <p className="text-xl font-bold text-white mb-1">{event.location}</p>
+                <p className="text-xl font-bold text-white mb-1">
+                  {event.location}
+                </p>
                 {event.googleMapUrl && (
                   <div className="mt-6 h-48 rounded-2xl overflow-hidden border border-white/10 group relative">
                     <iframe
                       src={
-                        /^-?\d+\.?\d*,-?\d+\.?\d*$/.test(event.googleMapUrl.trim())
+                        /^-?\d+\.?\d*,-?\d+\.?\d*$/.test(
+                          event.googleMapUrl.trim(),
+                        )
                           ? `https://maps.google.com/maps?q=${event.googleMapUrl.trim()}&z=15&output=embed`
                           : event.googleMapUrl
                       }
@@ -176,7 +198,7 @@ const EventDetail = () => {
                       referrerPolicy="no-referrer-when-downgrade"
                       className="grayscale opacity-60 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-700"
                     ></iframe>
-                    <div className="absolute inset-0 pointer-events-none bg-gradient-to-t from-dark-bg/40 to-transparent" />
+                    <div className="absolute inset-0 pointer-events-none bg-linear-to-t from-dark-bg/40 to-transparent" />
                   </div>
                 )}
               </div>
@@ -189,7 +211,7 @@ const EventDetail = () => {
                 About This Event
               </h2>
               <div className="prose prose-invert max-w-none">
-                <p className="text-slate-400 text-lg leading-relaxed whitespace-pre-line font-medium">
+                <p className="text-zinc-400 text-lg leading-relaxed whitespace-pre-line font-medium">
                   {event.fullDescription || event.description}
                 </p>
               </div>
@@ -199,15 +221,21 @@ const EventDetail = () => {
           {/* Booking Sidebar */}
           <div className="lg:col-span-4">
             <div className="glass-card p-10 bg-slate-900 border-white/10 sticky top-28 shadow-3xl shadow-black/40">
-              <h3 className="text-xs font-black uppercase tracking-[0.4em] text-slate-500 mb-8 text-center">SELECT YOUR PASS</h3>
-              
-              {user?.role === 'admin' ? (
+              <h3 className="text-xs font-black uppercase tracking-[0.4em] text-zinc-500 mb-8 text-center">
+                SELECT YOUR PASS
+              </h3>
+
+              {user?.role === "admin" ? (
                 <div className="text-center py-12 bg-white/5 rounded-3xl border border-white/10">
-                  <div className="w-16 h-16 rounded-full bg-slate-800 flex items-center justify-center mx-auto mb-6 text-slate-400 shadow-inner">
+                  <div className="w-16 h-16 rounded-full bg-slate-800 flex items-center justify-center mx-auto mb-6 text-zinc-400 shadow-inner">
                     <FiShield className="text-2xl" />
                   </div>
-                  <p className="text-sm font-black uppercase tracking-widest text-slate-400 mb-2">Admin Restriction</p>
-                  <p className="text-xs font-medium text-slate-500 px-4">Administrators cannot purchase event tickets.</p>
+                  <p className="text-sm font-black uppercase tracking-widest text-zinc-400 mb-2">
+                    Admin Restriction
+                  </p>
+                  <p className="text-xs font-medium text-zinc-500 px-4">
+                    Administrators cannot purchase event tickets.
+                  </p>
                 </div>
               ) : (
                 <>
@@ -217,27 +245,38 @@ const EventDetail = () => {
                       <div
                         key={ticket.id}
                         onClick={() => setSelectedTicket(ticket)}
-                        className={`relative p-6 rounded-[2rem] cursor-pointer transition-all duration-500 border-2 ${
+                        className={`relative p-6 rounded-4xl cursor-pointer transition-all duration-500 border-2 ${
                           selectedTicket?.id === ticket.id
-                            ? 'border-primary bg-primary/5'
-                            : 'border-white/5 bg-white/5 hover:border-white/20'
+                            ? "border-primary bg-primary/5"
+                            : "border-white/5 bg-white/5 hover:border-white/20"
                         }`}
                       >
                         <div className="flex justify-between items-start mb-2">
                           <div>
-                            <p className={`font-black text-sm uppercase tracking-tighter transition-colors ${selectedTicket?.id === ticket.id ? 'text-primary' : 'text-white'}`}>
+                            <p
+                              className={`font-black text-sm uppercase tracking-tighter transition-colors ${selectedTicket?.id === ticket.id ? "text-primary" : "text-white"}`}
+                            >
                               {ticket.name}
                             </p>
-                            <p className="text-[10px] font-medium text-slate-500 mt-1">{ticket.description}</p>
+                            <p className="text-[10px] font-medium text-zinc-500 mt-1">
+                              {ticket.description}
+                            </p>
                           </div>
-                          <p className="text-xl font-black text-white tracking-tighter">৳{ticket.price}</p>
+                          <p className="text-xl font-black text-white tracking-tighter">
+                            ৳{ticket.price}
+                          </p>
                         </div>
                         <div className="mt-4 flex items-center justify-between">
-                          <span className={`text-[9px] font-black uppercase tracking-widest ${ticket.capacity < 20 ? 'text-rose-500' : 'text-slate-600'}`}>
+                          <span
+                            className={`text-[9px] font-black uppercase tracking-widest ${ticket.capacity < 20 ? "text-rose-500" : "text-zinc-600"}`}
+                          >
                             {ticket.capacity} Spots Left
                           </span>
                           {selectedTicket?.id === ticket.id && (
-                            <motion.div layoutId="check" className="w-5 h-5 bg-primary rounded-full flex items-center justify-center">
+                            <motion.div
+                              layoutId="check"
+                              className="w-5 h-5 bg-primary rounded-full flex items-center justify-center"
+                            >
                               <div className="w-2 h-2 bg-white rounded-full" />
                             </motion.div>
                           )}
@@ -249,7 +288,9 @@ const EventDetail = () => {
                   {/* Quantity */}
                   <div className="mb-10">
                     <div className="flex items-center justify-between mb-4">
-                      <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Quantity</label>
+                      <label className="text-[10px] font-black text-zinc-500 uppercase tracking-widest">
+                        Quantity
+                      </label>
                       <div className="flex items-center bg-white/5 rounded-2xl border border-white/5">
                         <button
                           onClick={() => setQuantity(Math.max(1, quantity - 1))}
@@ -257,9 +298,18 @@ const EventDetail = () => {
                         >
                           –
                         </button>
-                        <span className="w-8 text-center font-black text-white">{quantity}</span>
+                        <span className="w-8 text-center font-black text-white">
+                          {quantity}
+                        </span>
                         <button
-                          onClick={() => setQuantity(Math.min(selectedTicket?.capacity || 1, quantity + 1))}
+                          onClick={() =>
+                            setQuantity(
+                              Math.min(
+                                selectedTicket?.capacity || 1,
+                                quantity + 1,
+                              ),
+                            )
+                          }
                           className="w-12 h-12 flex items-center justify-center text-white hover:text-primary transition-colors font-black text-xl"
                         >
                           +
@@ -271,14 +321,16 @@ const EventDetail = () => {
                   {/* Action */}
                   <div className="space-y-4 pt-6 border-t border-white/5">
                     <div className="flex justify-between items-center mb-6">
-                      <span className="text-xs font-black text-slate-500 uppercase tracking-widest">Grand Total</span>
+                      <span className="text-xs font-black text-zinc-500 uppercase tracking-widest">
+                        Grand Total
+                      </span>
                       <span className="text-4xl font-black text-white tracking-tighter">
                         ৳{selectedTicket ? selectedTicket.price * quantity : 0}
                       </span>
                     </div>
-                    <button 
-                      onClick={handleAddToCart} 
-                      className="w-full btn-primary py-5 rounded-[2rem] text-[11px] shadow-2xl shadow-primary/30 group"
+                    <button
+                      onClick={handleAddToCart}
+                      className="w-full btn-primary py-5 rounded-4xl text-[11px] shadow-2xl shadow-primary/30 group"
                     >
                       Confirm & Secure Pass
                     </button>
