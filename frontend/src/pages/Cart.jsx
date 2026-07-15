@@ -2,6 +2,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { FiTrash2, FiShoppingBag } from "react-icons/fi";
 import { useCart } from "../context/CartContext";
 import { format } from "date-fns";
+import { API_ROOT } from "../services/api";
 
 const Cart = () => {
   const { cartItems, removeFromCart, updateQuantity, getCartTotal } = useCart();
@@ -35,6 +36,12 @@ const Cart = () => {
       </div>
     );
   }
+  const getImageUrl = (url) => {
+    if (!url)
+      return "https://images.unsplash.com/photo-1501281668745-f7f57925c3b4?w=1200";
+    if (url.startsWith("http")) return url;
+    return `${API_ROOT}${url}`;
+  };
 
   return (
     <div className="min-h-screen bg-dark-bg pt-32 pb-24 text-zinc-200">
@@ -55,7 +62,7 @@ const Cart = () => {
                   {/* Event Image */}
                   <div className="relative w-full md:w-40 h-40 overflow-hidden rounded-3xl">
                     <img
-                      src={item.event.image}
+                      src={getImageUrl(item.event.image)}
                       alt={item.event.title}
                       className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                     />
@@ -96,7 +103,7 @@ const Cart = () => {
                   </div>
 
                   {/* Quantity and Price */}
-                  <div className="flex flex-row md:flex-col items-center md:items-end justify-between md:justify-center gap-4 md:min-w-[120px] pt-4 md:pt-0 border-t md:border-t-0 border-white/5">
+                  <div className="flex flex-row md:flex-col items-center md:items-end justify-between md:justify-center gap-4 md:min-w-30 pt-4 md:pt-0 border-t md:border-t-0 border-white/5">
                     <div className="flex items-center bg-white/5 rounded-2xl border border-white/5 p-1">
                       <button
                         onClick={() =>
@@ -193,7 +200,7 @@ const Cart = () => {
                   SECURE PAYMENTS
                 </p>
                 <div className="flex flex-wrap justify-center gap-3">
-                  {["VISA", "MASTERCARD", "AMARPAY", "BKASH", "NAGAD"].map(
+                  {["VISA", "MASTERCARD", "AAMARPAY", "BKASH", "NAGAD"].map(
                     (tag) => (
                       <span
                         key={tag}

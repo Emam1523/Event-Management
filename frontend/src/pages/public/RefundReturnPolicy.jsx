@@ -54,7 +54,7 @@ export default function RefundReturnPolicy() {
   ];
 
   return (
-    <div className="bg-dark-bg min-h-screen pt-32 pb-24 text-zinc-200">
+    <div className="bg-dark-bg min-h-screen pt-32 text-zinc-200">
       <div className="container-custom">
         <div className="max-w-4xl mx-auto">
           {/* Hero */}
@@ -63,7 +63,7 @@ export default function RefundReturnPolicy() {
             animate={{ opacity: 1, y: 0 }}
             className="text-center mb-20"
           >
-            <h1 className="text-5xl md:text-7xl font-black text-white tracking-tighter mb-8 uppercase">
+            <h1 className="text-5xl md:text-7xl font-black text-white tracking-tighter my-4 uppercase">
               REFUND & <span className="text-primary">RETURN POLICY.</span>
             </h1>
             <p className="text-xl text-zinc-400 font-medium max-w-2xl mx-auto leading-relaxed">

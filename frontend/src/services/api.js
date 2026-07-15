@@ -1,23 +1,24 @@
-import axios from 'axios';
+import axios from "axios";
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5005/api';
-export const API_ROOT = API_BASE_URL.replace('/api', '');
+const API_BASE_URL =
+  import.meta.env.VITE_API_URL || "http://localhost:5005/api";
+export const API_ROOT = API_BASE_URL.replace("/api", "");
 
 const api = axios.create({
   baseURL: API_BASE_URL,
-  headers: { 'Content-Type': 'application/json' },
+  headers: { "Content-Type": "application/json" },
 });
 
 // Attach token to every request automatically
 api.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem("token");
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
     return config;
   },
-  (error) => Promise.reject(error)
+  (error) => Promise.reject(error),
 );
 
 // Global response error handler
@@ -25,47 +26,50 @@ api.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401) {
-      localStorage.removeItem('token');
-      localStorage.removeItem('user');
-      window.location.href = '/login';
+      localStorage.removeItem("token");
+      localStorage.removeItem("user");
+      window.location.href = "/login";
     }
     return Promise.reject(error);
-  }
+  },
 );
 
 // ── Auth ──────────────────────────────────────────────────────────────────────
 export const authAPI = {
-  login: (credentials) => api.post('/auth/login', credentials),
-  register: (userData) => api.post('/auth/register', userData),
-  getCurrentUser: () => api.get('/auth/me'),
-  requestVerificationCode: (data) => api.post('/auth/request-code', data),
-  verifyCode: (data) => api.post('/auth/verify-code', data),
-  confirmPasswordChange: (data) => api.post('/auth/confirm-password-change', data),
+  login: (credentials) => api.post("/auth/login", credentials),
+  register: (userData) => api.post("/auth/register", userData),
+  googleLogin: (accessToken) =>
+    api.post("/auth/login-with-google", { accessToken }),
+  getCurrentUser: () => api.get("/auth/me"),
+  requestVerificationCode: (data) => api.post("/auth/request-code", data),
+  verifyCode: (data) => api.post("/auth/verify-code", data),
+  confirmPasswordChange: (data) =>
+    api.post("/auth/confirm-password-change", data),
 };
 
 // ── Events ────────────────────────────────────────────────────────────────────
 export const eventsAPI = {
-  getAll: (params) => api.get('/events', { params }),
+  getAll: (params) => api.get("/events", { params }),
   getById: (id) => api.get(`/events/${id}`),
-  getFeatured: () => api.get('/events/featured'),
-  getFilters: () => api.get('/events/filters'),
-  create: (data) => api.post('/events', data),
+  getFeatured: () => api.get("/events/featured"),
+  getFilters: () => api.get("/events/filters"),
+  create: (data) => api.post("/events", data),
   update: (id, data) => api.put(`/events/${id}`, data),
   delete: (id) => api.delete(`/events/${id}`),
 };
 
 // ── Admin ─────────────────────────────────────────────────────────────────────
 export const adminAPI = {
-  getStats: () => api.get('/admin/stats'),
-  getAnalytics: (params) => api.get('/admin/analytics', { params }),
-  getUsers: (params) => api.get('/admin/users', { params }),
-  getBookings: (params) => api.get('/admin/bookings', { params }),
+  getStats: () => api.get("/admin/stats"),
+  getAnalytics: (params) => api.get("/admin/analytics", { params }),
+  getUsers: (params) => api.get("/admin/users", { params }),
+  getBookings: (params) => api.get("/admin/bookings", { params }),
 };
 
 // ── Bookings ──────────────────────────────────────────────────────────────────
 export const bookingsAPI = {
-  create: (data) => api.post('/bookings', data),
-  getMyBookings: () => api.get('/bookings/my-bookings'),
+  create: (data) => api.post("/bookings", data),
+  getMyBookings: () => api.get("/bookings/my-bookings"),
   getById: (id) => api.get(`/bookings/${id}`),
   cancel: (id) => api.put(`/bookings/${id}/cancel`),
 };
@@ -73,44 +77,44 @@ export const bookingsAPI = {
 // ── Reviews ───────────────────────────────────────────────────────────────────
 export const reviewsAPI = {
   getByEvent: (eventId) => api.get(`/reviews/event/${eventId}`),
-  create: (data) => api.post('/reviews', data),
+  create: (data) => api.post("/reviews", data),
   update: (id, data) => api.put(`/reviews/${id}`, data),
   delete: (id) => api.delete(`/reviews/${id}`),
 };
 
 // ── Payments ──────────────────────────────────────────────────────────────────
 export const paymentAPI = {
-  process: (data) => api.post('/payments', data),
-  initiateAmarPay: (data) => api.post('/payments/amar-pay/initiate', data),
+  process: (data) => api.post("/payments", data),
+  initiateAmarPay: (data) => api.post("/payments/amar-pay/initiate", data),
 };
 
 // ── Stats ─────────────────────────────────────────────────────────────────────
 export const statsAPI = {
-  getGlobalStats: () => api.get('/stats'),
+  getGlobalStats: () => api.get("/stats"),
 };
 
 // ── Chat ─────────────────────────────────────────────────────────────────────
 export const chatAPI = {
-  sendMessage: (message) => api.post('/chat', { message }),
+  sendMessage: (message) => api.post("/chat", { message }),
 };
 
 // ── App Reviews ───────────────────────────────────────────────────────────────
 export const appReviewsAPI = {
-  getAll: () => api.get('/app-reviews'),
-  getMine: () => api.get('/app-reviews/mine'),
-  submit: (data) => api.post('/app-reviews', data),
+  getAll: () => api.get("/app-reviews"),
+  getMine: () => api.get("/app-reviews/mine"),
+  submit: (data) => api.post("/app-reviews", data),
   delete: (id) => api.delete(`/app-reviews/${id}`),
 };
 
 // ── Notifications ─────────────────────────────────────────────────────────────
 export const notificationsAPI = {
-  getAll: () => api.get('/notifications'),
+  getAll: () => api.get("/notifications"),
   markAsRead: (id) => api.put(`/notifications/${id}/read`),
 };
 
 // ── Contact ──────────────────────────────────────────────────────────────────
 export const contactAPI = {
-  submit: (data) => api.post('/contact', data),
+  submit: (data) => api.post("/contact", data),
 };
 
 export default api;

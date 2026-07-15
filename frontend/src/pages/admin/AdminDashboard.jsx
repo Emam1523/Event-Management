@@ -55,7 +55,7 @@ const AdminDashboard = () => {
 
   if (isLoading) {
     return (
-      <div className="min-h-[400px] flex flex-col items-center justify-center gap-4">
+      <div className="min-h-100 flex flex-col items-center justify-center gap-4">
         <div className="w-12 h-12 border-4 border-white/5 border-t-brand-orange rounded-full animate-spin" />
         <p className="text-gray-400 font-bold uppercase tracking-widest text-xs">
           Loading Dashboard...

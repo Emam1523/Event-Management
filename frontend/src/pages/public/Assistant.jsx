@@ -156,7 +156,7 @@ const Assistant = () => {
     <div className="bg-dark-bg h-screen text-zinc-200 relative overflow-hidden flex flex-col pt-20 sm:pt-24 md:pt-28 lg:pt-32 pb-6">
       {/* Background Decorative Gradients */}
       <div className="absolute inset-0 opacity-20 pointer-events-none z-0" />
-      <div className="absolute top-1/4 left-1/4 w-125 h-125 bg-primary/5 rounded-full blur-[120px] pointer-events-none -z-10" />
+      <div className="absolute top-1/4 left-1/4 w-125 h-125 bg-primary/5 rounded-full blur-30 pointer-events-none -z-10" />
       <div className="absolute bottom-1/4 right-10 w-100 h-100 bg-[#ff2d55]/5 rounded-full blur-[140px] pointer-events-none -z-10" />
 
       <div className="container-custom relative z-10 flex flex-col flex-1 min-h-0 mt-10">

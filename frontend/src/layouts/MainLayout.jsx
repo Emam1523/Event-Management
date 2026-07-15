@@ -4,7 +4,7 @@ import Footer from "../components/Footer";
 import { useAuth } from "../context/AuthContext";
 
 const MainLayout = () => {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, isAdmin } = useAuth();
   const location = useLocation();
 
   const isEventDetail =
@@ -14,7 +14,6 @@ const MainLayout = () => {
   const hideNavbarPaths = [
     "/profile",
     "/my-tickets",
-    "/dashboard",
     "/cart",
     "/checkout",
     "/payment-success",
@@ -25,13 +24,15 @@ const MainLayout = () => {
       (hideNavbarPaths.includes(location.pathname) || isEventsPage)) ||
     isEventDetail;
 
+  const shouldHideFooter = isAuthenticated && isAdmin;
+
   return (
     <div className="min-h-screen flex flex-col">
       <Navbar hideMenu={shouldHideNavbar} />
       <main className="grow">
         <Outlet />
       </main>
-      {!shouldHideNavbar && <Footer />}
+      {!shouldHideFooter && <Footer />}
     </div>
   );
 };

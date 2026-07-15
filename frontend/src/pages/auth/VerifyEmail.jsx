@@ -20,7 +20,7 @@ const VerifyEmail = () => {
 
   const email = searchParams.get("email") || "";
   const purpose = searchParams.get("purpose") || "registration";
-  const next = searchParams.get("next") || "/dashboard";
+  const next = searchParams.get("next") || "/profile";
 
   const [code, setCode] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -94,8 +94,8 @@ const VerifyEmail = () => {
   return (
     <div className="min-h-screen w-full bg-[#030303] flex items-center justify-center p-4 pt-24 relative overflow-hidden">
       {/* Ambient Background Glows */}
-      <div className="absolute top-1/4 right-1/4 w-[500px] h-[500px] bg-brand-orange/5 rounded-full blur-[130px] pointer-events-none -z-10" />
-      <div className="absolute bottom-1/4 left-1/4 w-[400px] h-[400px] bg-indigo-500/5 rounded-full blur-[140px] pointer-events-none -z-10" />
+      <div className="absolute top-1/4 right-1/4 w-125 h-125 bg-brand-orange/5 rounded-full blur-[130px] pointer-events-none -z-10" />
+      <div className="absolute bottom-1/4 left-1/4 w-100 h-100 bg-indigo-500/5 rounded-full blur-[140px] pointer-events-none -z-10" />
 
       <motion.div
         initial={{ opacity: 0, scale: 0.95, y: 20 }}

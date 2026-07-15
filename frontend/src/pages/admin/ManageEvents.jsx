@@ -78,7 +78,7 @@ const ManageEvents = () => {
 
   if (isLoading) {
     return (
-      <div className="min-h-[400px] flex flex-col items-center justify-center gap-4">
+      <div className="min-h-100 flex flex-col items-center justify-center gap-4">
         <div className="w-12 h-12 border-4 border-white/5 border-t-brand-orange rounded-full animate-spin" />
         <p className="text-gray-400 font-bold uppercase tracking-widest text-xs">
           Assembling Your Events...
@@ -207,7 +207,7 @@ const ManageEvents = () => {
                       </div>
                     </td>
                     <td className="px-8 py-6">
-                      <div className="space-y-2 max-w-[120px]">
+                      <div className="space-y-2 max-w-30">
                         <div className="flex justify-between text-[10px] font-black">
                           <span className="text-gray-500">
                             {event._count?.bookings || 0} SOLD

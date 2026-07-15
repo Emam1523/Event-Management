@@ -1,12 +1,15 @@
 /* eslint-disable react-refresh/only-export-components */
-import { createContext, useContext, useState, useCallback } from 'react';
+import { createContext, useContext, useState, useCallback } from "react";
+import Toast from "../components/common/Toast";
 
 const NotificationContext = createContext();
 
 export const useNotifications = () => {
   const context = useContext(NotificationContext);
   if (!context) {
-    throw new Error('useNotifications must be used within a NotificationProvider');
+    throw new Error(
+      "useNotifications must be used within a NotificationProvider",
+    );
   }
   return context;
 };
@@ -20,34 +23,32 @@ export const NotificationProvider = ({ children }) => {
       id: Date.now() + Math.random(),
       timestamp: new Date(),
       read: false,
-      ...notification
+      ...notification,
     };
 
-    setNotifications(prev => [newNotification, ...prev]);
-    setUnreadCount(prev => prev + 1);
+    setNotifications((prev) => [newNotification, ...prev]);
+    setUnreadCount((prev) => prev + 1);
   }, []);
 
   const markAsRead = useCallback((id) => {
-    setNotifications(prev =>
-      prev.map(notif =>
-        notif.id === id ? { ...notif, read: true } : notif
-      )
+    setNotifications((prev) =>
+      prev.map((notif) => (notif.id === id ? { ...notif, read: true } : notif)),
     );
-    setUnreadCount(prev => Math.max(0, prev - 1));
+    setUnreadCount((prev) => Math.max(0, prev - 1));
   }, []);
 
   const markAllAsRead = useCallback(() => {
-    setNotifications(prev => prev.map(notif => ({ ...notif, read: true })));
+    setNotifications((prev) => prev.map((notif) => ({ ...notif, read: true })));
     setUnreadCount(0);
   }, []);
 
   const removeNotification = useCallback((id) => {
-    setNotifications(prev => {
-      const notification = prev.find(n => n.id === id);
-      const newNotifications = prev.filter(n => n.id !== id);
+    setNotifications((prev) => {
+      const notification = prev.find((n) => n.id === id);
+      const newNotifications = prev.filter((n) => n.id !== id);
 
       if (notification && !notification.read) {
-        setUnreadCount(count => Math.max(0, count - 1));
+        setUnreadCount((count) => Math.max(0, count - 1));
       }
 
       return newNotifications;
@@ -59,13 +60,16 @@ export const NotificationProvider = ({ children }) => {
     setUnreadCount(0);
   }, []);
 
-  const showNotification = useCallback((message, type = 'info', title = null) => {
-    addNotification({
-      title: title || (type.charAt(0).toUpperCase() + type.slice(1)),
-      message,
-      type
-    });
-  }, [addNotification]);
+  const showNotification = useCallback(
+    (message, type = "info", title = null) => {
+      addNotification({
+        title: title || type.charAt(0).toUpperCase() + type.slice(1),
+        message,
+        type,
+      });
+    },
+    [addNotification],
+  );
 
   const value = {
     notifications,
@@ -75,64 +79,83 @@ export const NotificationProvider = ({ children }) => {
     markAsRead,
     markAllAsRead,
     removeNotification,
-    clearAll
+    clearAll,
   };
 
   return (
     <NotificationContext.Provider value={value}>
       {children}
+      <div
+        aria-live="polite"
+        aria-atomic="true"
+        className="pointer-events-none fixed right-4 top-4 z-9999 flex max-w-sm flex-col gap-3"
+      >
+        {notifications.map((notification) => (
+          <div key={notification.id} className="pointer-events-auto w-full">
+            <Toast
+              title={notification.title}
+              message={notification.message}
+              type={notification.type}
+              position="static"
+              onClose={() => removeNotification(notification.id)}
+            />
+          </div>
+        ))}
+      </div>
     </NotificationContext.Provider>
   );
 };
 
 // Predefined notification types
 const notificationTypes = {
-  BOOKING_SUCCESS: 'booking_success',
-  BOOKING_CANCELLED: 'booking_cancelled',
-  EVENT_REMINDER: 'event_reminder',
-  PAYMENT_FAILED: 'payment_failed',
-  TICKET_TRANSFER: 'ticket_transfer',
-  EVENT_UPDATE: 'event_update'
+  BOOKING_SUCCESS: "booking_success",
+  BOOKING_CANCELLED: "booking_cancelled",
+  EVENT_REMINDER: "event_reminder",
+  PAYMENT_FAILED: "payment_failed",
+  TICKET_TRANSFER: "ticket_transfer",
+  EVENT_UPDATE: "event_update",
 };
 
 // Helper function to create typed notifications
 export const createNotification = (type, data) => {
   const templates = {
     [notificationTypes.BOOKING_SUCCESS]: {
-      title: 'Booking Confirmed!',
+      title: "Booking Confirmed!",
       message: `Your booking for ${data.eventTitle} has been confirmed.`,
-      type: 'success'
+      type: "success",
     },
     [notificationTypes.BOOKING_CANCELLED]: {
-      title: 'Booking Cancelled',
+      title: "Booking Cancelled",
       message: `Your booking for ${data.eventTitle} has been cancelled.`,
-      type: 'warning'
+      type: "warning",
     },
     [notificationTypes.EVENT_REMINDER]: {
-      title: 'Event Reminder',
+      title: "Event Reminder",
       message: `${data.eventTitle} starts tomorrow at ${data.time}.`,
-      type: 'info'
+      type: "info",
     },
     [notificationTypes.PAYMENT_FAILED]: {
-      title: 'Payment Failed',
+      title: "Payment Failed",
       message: `Payment for ${data.eventTitle} could not be processed.`,
-      type: 'error'
+      type: "error",
     },
     [notificationTypes.TICKET_TRANSFER]: {
-      title: 'Ticket Transferred',
+      title: "Ticket Transferred",
       message: `Your ticket for ${data.eventTitle} has been transferred.`,
-      type: 'success'
+      type: "success",
     },
     [notificationTypes.EVENT_UPDATE]: {
-      title: 'Event Updated',
+      title: "Event Updated",
       message: `${data.eventTitle} has been updated. Check for changes.`,
-      type: 'info'
-    }
+      type: "info",
+    },
   };
 
-  return templates[type] || {
-    title: 'Notification',
-    message: data.message || 'You have a new notification.',
-    type: 'info'
-  };
+  return (
+    templates[type] || {
+      title: "Notification",
+      message: data.message || "You have a new notification.",
+      type: "info",
+    }
+  );
 };

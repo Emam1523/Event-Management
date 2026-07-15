@@ -122,7 +122,7 @@ const MyTickets = () => {
       {/* Background */}
       <div className="pointer-events-none fixed inset-0 -z-0">
         <div className="absolute -top-40 -right-40 w-[500px] h-[500px] bg-brand-orange/6 rounded-full blur-[130px]" />
-        <div className="absolute bottom-0 -left-40 w-[400px] h-[400px] bg-violet-600/6 rounded-full blur-[120px]" />
+        <div className="absolute bottom-0 -left-40 w-100 h-100 bg-violet-600/6 rounded-full blur-30" />
       </div>
 
       <div className="max-w-6xl mx-auto px-4 sm:px-6 relative z-10 space-y-10">

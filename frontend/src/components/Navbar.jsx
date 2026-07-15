@@ -62,12 +62,12 @@ const Navbar = ({ hideMenu = false }) => {
 
   return (
     <nav
-      className="fixed top-0 left-0 right-0 z-100 transition-all duration-500 px-4 pt-6 md:px-12 md:pt-10 pointer-events-none"
+      className="fixed top-0 left-0 right-0 z-100 transition-all duration-500 pointer-events-none"
       ref={mobileMenuRef}
     >
       <div
-        className={`mx-auto max-w-360 rounded-2xl transition-all duration-700 bg-black/60 backdrop-blur-3xl border border-white/5 shadow-2xl pointer-events-auto ${
-          scrolled ? "translate-y-2.5 scale-[0.98] opacity-100" : ""
+        className={`mx-auto max-w-360 transition-all duration-700 bg-black/60 backdrop-blur-3xl border border-white/5 shadow-2xl pointer-events-auto ${
+          scrolled ? "translate-y-2.5 scale-98 rounded-2xl" : "rounded-b-2xl"
         }`}
       >
         <div className="flex justify-between items-center h-16 sm:h-20 px-4 sm:px-10">

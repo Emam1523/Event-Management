@@ -25,8 +25,8 @@ const Footer = () => {
 
   return (
     <footer className="bg-dark-card text-white pt-12 pb-8 overflow-hidden relative border-t border-zinc-800/50">
-      <div className="absolute -bottom-24 -left-24 w-96 h-96 bg-brand-orange/5 rounded-full blur-[120px] pointer-events-none" />
-      <div className="absolute -top-24 -right-24 w-80 h-80 bg-indigo-500/10 rounded-full blur-[120px] pointer-events-none" />
+      <div className="absolute -bottom-24 -left-24 w-96 h-96 bg-brand-orange/5 rounded-full blur-30 pointer-events-none" />
+      <div className="absolute -top-24 -right-24 w-80 h-80 bg-indigo-500/10 rounded-full blur-30 pointer-events-none" />
       <div className="absolute inset-x-0 top-0 h-1 bg-linear-to-r from-transparent via-brand-orange/50 to-transparent" />
 
       <div className="container-custom relative z-10 mx-auto px-10">
@@ -86,10 +86,10 @@ const Footer = () => {
 
           {/* organization information */}
           <div title="Company Information" className="lg:text-right">
-            <p className="mb-4 text-primary font-black text-xl decoration-brand-primary/60 underline underline-offset-2">
+            <p className="mb-4 text-primary font-black text-xl decoration-brand-primary/60">
               Organizatation Informations
             </p>
-            <div className="space-y-2 text-sm">
+            <div className="space-y-2 text-sm select-text">
               <section className="grid grid-cols-1">
                 <p className="text-zinc-500 font-bold">Trade License No</p>
                 <p className="text-primary">TRAD/DNCC/049809/2025</p>
@@ -101,10 +101,10 @@ const Footer = () => {
             </div>
             {/* address */}
             <div className="mt-10">
-              <p className="text-primary font-bold flex gap-2 items-center lg:justify-end-safe">
-                <MdLocationPin size={20} /> Address
+              <p className="text-primary text-xl text-right font-bold flex lg:flex-row-reverse gap-2 items-center">
+                Address <MdLocationPin />
               </p>
-              <p className="text-sm font-bold text-zinc-400 group-hover:text-amber-500 transition-colors">
+              <p className="text-sm font-bold text-zinc-500 group-hover:text-amber-500 transition-colors">
                 <span>Plot-11.Section-10,Main road -1,</span>
                 <br />
                 <span>Senpara Parbata,Mirpur-10,Dhaka-1216</span>

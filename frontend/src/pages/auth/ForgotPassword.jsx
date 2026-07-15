@@ -66,7 +66,7 @@ const ForgotPassword = () => {
       setCodeError("");
     } catch (error) {
       showNotification(
-        error.response?.data?.message || "Failed to send code.",
+        (await error.response?.data?.message) || "Failed to send code.",
         "error",
       );
     } finally {
@@ -162,9 +162,9 @@ const ForgotPassword = () => {
   const strokeDashoffset = circumference * (1 - timer / OTP_TIMER);
 
   return (
-    <div className="min-h-screen w-full bg-[#030303] flex items-center justify-center p-4 relative overflow-hidden">
-      <div className="absolute top-1/4 -left-20 w-[600px] h-[600px] bg-brand-orange/5 rounded-full blur-[150px] pointer-events-none -z-10 animate-pulse-slow" />
-      <div className="absolute bottom-1/4 -right-20 w-[500px] h-[500px] bg-indigo-500/5 rounded-full blur-[140px] pointer-events-none -z-10 animate-float-delayed" />
+    <div className="min-h-screen w-full flex items-center justify-center p-4 relative overflow-hidden">
+      <div className="absolute top-1/4 -left-20 w-150 h-150 bg-brand-orange/5 rounded-full blur-[150px] pointer-events-none -z-10 animate-pulse-slow" />
+      <div className="absolute bottom-1/4 -right-20 w-130 h-130 bg-indigo-500/5 rounded-full blur-[140px] pointer-events-none -z-10 animate-float-delayed" />
 
       <motion.div
         initial={{ opacity: 0, y: 30 }}

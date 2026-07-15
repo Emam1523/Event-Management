@@ -75,16 +75,16 @@ const EventDetail = () => {
   return (
     <div className="min-h-screen bg-dark-bg pb-24">
       {/* ── Hero Header ──────────────────────────────────────────────────────── */}
-      <div className="relative h-[65vh] w-full overflow-hidden">
+      <div className="relative h-auto w-full overflow-hidden py-30">
         <img
           src={getImageUrl(event.image)}
           alt={event.title}
-          className="w-full h-full object-cover scale-105"
+          className="w-full scale-110 bg-no-repeat object-contain aspect-video absolute top-0 left-0"
         />
         <div className="absolute inset-0 bg-linear-to-t from-dark-bg via-dark-bg/40 to-transparent"></div>
         <div className="absolute inset-0 bg-linear-to-r from-dark-bg/60 to-transparent"></div>
 
-        <div className="absolute bottom-0 left-0 right-0 container-custom pb-12">
+        <div className="relative container-custom mt-44">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
@@ -102,14 +102,12 @@ const EventDetail = () => {
               {event.title}
             </h1>
             <div className="flex flex-wrap items-center gap-8 text-zinc-400">
-              <div className="flex items-center gap-3 group">
-                <div>
-                  <span className="text-zinc-500">(Verified)</span>
-                </div>
+              <div className="w-10 h-10 bg-green-800/30 border border-green-600/40 rounded-xl p-2">
+                <FiShield className="text-green-500" size={20} />
               </div>
               <div className="flex items-center gap-3 group">
                 <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center border border-white/5 group-hover:border-indigo-500/30 transition-all">
-                  <FiUsers className="text-indigo-400" />
+                  <FiUsers className="text-indigo-400" size={20} />
                 </div>
                 <div>
                   <p className="text-[10px] font-black uppercase tracking-widest">
@@ -123,7 +121,7 @@ const EventDetail = () => {
         </div>
       </div>
 
-      <div className="container-custom -mt-12 relative z-10">
+      <div className="container-custom relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
           {/* Main Info */}
           <div className="lg:col-span-8 space-y-12">

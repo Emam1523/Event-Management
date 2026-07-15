@@ -133,7 +133,7 @@ const AdminLayout = () => {
 
           <div className="flex items-center gap-4">
             <div className="text-right hidden sm:block">
-              <p className="text-sm font-bold text-white truncate max-w-[150px]">
+              <p className="text-sm font-bold text-white truncate max-w-38">
                 {user?.name}
               </p>
               <p className="text-[10px] text-brand-orange uppercase">Admin</p>
@@ -174,7 +174,7 @@ const AdminLayout = () => {
               initial={{ x: "-100%" }}
               animate={{ x: 0 }}
               exit={{ x: "-100%" }}
-              className="fixed top-0 left-0 bottom-0 w-72 bg-zinc-950 z-[60] p-6 md:hidden flex flex-col shadow-2xl shadow-black"
+              className="fixed top-0 left-0 bottom-0 w-72 bg-zinc-950 z-60 p-6 md:hidden flex flex-col shadow-2xl shadow-black"
             >
               <div className="flex items-center justify-between mb-8 border-b border-white/5 pb-4">
                 <div className="flex items-center gap-4">

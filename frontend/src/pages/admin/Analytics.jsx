@@ -124,7 +124,7 @@ const Analytics = () => {
 
   if (isLoading) {
     return (
-      <div className="min-h-[400px] flex flex-col items-center justify-center gap-4">
+      <div className="min-h-100 flex flex-col items-center justify-center gap-4">
         <div className="w-12 h-12 border-4 border-white/5 border-t-brand-orange rounded-full animate-spin" />
       </div>
     );
@@ -214,7 +214,7 @@ const Analytics = () => {
             </div>
           </div>
 
-          <div className="h-[400px] w-full mt-4">
+          <div className="h-100 w-full mt-4">
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart data={revenueData}>
                 <defs>

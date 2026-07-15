@@ -11,7 +11,9 @@ import {
   FiCalendar,
   FiMapPin,
   FiMessageSquare,
+  FiUser,
 } from "react-icons/fi";
+import { MdLocationCity, MdRateReview } from "react-icons/md";
 import { BsTicketPerforated } from "react-icons/bs";
 import { motion, AnimatePresence } from "framer-motion";
 import { SiGooglegemini } from "react-icons/si";
@@ -178,18 +180,21 @@ const Home = () => {
         ? "..."
         : numberFormatter.format(stats.totalUsers || 86),
       label: "Total Users",
+      icon: <FiUser />,
     },
     {
       value: statsLoading
         ? "..."
         : numberFormatter.format(stats.totalCities || 64),
       label: "Major Cities",
+      icon: <MdLocationCity />,
     },
     {
       value: statsLoading ? "..." : `${(stats.rating || 4.3).toFixed(1)}/5`,
       label: stats.totalReviews
         ? `User Rating (${numberFormatter.format(stats.totalReviews)} reviews)`
         : "User Rating",
+      icon: <MdRateReview />,
     },
   ];
 
@@ -222,7 +227,7 @@ const Home = () => {
         {/* Background Decorative Elements */}
         <div className="absolute inset-0 -z-10">
           <div className="absolute top-[-10%] right-[-10%] w-200 h-200 bg-primary/10 rounded-full blur-[150px]" />
-          <div className="absolute bottom-[-20%] left-[-10%] w-150 h-150 bg-indigo-500/10 rounded-full blur-[120px]" />
+          <div className="absolute bottom-[-20%] left-[-10%] w-150 h-150 bg-indigo-500/10 rounded-full blur-30" />
           <div className="absolute inset-0 opacity-20" />
         </div>
 
@@ -279,7 +284,7 @@ const Home = () => {
                     </div>
                     <button
                       type="submit"
-                      className="px-6 py-3 rounded-2xl bg-linear-to-r from-amber-400 via-rose-500 to-indigo-500 text-white text-[10px] font-black uppercase tracking-[0.3em] shadow-[0_12px_30px_rgba(244,63,94,0.35)] hover:translate-y-[-1px] transition-all cursor-pointer active:scale-95"
+                      className="px-6 py-3 rounded-2xl bg-linear-to-r from-amber-400 via-rose-500 to-indigo-500 text-white text-[10px] font-black uppercase tracking-[0.3em] shadow-[0_12px_30px_rgba(244,63,94,0.35)] hover:-translate-y-px transition-all cursor-pointer active:scale-95"
                     >
                       Search
                     </button>
@@ -298,7 +303,7 @@ const Home = () => {
                         onClick={() => {
                           handleTagClick(tag);
                         }}
-                        className="group flex items-center gap-3 px-4 py-2.5 rounded-2xl bg-white/5 border border-white/5 text-zinc-300 hover:text-white hover:border-white/20 hover:bg-white/10 transition-all duration-300 min-w-[170px] neon-ring"
+                        className="group flex items-center gap-3 px-4 py-2.5 rounded-2xl bg-white/5 border border-white/5 text-zinc-300 hover:text-white hover:border-white/20 hover:bg-white/10 transition-all duration-300 min-w-42 neon-ring"
                       >
                         <div className="w-9 h-9 rounded-xl bg-linear-to-br from-white/10 to-white/5 border border-white/10 flex items-center justify-center text-zinc-300 group-hover:text-white transition-colors">
                           {tag === "Concerts" && (
@@ -374,7 +379,7 @@ const Home = () => {
                 </div>
 
                 {/* Messages Window */}
-                <div className="h-[280px] overflow-y-auto rounded-2xl border border-white/5 bg-black/40 p-4 space-y-4 scrollbar-hide">
+                <div className="h-70 overflow-y-auto rounded-2xl border border-white/5 bg-black/40 p-4 space-y-4 scrollbar-hide">
                   {previewMessages.map((message) => (
                     <div
                       key={message.id}
@@ -420,7 +425,7 @@ const Home = () => {
       </section>
 
       {/* ── Stats Section ─────────────────────────────────────────────────────── */}
-      <section className="relative z-10 mb-10">
+      <section className="relative z-10 mb-6">
         <div className="container-custom">
           <div className="grid grid-cols-3 gap-6">
             {heroStats.map((stat, i) => (
@@ -429,13 +434,16 @@ const Home = () => {
                 {...fadeInUp}
                 whileHover={{ y: -6, scale: 1.02 }}
                 transition={{ delay: i * 0.1 }}
-                className="p-6 rounded-3xl bg-white/1 backdrop-blur-md border border-white/5 hover:border-primary/20 text-center group hover:bg-white/4 transition-all card-glow border-t-white/10"
+                className="py-4 px-2 rounded-3xl bg-white/1 backdrop-blur-md border border-white/5 hover:border-primary/20 text-center group hover:bg-white/4 transition-all card-glow border-t-white/10"
               >
-                <div className="text-3xl font-black text-white mb-2 tracking-tighter bg-linear-to-r from-white to-slate-300 bg-clip-text group-hover:from-primary group-hover:to-orange-500 transition-colors">
+                <div className="text-3xl font-black text-white group-hover:text-brand-primary mb-2 tracking-tighter bg-linear-to-r from-white to-slate-300 bg-clip-text group-hover:from-primary group-hover:to-orange-500 transition-colors">
                   {stat.value}
                 </div>
                 <div className="text-[9px] font-bold uppercase tracking-wider">
                   {stat.label}
+                </div>
+                <div className="text-primary mx-auto w-fit mt-2">
+                  {stat.icon}
                 </div>
               </motion.div>
             ))}
@@ -467,7 +475,7 @@ const Home = () => {
               </div>
 
               {/* Animate slide transitions */}
-              <div className="relative overflow-hidden rounded-4xl border border-white/5 bg-black h-[280px]">
+              <div className="relative overflow-hidden rounded-4xl border border-white/5 bg-black h-70">
                 <AnimatePresence mode="wait">
                   <motion.div
                     key={upcomingIndex}
@@ -578,7 +586,7 @@ const Home = () => {
       </section>
 
       {/* ── Featured Events ───────────────────────────────────────────────────── */}
-      <section className="pt-8 bg-slate-900/10 relative overflow-hidden">
+      <section className="py-8 bg-slate-900/10 relative overflow-hidden">
         <div className="absolute inset-0 bg-linear-to-r from-transparent via-white/5 to-transparent opacity-30" />
         <div className="absolute -top-24 right-[-10%] w-130 h-130 bg-rose-500/10 rounded-full blur-[140px]" />
         <div className="absolute -bottom-24 left-[-10%] w-130 h-130 bg-indigo-500/10 rounded-full blur-[140px]" />
@@ -634,12 +642,12 @@ const Home = () => {
               {[1, 2, 3].map((i) => (
                 <div
                   key={i}
-                  className="h-[500px] bg-white/5 rounded-4xl animate-pulse border border-white/5"
+                  className="h-125 bg-white/5 rounded-4xl animate-pulse border border-white/5"
                 />
               ))}
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
               {featuredEvents.slice(0, 6).map((event, i) => (
                 <motion.div
                   key={event.id}
@@ -665,8 +673,8 @@ const Home = () => {
             className="relative bg-linear-to-br from-slate-900 to-black rounded-[3rem] p-12 md:p-20 overflow-hidden text-center border border-white/5 card-glow"
           >
             <div className="absolute inset-0 bg-mesh opacity-10" />
-            <div className="absolute -top-24 -right-24 w-96 h-96 bg-primary/10 rounded-full blur-[120px]" />
-            <div className="absolute -bottom-24 -left-24 w-96 h-96 bg-rose-500/10 rounded-full blur-[120px]" />
+            <div className="absolute -top-24 -right-24 w-96 h-96 bg-primary/10 rounded-full blur-30" />
+            <div className="absolute -bottom-24 -left-24 w-96 h-96 bg-rose-500/10 rounded-full blur-30" />
             <div className="absolute inset-0 sweep-light" />
             <div className="absolute top-12 left-12 hidden md:block orbit-dot" />
             <div className="absolute bottom-16 right-16 hidden md:block orbit-dot" />

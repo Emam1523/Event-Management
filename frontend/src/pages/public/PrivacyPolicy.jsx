@@ -30,7 +30,7 @@ const PrivacyPolicy = () => {
   ];
 
   return (
-    <div className="bg-dark-bg min-h-screen pt-32 pb-24 text-zinc-200">
+    <div className="bg-dark-bg min-h-screen pt-32 pb-10 text-zinc-200">
       <div className="container-custom">
         <div className="max-w-4xl mx-auto">
           <motion.div
@@ -38,7 +38,7 @@ const PrivacyPolicy = () => {
             animate={{ opacity: 1, y: 0 }}
             className="text-center mb-20"
           >
-            <h1 className="text-5xl md:text-7xl font-black text-white tracking-tighter mb-8 uppercase">
+            <h1 className="text-5xl md:text-7xl font-black text-white tracking-tighter my-4 uppercase">
               PRIVACY <span className="text-primary">POLICY.</span>
             </h1>
             <p className="text-xl text-zinc-400 font-medium max-w-2xl mx-auto leading-relaxed">
@@ -47,16 +47,16 @@ const PrivacyPolicy = () => {
             </p>
           </motion.div>
 
-          <div className="grid grid-cols-1 gap-8 mb-20">
+          <div className="grid grid-cols-1 gap-8 mb-10">
             {sections.map((section, idx) => (
               <motion.div
                 key={section.title}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: idx * 0.1 }}
-                className="glass-card p-10 bg-white/5 border-white/10 flex flex-col md:flex-row gap-10 items-start hover:bg-white/10 transition-all"
+                className="glass-card p-8 bg-white/5 border-white/10 flex flex-col md:flex-row gap-10 items-start hover:bg-white/10 transition-all"
               >
-                <div className="w-16 h-16 rounded-[1.5rem] bg-primary/10 flex items-center justify-center text-primary text-3xl shrink-0 border border-primary/20">
+                <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center text-primary text-3xl shrink-0 border border-primary/20">
                   {section.icon}
                 </div>
                 <div>

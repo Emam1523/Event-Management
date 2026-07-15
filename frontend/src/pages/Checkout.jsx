@@ -237,16 +237,16 @@ const Checkout = () => {
     },
     {
       id: "amarPay",
-      label: "amarPay",
-      sub: "Pay with amarPay (Cards, Mobile Banking)",
+      label: "aamarPay",
+      sub: "Pay with aamarPay (Cards, Mobile Banking)",
       icon: <FiSmartphone />,
     },
-    { id: "bkash", label: "bKash", sub: "Pay with bKash mobile wallet" },
-    { id: "nagad", label: "Nagad", sub: "Pay with Nagad mobile wallet" },
+    // { id: "bkash", label: "bKash", sub: "Pay with bKash mobile wallet" },
+    // { id: "nagad", label: "Nagad", sub: "Pay with Nagad mobile wallet" },
   ];
 
   return (
-    <div className="min-h-screen bg-slate-50 py-8 md:py-12">
+    <div className="min-h-screen bg-aurora py-8 md:py-12">
       <div className="container-custom">
         <div className="mb-6">
           <Link
@@ -400,14 +400,25 @@ const Checkout = () => {
                   <FiCreditCard className="mr-2" /> Payment Method
                 </h2>
 
-                <div className="space-y-3 mb-6">
+                <div
+                  role="radiogroup"
+                  aria-label="Payment methods"
+                  className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6"
+                >
                   {paymentMethods.map((pm) => (
-                    <label
+                    <button
                       key={pm.id}
-                      className={`flex items-center p-4 border-2 rounded-xl cursor-pointer transition ${
+                      type="button"
+                      onClick={() =>
+                        setFormData((prev) => ({
+                          ...prev,
+                          paymentMethod: pm.id,
+                        }))
+                      }
+                      className={`relative flex items-center p-4 border rounded-xl transition focus:outline-none text-left overflow-hidden ${
                         formData.paymentMethod === pm.id
-                          ? "border-slate-900 bg-slate-900/5"
-                          : "border-slate-200 hover:border-slate-300"
+                          ? "border-emerald-600 bg-emerald-50"
+                          : "border-slate-200 hover:border-slate-300 bg-white"
                       }`}
                     >
                       <input
@@ -416,18 +427,36 @@ const Checkout = () => {
                         value={pm.id}
                         checked={formData.paymentMethod === pm.id}
                         onChange={handleChange}
-                        className="mr-3 accent-slate-900"
+                        className="sr-only"
+                        aria-checked={formData.paymentMethod === pm.id}
                       />
-                      <span className="mr-3 text-zinc-500">
-                        {pm.icon || <FiSmartphone />}
-                      </span>
-                      <div>
-                        <p className="font-semibold text-zinc-900 text-sm">
-                          {pm.label}
-                        </p>
-                        <p className="text-zinc-500 text-xs">{pm.sub}</p>
+
+                      <div className="flex items-center gap-3">
+                        <div className="shrink-0 text-2xl text-zinc-700">
+                          {pm.icon || <FiSmartphone />}
+                        </div>
+                        <div className="flex-1">
+                          <p className="font-semibold text-zinc-900 text-sm">
+                            {pm.label}
+                          </p>
+                          <p className="text-zinc-500 text-xs mt-0.5">
+                            {pm.sub}
+                          </p>
+                        </div>
                       </div>
-                    </label>
+
+                      <div className="ml-4 flex items-center">
+                        <span
+                          className={`inline-flex items-center justify-center w-6 h-6 rounded-full border transition ${
+                            formData.paymentMethod === pm.id
+                              ? "bg-emerald-600 text-white border-emerald-600"
+                              : "bg-white text-transparent border-slate-200"
+                          }`}
+                        >
+                          <FiCheckCircle className="w-4 h-4" />
+                        </span>
+                      </div>
+                    </button>
                   ))}
                 </div>
 
@@ -523,7 +552,7 @@ const Checkout = () => {
               <button
                 type="submit"
                 disabled={isProcessing}
-                className={`w-full rounded-2xl bg-slate-900 text-white text-center text-lg py-4 font-semibold transition hover:bg-slate-800 ${isProcessing ? "opacity-60 cursor-not-allowed" : ""}`}
+                className={`w-full rounded-2xl cursor-pointer bg-emerald-700 text-green-200 text-center text-lg py-4 font-semibold transition hover:text-green-900 hover:bg-emerald-400 ${isProcessing ? "opacity-60 cursor-not-allowed" : ""}`}
               >
                 {isProcessing ? (
                   <span className="flex items-center justify-center gap-2">

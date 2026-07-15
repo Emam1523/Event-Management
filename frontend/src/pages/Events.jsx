@@ -138,8 +138,8 @@ const Events = () => {
     <div className="bg-aurora min-h-screen relative overflow-hidden pt-10 pb-4">
       {/* Background Decorative Elements */}
       <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none z-0">
-        <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-primary/5 rounded-full blur-[120px]" />
-        <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-indigo-500/5 rounded-full blur-[120px]" />
+        <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-primary/5 rounded-full blur-30" />
+        <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-indigo-500/5 rounded-full blur-30" />
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full opacity-20" />
       </div>
 
@@ -332,7 +332,7 @@ const Events = () => {
                     {[...Array(6)].map((_, i) => (
                       <div
                         key={i}
-                        className="bg-[#0b0b11]/50 rounded-4xl h-[450px] animate-pulse border border-white/5"
+                        className="bg-[#0b0b11]/50 rounded-4xl h-112 animate-pulse border border-white/5"
                       />
                     ))}
                   </motion.div>

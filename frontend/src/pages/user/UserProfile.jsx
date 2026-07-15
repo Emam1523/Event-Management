@@ -257,7 +257,9 @@ const UserProfile = () => {
     setSavingReview(false);
   };
 
-  const avatarLetter = user?.name?.charAt(0)?.toUpperCase() || "U";
+  const avatarLetter = user?.avatar
+    ? user?.avatar
+    : user?.name?.charAt(0)?.toUpperCase() || "U";
   const isAdmin = user?.role === "admin";
 
   const statCards = !isAdmin
@@ -295,10 +297,10 @@ const UserProfile = () => {
   return (
     <div className="min-h-screen bg-[#05050a] text-zinc-200 pt-28 pb-24 relative overflow-hidden">
       {/* Background blobs */}
-      <div className="pointer-events-none fixed inset-0 overflow-hidden -z-0">
-        <div className="absolute -top-40 -right-40 w-[600px] h-[600px] bg-brand-orange/8 rounded-full blur-[140px]" />
-        <div className="absolute top-1/2 -left-40 w-[500px] h-[500px] bg-indigo-600/8 rounded-full blur-[140px]" />
-        <div className="absolute -bottom-40 right-1/3 w-[400px] h-[400px] bg-violet-600/8 rounded-full blur-[120px]" />
+      <div className="pointer-events-none fixed inset-0 overflow-hidden z-0">
+        <div className="absolute -top-40 -right-40 w-150 h-150 bg-brand-orange/8 rounded-full blur-[140px]" />
+        <div className="absolute top-1/2 -left-40 w-125 h-]125bg-indigo-600/8 rounded-full blur-[140px]" />
+        <div className="absolute -bottom-40 right-1/3 w-100 h-100 bg-violet-600/8 rounded-full blur-30" />
       </div>
 
       <div className="max-w-6xl mx-auto px-4 sm:px-6 relative z-10">
@@ -330,10 +332,19 @@ const UserProfile = () => {
             <div className="flex flex-col sm:flex-row sm:items-end gap-6 -mt-14 relative">
               {/* Avatar */}
               <div className="relative shrink-0">
-                <div className="w-28 h-28 rounded-3xl bg-linear-to-br from-brand-orange via-rose-500 to-violet-600 p-[3px] shadow-2xl shadow-brand-orange/30">
+                <div className="w-28 h-28 rounded-3xl bg-linear-to-br from-brand-orange via-rose-500 to-violet-600 p-px shadow-2xl shadow-brand-orange/30">
                   <div className="w-full h-full rounded-3xl bg-zinc-950 flex items-center justify-center">
                     <span className="text-4xl font-black text-white">
-                      {avatarLetter}
+                      {avatarLetter?.includes("https") ? (
+                        <img
+                          src={avatarLetter}
+                          width={192}
+                          height={192}
+                          className="aspect-square object-cover rounded-3xl p-1.5"
+                        />
+                      ) : (
+                        avatarLetter
+                      )}
                     </span>
                   </div>
                 </div>

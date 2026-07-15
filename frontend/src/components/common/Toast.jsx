@@ -2,6 +2,7 @@ import { useEffect, useState, useCallback } from "react";
 import { FiCheck, FiX, FiAlertCircle, FiInfo } from "react-icons/fi";
 
 const Toast = ({
+  title = null,
   message,
   type = "info",
   duration = 4000,
@@ -32,6 +33,7 @@ const Toast = ({
     "bottom-left": "bottom-4 left-4",
     "top-center": "top-4 left-1/2 transform -translate-x-1/2",
     "bottom-center": "bottom-4 left-1/2 transform -translate-x-1/2",
+    static: "",
   };
 
   const handleClose = useCallback(() => {
@@ -55,7 +57,9 @@ const Toast = ({
 
   return (
     <div
-      className={`fixed z-50 ${positions[position]} transition-all duration-300 ${
+      className={`${
+        position === "static" ? "relative" : "fixed"
+      } z-50 ${positions[position]} transition-all duration-300 ${
         isExiting ? "opacity-0 translate-y-2" : "opacity-100 translate-y-0"
       }`}
     >
@@ -63,7 +67,10 @@ const Toast = ({
         className={`flex items-center gap-3 p-4 rounded-lg border shadow-lg ${colors[type]} max-w-sm`}
       >
         <div className="shrink-0">{icons[type]}</div>
-        <p className="text-sm font-medium flex-1">{message}</p>
+        <div className="min-w-0 flex-1">
+          {title && <p className="text-sm font-semibold">{title}</p>}
+          <p className="text-sm font-medium">{message}</p>
+        </div>
         <button
           onClick={handleClose}
           className="shrink-0 p-1 hover:bg-black hover:bg-opacity-10 rounded transition-colors"

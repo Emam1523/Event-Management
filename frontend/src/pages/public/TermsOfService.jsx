@@ -26,7 +26,7 @@ const TermsOfService = () => {
   ];
 
   return (
-    <div className="bg-dark-bg min-h-screen pt-32 pb-24 text-zinc-200">
+    <div className="bg-dark-bg min-h-screen pt-32 text-zinc-200">
       <div className="container-custom">
         <div className="max-w-4xl mx-auto">
           <motion.div
@@ -34,7 +34,7 @@ const TermsOfService = () => {
             animate={{ opacity: 1, y: 0 }}
             className="text-center mb-20"
           >
-            <h1 className="text-5xl md:text-7xl font-black text-white tracking-tighter mb-8 uppercase">
+            <h1 className="text-5xl md:text-7xl font-black text-white tracking-tighter my-4 uppercase">
               TERMS OF <span className="text-primary">SERVICE.</span>
             </h1>
             <p className="text-xl text-zinc-400 font-medium max-w-2xl mx-auto leading-relaxed">
@@ -43,7 +43,7 @@ const TermsOfService = () => {
             </p>
           </motion.div>
 
-          <div className="space-y-12 mb-20">
+          <div className="space-y-6 mb-20">
             {terms.map((term, idx) => (
               <motion.div
                 key={term.title}

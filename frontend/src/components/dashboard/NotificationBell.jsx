@@ -20,7 +20,7 @@ const NotificationBell = ({ count = 0, onClick }) => {
     >
       <FiBell className={`text-xl ${isAnimating ? 'animate-bounce' : ''}`} />
       {count > 0 && (
-        <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center min-w-[20px]">
+        <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center min-w-5">
           {count > 99 ? '99+' : count}
         </span>
       )}

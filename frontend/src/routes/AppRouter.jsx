@@ -76,7 +76,6 @@ const AppRouter = () => {
           {/* Protected User Routes */}
           <Route element={<ProtectedRoute />}>
             <Route path="/checkout" element={<Checkout />} />
-            {/* <Route path="/dashboard" element={<UserDashboard />} /> */}
             <Route path="/profile" element={<UserProfile />} />
             <Route path="/my-tickets" element={<MyTickets />} />
             <Route path="/my-tickets/:id" element={<TicketDetail />} />

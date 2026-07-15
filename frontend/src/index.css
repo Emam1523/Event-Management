@@ -19,10 +19,12 @@
     box-sizing: border-box;
     -webkit-font-smoothing: antialiased;
     scroll-behavior: smooth;
-    user-select: none;
+    user-select: text;
   }
 
   body {
+    width: 100%;
+    overflow-x: hiddenu;
     color: #fafafa;
     line-height: 1.6;
     font-family: "Inter", sans-serif;
