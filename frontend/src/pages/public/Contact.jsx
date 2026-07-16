@@ -7,11 +7,33 @@ import {
   FiSend,
   FiMessageSquare,
   FiFileText,
+  FiFacebook,
+  FiInstagram,
 } from "react-icons/fi";
 import { MdFace } from "react-icons/md";
 import { contactAPI } from "../../services/api";
 import toast from "react-hot-toast";
-
+import { FaWhatsapp } from "react-icons/fa";
+const socialLinks = [
+  {
+    Icon: FiFacebook,
+    url: "#",
+    label: "Facebook",
+    color: "#229fef",
+  },
+  {
+    Icon: FiInstagram,
+    url: "https://www.instagram.com/p/DaXsNoQnyuY/",
+    label: "Instagram",
+    color: "#ff4f5f",
+  },
+  {
+    Icon: FaWhatsapp,
+    url: "https://wa.me/8801318672928",
+    label: "WhatsApp",
+    color: "#2aca2f",
+  },
+];
 const Contact = () => {
   const [formData, setFormData] = useState({
     name: "",
@@ -113,6 +135,24 @@ const Contact = () => {
                     </p>
                   </div>
                 </div>
+              </div>
+
+              <div className="flex gap-4 my-5">
+                {socialLinks.map((social, i) => (
+                  <a
+                    key={i}
+                    href={social.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={social.label}
+                    className="w-20 h-20 rounded-xl border border-zinc-800 flex items-center justify-center text-zinc-400 hover:text-white transition-all hover:border-white/20"
+                    style={{
+                      backgroundColor: social.color + "12",
+                    }}
+                  >
+                    <social.Icon size={24} color={social.color} />
+                  </a>
+                ))}
               </div>
             </motion.div>
 
