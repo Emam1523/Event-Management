@@ -73,11 +73,13 @@ const Contact = () => {
                     <FiMail />
                   </div>
                   <div>
-                    <p className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500 mb-2">
+                    <p className="text-[10px] font-black uppercase tracking-wide text-zinc-500 mb-2">
                       Email Us
                     </p>
                     <p className="text-xl font-bold text-white group-hover:text-blue-500 transition-colors">
-                      <a href="mailto:Bbcutv24@gmail.com">Bbcutv24@gmail.com</a>
+                      <a href="mailto:nextdhaka101@gmail.com">
+                        nextdhaka101@gmail.com
+                      </a>
                     </p>
                   </div>
                 </div>
@@ -87,7 +89,7 @@ const Contact = () => {
                     <FiPhone />
                   </div>
                   <div>
-                    <p className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500 mb-2">
+                    <p className="text-[10px] font-black uppercase tracking-wide text-zinc-500 mb-2">
                       Call Us
                     </p>
                     <p className="text-xl font-bold text-white group-hover:text-rose-500 transition-colors">
@@ -101,7 +103,7 @@ const Contact = () => {
                     <FiMapPin />
                   </div>
                   <div>
-                    <p className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500 mb-2">
+                    <p className="text-[10px] font-black uppercase tracking-wide text-zinc-500 mb-2">
                       Visit Us
                     </p>
                     <p className="text-xl font-bold text-white group-hover:text-amber-500 transition-colors">

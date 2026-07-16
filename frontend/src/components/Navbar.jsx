@@ -100,7 +100,7 @@ const Navbar = ({ hideMenu = false }) => {
                 <Link
                   key={link.to}
                   to={link.to}
-                  className={`relative px-6 py-2.5 text-[10px] font-bold uppercase tracking-[0.2em] transition-all duration-500 rounded-2xl ${
+                  className={`relative px-6 py-2.5 text-[10px] font-bold uppercase tracking-wide transition-all duration-500 rounded-2xl ${
                     location.pathname === link.to
                       ? "text-brand-secondary"
                       : "text-zinc-300/60 hover:text-zinc-200 border-2 border-transparent hover:border-primary/20"
@@ -196,7 +196,7 @@ const Navbar = ({ hideMenu = false }) => {
                             <span className="text-lg group-hover:text-brand-orange transition-colors">
                               {item.icon}
                             </span>
-                            <span className="uppercase tracking-[0.2em]">
+                            <span className="uppercase tracking-wide">
                               {item.label}
                             </span>
                           </Link>
@@ -206,7 +206,7 @@ const Navbar = ({ hideMenu = false }) => {
                           className="w-full flex items-center gap-4 px-4 py-4 text-[10px] font-black text-red-500/70 hover:text-red-50 hover:bg-red-500 rounded-2xl transition-all group"
                         >
                           <FiLogOut className="text-lg" />
-                          <span className="uppercase tracking-[0.2em]">
+                          <span className="uppercase tracking-wide">
                             Logout
                           </span>
                         </button>

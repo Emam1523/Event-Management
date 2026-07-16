@@ -133,15 +133,18 @@ const EventDetail = () => {
                   <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary border border-primary/20">
                     <FiCalendar className="text-2xl" />
                   </div>
-                  <h3 className="text-xs font-black uppercase tracking-[0.2em] text-white">
+                  <h3 className="text-xs font-black uppercase tracking-wide text-white">
                     Date & Time
                   </h3>
                 </div>
                 <p className="text-xl font-bold text-white mb-1">
-                  {format(new Date(event.date), "EEEE, MMMM d, yyyy")}
+                  {format(new Date(event.date), "EE, MMMM d, yyyy")}
                 </p>
                 <p className="text-zinc-400 font-medium">
-                  {event.time} {event.endTime ? `– ${event.endTime}` : ""}
+                  {format(new Date(event.date), "hh:mm a")}{" "}
+                  {event.endTime
+                    ? `- ${format(new Date(event.date), " hh:mm a")}`
+                    : ""}
                 </p>
               </div>
 
@@ -151,7 +154,7 @@ const EventDetail = () => {
                   <div className="w-12 h-12 rounded-2xl bg-amber-500/10 flex items-center justify-center text-amber-400 border border-amber-500/20">
                     <FiTag className="text-2xl" />
                   </div>
-                  <h3 className="text-xs font-black uppercase tracking-[0.2em] text-white">
+                  <h3 className="text-xs font-black uppercase tracking-wide text-white">
                     Classification & Capacity
                   </h3>
                 </div>
@@ -171,7 +174,7 @@ const EventDetail = () => {
                   <div className="w-12 h-12 rounded-2xl bg-indigo-500/10 flex items-center justify-center text-indigo-400 border border-indigo-500/20">
                     <FiMapPin className="text-2xl" />
                   </div>
-                  <h3 className="text-xs font-black uppercase tracking-[0.2em] text-white">
+                  <h3 className="text-xs font-black uppercase tracking-wide text-white">
                     Location
                   </h3>
                 </div>
@@ -219,7 +222,7 @@ const EventDetail = () => {
           {/* Booking Sidebar */}
           <div className="lg:col-span-4">
             <div className="glass-card p-10 bg-slate-900 border-white/10 sticky top-28 shadow-3xl shadow-black/40">
-              <h3 className="text-xs font-black uppercase tracking-[0.4em] text-zinc-500 mb-8 text-center">
+              <h3 className="text-xs font-black uppercase tracking-wider text-zinc-500 mb-8 text-center">
                 SELECT YOUR PASS
               </h3>
 

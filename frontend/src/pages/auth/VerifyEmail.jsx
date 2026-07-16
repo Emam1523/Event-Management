@@ -150,7 +150,7 @@ const VerifyEmail = () => {
           transition={{ duration: 0.4 }}
         >
           <div className="space-y-3 text-left">
-            <label className="text-[10px] font-black text-zinc-500 uppercase tracking-[0.3em] ml-1">
+            <label className="text-[10px] font-black text-zinc-500 uppercase tracking-wider ml-1">
               Secure Code
             </label>
             <input

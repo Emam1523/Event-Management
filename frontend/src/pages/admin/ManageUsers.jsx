@@ -119,19 +119,19 @@ const ManageUsers = () => {
           <table className="w-full text-left">
             <thead>
               <tr className="bg-white/2">
-                <th className="px-8 py-5 text-[10px] font-black text-gray-500 uppercase tracking-[0.2em]">
+                <th className="px-8 py-5 text-[10px] font-black text-gray-500 uppercase tracking-wide">
                   Member
                 </th>
-                <th className="px-8 py-5 text-[10px] font-black text-gray-500 uppercase tracking-[0.2em]">
+                <th className="px-8 py-5 text-[10px] font-black text-gray-500 uppercase tracking-wide">
                   Credentials
                 </th>
-                <th className="px-8 py-5 text-[10px] font-black text-gray-500 uppercase tracking-[0.2em]">
+                <th className="px-8 py-5 text-[10px] font-black text-gray-500 uppercase tracking-wide">
                   Rank
                 </th>
-                <th className="px-8 py-5 text-[10px] font-black text-gray-500 uppercase tracking-[0.2em]">
+                <th className="px-8 py-5 text-[10px] font-black text-gray-500 uppercase tracking-wide">
                   Date Joined
                 </th>
-                <th className="px-8 py-5 text-[10px] font-black text-gray-500 uppercase tracking-[0.2em] text-right">
+                <th className="px-8 py-5 text-[10px] font-black text-gray-500 uppercase tracking-wide text-right">
                   Settings
                 </th>
               </tr>

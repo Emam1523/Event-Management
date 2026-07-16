@@ -27,22 +27,22 @@ const BookingsTable = ({ bookings, isLoading }) => {
         <table className="w-full text-left">
           <thead>
             <tr className="bg-white/2 border-b border-white/5">
-              <th className="px-8 py-5 text-[10px] font-black text-gray-500 uppercase tracking-[0.2em]">
+              <th className="px-8 py-5 text-[10px] font-black text-gray-500 uppercase tracking-wide">
                 Transaction ID
               </th>
-              <th className="px-8 py-5 text-[10px] font-black text-gray-500 uppercase tracking-[0.2em]">
+              <th className="px-8 py-5 text-[10px] font-black text-gray-500 uppercase tracking-wide">
                 Acquisition By
               </th>
-              <th className="px-8 py-5 text-[10px] font-black text-gray-500 uppercase tracking-[0.2em]">
+              <th className="px-8 py-5 text-[10px] font-black text-gray-500 uppercase tracking-wide">
                 Curation
               </th>
-              <th className="px-8 py-5 text-[10px] font-black text-gray-500 uppercase tracking-[0.2em]">
+              <th className="px-8 py-5 text-[10px] font-black text-gray-500 uppercase tracking-wide">
                 Investment
               </th>
-              <th className="px-8 py-5 text-[10px] font-black text-gray-500 uppercase tracking-[0.2em]">
+              <th className="px-8 py-5 text-[10px] font-black text-gray-500 uppercase tracking-wide">
                 Mandate Status
               </th>
-              <th className="px-8 py-5 text-[10px] font-black text-gray-500 uppercase tracking-[0.2em] text-right">
+              <th className="px-8 py-5 text-[10px] font-black text-gray-500 uppercase tracking-wide text-right">
                 Actions
               </th>
             </tr>

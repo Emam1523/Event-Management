@@ -168,7 +168,7 @@ const Analytics = () => {
                   {card.icon}
                 </div>
               </div>
-              <p className="text-[10px] font-black text-gray-500 uppercase tracking-[0.2em] mb-1 relative z-10">
+              <p className="text-[10px] font-black text-gray-500 uppercase tracking-wide mb-1 relative z-10">
                 {card.label}
               </p>
               <p className="text-3xl font-black text-white group-hover:scale-105 origin-left transition-transform relative z-10">
@@ -272,7 +272,7 @@ const Analytics = () => {
             </h2>
             <FiTrendingUp className="text-emerald-400 text-2xl" />
           </div>
-          <p className="text-[10px] text-gray-500 font-black uppercase tracking-[0.2em] mb-8">
+          <p className="text-[10px] text-gray-500 font-black uppercase tracking-wide mb-8">
             Top performing exhibitions
           </p>
 

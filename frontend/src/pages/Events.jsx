@@ -196,7 +196,7 @@ const Events = () => {
                   />
                   <button
                     type="submit"
-                    className="bg-primary text-white px-6 py-3 rounded-xl font-black text-[10px] uppercase tracking-[0.2em] hover:scale-105 transition-all shadow-lg shadow-primary/20 active:scale-95 cursor-pointer"
+                    className="bg-primary text-white px-6 py-3 rounded-xl font-black text-[10px] uppercase tracking-wide hover:scale-105 transition-all shadow-lg shadow-primary/20 active:scale-95 cursor-pointer"
                   >
                     Search
                   </button>
@@ -245,7 +245,7 @@ const Events = () => {
               <div className="bg-primary/20 p-2.5 rounded-xl">
                 <FiZap className="text-primary text-sm" />
               </div>
-              <h3 className="text-xs font-black uppercase tracking-[0.3em] text-zinc-400">
+              <h3 className="text-xs font-black uppercase tracking-wider text-zinc-400">
                 Showing{" "}
                 <span className="text-white font-black">{totalEvents}</span>{" "}
                 Results
@@ -259,7 +259,7 @@ const Events = () => {
               <div className="flex flex-col space-y-5">
                 {/* Category Filter */}
                 <div className="bg-white/5 border border-white/10 rounded-xl p-3.5">
-                  <h4 className="text-white text-[11px] font-black uppercase tracking-[0.3em] mb-2.5 flex items-center gap-2">
+                  <h4 className="text-white text-[11px] font-black uppercase tracking-wider mb-2.5 flex items-center gap-2">
                     <FiCompass className="text-primary" /> Category
                   </h4>
                   <div className="relative group">
@@ -283,7 +283,7 @@ const Events = () => {
 
                 {/* Location Filter */}
                 <div className="bg-white/5 border border-white/10 rounded-xl p-3.5">
-                  <h4 className="text-white text-[11px] font-black uppercase tracking-[0.3em] mb-2.5 flex items-center gap-2">
+                  <h4 className="text-white text-[11px] font-black uppercase tracking-wider mb-2.5 flex items-center gap-2">
                     <FiMapPin className="text-primary" /> Location
                   </h4>
                   <div className="relative group">
@@ -308,7 +308,7 @@ const Events = () => {
                 {/* Reset All */}
                 <button
                   onClick={clearFilters}
-                  className="w-full py-2.5 rounded-xl border border-white/10 text-zinc-500 text-[10px] font-black uppercase tracking-[0.2em] hover:bg-white/5 hover:text-white hover:border-white/20 transition-all flex items-center justify-center gap-2 cursor-pointer"
+                  className="w-full py-2.5 rounded-xl border border-white/10 text-zinc-500 text-[10px] font-black uppercase tracking-wide hover:bg-white/5 hover:text-white hover:border-white/20 transition-all flex items-center justify-center gap-2 cursor-pointer"
                 >
                   <FiX /> Reset Filters
                 </button>
@@ -444,7 +444,7 @@ const Events = () => {
 
               <div className="space-y-12">
                 <div>
-                  <h4 className="text-white text-[10px] font-black uppercase tracking-[0.3em] mb-6">
+                  <h4 className="text-white text-[10px] font-black uppercase tracking-wider mb-6">
                     Category
                   </h4>
                   <select
@@ -464,7 +464,7 @@ const Events = () => {
                 </div>
 
                 <div>
-                  <h4 className="text-white text-[10px] font-black uppercase tracking-[0.3em] mb-6">
+                  <h4 className="text-white text-[10px] font-black uppercase tracking-wider mb-6">
                     Location
                   </h4>
                   <select
@@ -487,7 +487,7 @@ const Events = () => {
                   onClick={() => {
                     setIsFilterSidebarOpen(false);
                   }}
-                  className="w-full py-5 rounded-2xl bg-primary text-white text-[10px] font-black uppercase tracking-[0.2em] shadow-lg shadow-primary/30 active:scale-95 transition-transform cursor-pointer"
+                  className="w-full py-5 rounded-2xl bg-primary text-white text-[10px] font-black uppercase tracking-wide shadow-lg shadow-primary/30 active:scale-95 transition-transform cursor-pointer"
                 >
                   Apply & Close
                 </button>

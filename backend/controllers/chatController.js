@@ -18,7 +18,7 @@ const generateAssistantReply = async (message, events) => {
     throw new Error('API Key is not set in environment variables');
   }
 
-  const prompt = `You are AuraPass Assistant, a helpful and intelligent AI assistant for the AuraPass Event Management platform.
+  const prompt = `You are NextDhaka Assistant, a helpful and intelligent AI assistant for the NextDhaka Event Management platform.
   
 Your goal is to assist users with their questions. While you specialize in events, you can answer ANY type of question the user asks (general knowledge, calculations, advice, etc.).
 

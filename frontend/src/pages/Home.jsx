@@ -284,7 +284,7 @@ const Home = () => {
                     </div>
                     <button
                       type="submit"
-                      className="px-6 py-3 rounded-2xl bg-linear-to-r from-amber-400 via-rose-500 to-indigo-500 text-white text-[10px] font-black uppercase tracking-[0.3em] shadow-[0_12px_30px_rgba(244,63,94,0.35)] hover:-translate-y-px transition-all cursor-pointer active:scale-95"
+                      className="px-6 py-3 rounded-2xl bg-linear-to-r from-amber-400 via-rose-500 to-indigo-500 text-white text-[10px] font-black uppercase tracking-wider shadow-[0_12px_30px_rgba(244,63,94,0.35)] hover:-translate-y-px transition-all cursor-pointer active:scale-95"
                     >
                       Search
                     </button>
@@ -327,7 +327,7 @@ const Home = () => {
                           )}
                         </div>
                         <div className="text-left">
-                          <div className="text-[9px] font-black uppercase tracking-[0.2em] text-zinc-500 group-hover:text-zinc-200">
+                          <div className="text-[9px] font-black uppercase tracking-wide text-zinc-500 group-hover:text-zinc-200">
                             Category
                           </div>
                           <div className="text-xs font-bold tracking-tight">
@@ -456,7 +456,7 @@ const Home = () => {
             <div className="relative p-6 md:p-8">
               <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6 mb-8">
                 <div>
-                  <div className="text-xs font-black uppercase tracking-[0.3em] text-primary mb-3">
+                  <div className="text-xs font-black uppercase tracking-wider text-primary mb-3">
                     Upcoming Events
                   </div>
                   <h3 className="text-xl md:text-2xl font-black text-white tracking-tight uppercase">
@@ -468,7 +468,7 @@ const Home = () => {
                 </div>
                 <Link
                   to="/events"
-                  className="inline-flex items-center gap-3 px-6 py-3 rounded-2xl border border-white/10 hover:border-white/20 text-white text-[10px] font-black uppercase tracking-[0.3em] hover:bg-white/5 transition-all self-start md:self-auto"
+                  className="inline-flex items-center gap-3 px-6 py-3 rounded-2xl border border-white/10 hover:border-white/20 text-white text-[10px] font-black uppercase tracking-wider hover:bg-white/5 transition-all self-start md:self-auto"
                 >
                   View All <FiArrowRight className="text-sm" />
                 </Link>
@@ -495,7 +495,7 @@ const Home = () => {
                     />
                     <div className="absolute inset-0 bg-linear-to-r from-black/80 via-black/30 to-black/80" />
 
-                    <div className="absolute top-4 right-4 px-3 py-1.5 rounded-full bg-rose-500/20 text-rose-100 text-[9px] font-black uppercase tracking-[0.2em] border border-rose-500/20">
+                    <div className="absolute top-4 right-4 px-3 py-1.5 rounded-full bg-rose-500/20 text-rose-100 text-[9px] font-black uppercase tracking-wide border border-rose-500/20">
                       Featured
                     </div>
 
@@ -594,7 +594,7 @@ const Home = () => {
         <div className="container-custom">
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-16">
             <div className="text-left">
-              <div className="inline-flex items-center gap-3 px-4 py-2 rounded-full bg-white/5 border border-white/10 text-white text-[10px] font-black uppercase tracking-[0.3em] mb-6">
+              <div className="inline-flex items-center gap-3 px-4 py-2 rounded-full bg-white/5 border border-white/10 text-white text-[10px] font-black uppercase tracking-wider mb-6">
                 Editor's Choice
               </div>
               <motion.h2
@@ -617,7 +617,7 @@ const Home = () => {
                   (item) => (
                     <div
                       key={item}
-                      className="px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-[9px] font-black uppercase tracking-[0.2em] text-zinc-300"
+                      className="px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-[9px] font-black uppercase tracking-wide text-zinc-300"
                     >
                       {item}
                     </div>
@@ -680,7 +680,7 @@ const Home = () => {
             <div className="absolute bottom-16 right-16 hidden md:block orbit-dot" />
 
             <div className="relative z-10 max-w-4xl mx-auto">
-              <div className="inline-flex items-center gap-3 px-4 py-2 rounded-full bg-white/5 border border-white/10 text-white text-[9px] font-black uppercase tracking-[0.3em] mb-6">
+              <div className="inline-flex items-center gap-3 px-4 py-2 rounded-full bg-white/5 border border-white/10 text-white text-[9px] font-black uppercase tracking-wider mb-6">
                 Become a Member
               </div>
               <h2 className="text-4xl md:text-5xl font-black text-white tracking-tighter mb-8 leading-[0.95] uppercase">

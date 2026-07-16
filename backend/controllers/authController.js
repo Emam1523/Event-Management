@@ -18,7 +18,11 @@ const createVerificationCode = async ({ email, purpose, metadata = {} }) => {
       purpose,
       codeHash: hashCode(code),
       metadata,
-      expiresAt: new Date(Date.now() + CODE_TTL_MINUTES * 60 * 1000),
+      expiresAt: new Date(
+        Date.now() + purpose === "password-change"
+          ? 30 * 1000
+          : CODE_TTL_MINUTES * 60 * 1000,
+      ),
     },
   });
   return code;

@@ -166,7 +166,7 @@ const AdminDashboard = () => {
             </div>
             <Link
               to="/admin/manage-bookings"
-              className="text-[10px] font-black text-brand-orange hover:text-white transition-colors uppercase tracking-[0.2em] flex items-center gap-2"
+              className="text-[10px] font-black text-brand-orange hover:text-white transition-colors uppercase tracking-wide flex items-center gap-2"
             >
               View All <FiArrowRight />
             </Link>
@@ -175,7 +175,7 @@ const AdminDashboard = () => {
           <div className="overflow-x-auto">
             <table className="w-full text-left">
               <thead>
-                <tr className="bg-white/2 text-[10px] font-black text-gray-500 uppercase tracking-[0.2em] border-b border-white/5">
+                <tr className="bg-white/2 text-[10px] font-black text-gray-500 uppercase tracking-wide border-b border-white/5">
                   <th className="px-8 py-4">User</th>
                   <th className="px-8 py-4">Event</th>
                   <th className="px-8 py-4">Amount</th>

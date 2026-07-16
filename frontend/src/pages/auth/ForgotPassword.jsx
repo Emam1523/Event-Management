@@ -162,7 +162,7 @@ const ForgotPassword = () => {
   const strokeDashoffset = circumference * (1 - timer / OTP_TIMER);
 
   return (
-    <div className="min-h-screen w-full flex items-center justify-center p-4 relative overflow-hidden">
+    <div className="min-h-screen w-full flex items-center justify-center px-4 pt-28 pb-8 relative overflow-hidden">
       <div className="absolute top-1/4 -left-20 w-150 h-150 bg-brand-orange/5 rounded-full blur-[150px] pointer-events-none -z-10 animate-pulse-slow" />
       <div className="absolute bottom-1/4 -right-20 w-130 h-130 bg-indigo-500/5 rounded-full blur-[140px] pointer-events-none -z-10 animate-float-delayed" />
 
@@ -190,7 +190,7 @@ const ForgotPassword = () => {
               </motion.div>
               {s < 3 && (
                 <div
-                  className={`w-12 h-[2px] rounded-full ${step > s ? "bg-brand-orange" : "bg-white/10"}`}
+                  className={`w-12 h-1 rounded-full ${step > s ? "bg-brand-orange" : "bg-white/10"}`}
                 />
               )}
             </div>
@@ -245,7 +245,7 @@ const ForgotPassword = () => {
                   className="space-y-6"
                 >
                   <div className="space-y-2">
-                    <label className="text-[10px] font-black text-zinc-500 uppercase tracking-[0.3em] ml-1">
+                    <label className="text-[10px] font-black text-zinc-500 uppercase tracking-wider ml-1">
                       Email Address
                     </label>
                     <div className="relative group">
@@ -344,7 +344,7 @@ const ForgotPassword = () => {
                         </span>
                       </div>
                     </div>
-                    <span className="text-[10px] font-black text-zinc-500 uppercase tracking-[0.3em]">
+                    <span className="text-[10px] font-black text-zinc-500 uppercase tracking-wider">
                       {timerActive
                         ? "Time remaining"
                         : timer === 0
@@ -354,7 +354,7 @@ const ForgotPassword = () => {
                   </div>
 
                   <div className="space-y-2">
-                    <label className="text-[10px] font-black text-zinc-500 uppercase tracking-[0.3em] ml-1">
+                    <label className="text-[10px] font-black text-zinc-500 uppercase tracking-wider ml-1">
                       Secure Code
                     </label>
                     <input
@@ -368,7 +368,7 @@ const ForgotPassword = () => {
                       }}
                       placeholder="--- ---"
                       disabled={!timerActive}
-                      className={`w-full rounded-2xl border bg-black/30 px-4 py-4 text-center text-3xl font-mono font-black tracking-[0.4em] text-white outline-none transition-all duration-300 disabled:opacity-30 disabled:cursor-not-allowed ${
+                      className={`w-full rounded-2xl border bg-black/30 px-4 py-4 text-center text-3xl font-mono font-black tracking-wider text-white outline-none transition-all duration-300 disabled:opacity-30 disabled:cursor-not-allowed ${
                         codeError
                           ? "border-red-500/50 focus:border-red-500 shadow-[0_0_20px_rgba(239,68,68,0.15)]"
                           : "border-white/10 focus:border-brand-orange/50 focus:shadow-[0_0_30px_rgba(255,90,53,0.1)]"
@@ -470,7 +470,7 @@ const ForgotPassword = () => {
                   </motion.div>
 
                   <div className="space-y-2">
-                    <label className="text-[10px] font-black text-zinc-500 uppercase tracking-[0.3em] ml-1">
+                    <label className="text-[10px] font-black text-zinc-500 uppercase tracking-wider ml-1">
                       New Password
                     </label>
                     <div className="relative group">
@@ -489,7 +489,7 @@ const ForgotPassword = () => {
                   </div>
 
                   <div className="space-y-2">
-                    <label className="text-[10px] font-black text-zinc-500 uppercase tracking-[0.3em] ml-1">
+                    <label className="text-[10px] font-black text-zinc-500 uppercase tracking-wider ml-1">
                       Confirm Password
                     </label>
                     <div className="relative group">

@@ -663,7 +663,7 @@ const UserProfile = () => {
                   <div className="space-y-6">
                     {/* New Password */}
                     <div className="space-y-2">
-                      <label className="text-[10px] font-black uppercase tracking-[0.3em] ml-1 text-zinc-500">
+                      <label className="text-[10px] font-black uppercase tracking-wider ml-1 text-zinc-500">
                         New Password
                       </label>
                       <div className="relative group">
@@ -697,7 +697,7 @@ const UserProfile = () => {
 
                     {/* Confirm Password */}
                     <div className="space-y-2">
-                      <label className="text-[10px] font-black uppercase tracking-[0.3em] ml-1 text-zinc-500">
+                      <label className="text-[10px] font-black uppercase tracking-wider ml-1 text-zinc-500">
                         Confirm New Password
                       </label>
                       <div className="relative group">

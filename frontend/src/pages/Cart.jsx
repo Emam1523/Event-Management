@@ -56,7 +56,7 @@ const Cart = () => {
             {cartItems.map((item) => (
               <div
                 key={`${item.event.id}-${item.ticketType.id}`}
-                className="glass-card p-8 bg-white/5 border-white/5 group hover:border-white/10 transition-all"
+                className="glass-card p-8 bg-white/5 border-white/5 hover:border-white/10 transition-all"
               >
                 <div className="flex flex-col md:flex-row gap-8">
                   {/* Event Image */}
@@ -64,7 +64,7 @@ const Cart = () => {
                     <img
                       src={getImageUrl(item.event.image)}
                       alt={item.event.title}
-                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                      className="w-full h-full object-cover"
                     />
                   </div>
 
@@ -77,14 +77,6 @@ const Cart = () => {
                       >
                         {item.event.title}
                       </Link>
-                      <button
-                        onClick={() =>
-                          removeFromCart(item.event.id, item.ticketType.id)
-                        }
-                        className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center text-zinc-500 hover:text-rose-500 hover:bg-rose-500/10 transition-all border border-white/5"
-                      >
-                        <FiTrash2 />
-                      </button>
                     </div>
 
                     <div className="flex items-center gap-4 text-zinc-500 text-xs font-bold uppercase tracking-widest">
@@ -104,6 +96,14 @@ const Cart = () => {
 
                   {/* Quantity and Price */}
                   <div className="flex flex-row md:flex-col items-center md:items-end justify-between md:justify-center gap-4 md:min-w-30 pt-4 md:pt-0 border-t md:border-t-0 border-white/5">
+                    <button
+                      onClick={() =>
+                        removeFromCart(item.event.id, item.ticketType.id)
+                      }
+                      className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center text-zinc-500 hover:text-rose-500 hover:bg-rose-500/10 transition-all border border-white/5"
+                    >
+                      <FiTrash2 />
+                    </button>
                     <div className="flex items-center bg-white/5 rounded-2xl border border-white/5 p-1">
                       <button
                         onClick={() =>
@@ -115,7 +115,7 @@ const Cart = () => {
                         }
                         className="w-8 h-8 flex items-center justify-center text-zinc-400 hover:text-white transition-colors"
                       >
-                        –
+                        -
                       </button>
                       <span className="w-8 text-center font-black text-white text-sm">
                         {item.quantity}
@@ -146,8 +146,8 @@ const Cart = () => {
 
           {/* Order Summary */}
           <div className="lg:col-span-4">
-            <div className="glass-card p-10 bg-slate-900 border-white/10 sticky top-32 shadow-3xl shadow-black/40">
-              <h2 className="text-xs font-black uppercase tracking-[0.4em] text-zinc-500 mb-10 text-center">
+            <div className="glass-card p-10 bg-dark-card/30 border-white/10 sticky top-32 shadow-3xl shadow-black/40">
+              <h2 className="text-xs font-black uppercase tracking-wider text-zinc-500 mb-10 text-center">
                 ORDER SUMMARY
               </h2>
 
@@ -170,7 +170,7 @@ const Cart = () => {
                 </div>
                 <div className="border-t border-white/5 pt-8">
                   <div className="flex justify-between items-center">
-                    <span className="text-[10px] font-black text-zinc-400 uppercase tracking-[0.2em]">
+                    <span className="text-[10px] font-black text-zinc-400 uppercase tracking-wide">
                       Total Amount
                     </span>
                     <span className="text-4xl font-black text-primary tracking-tighter">

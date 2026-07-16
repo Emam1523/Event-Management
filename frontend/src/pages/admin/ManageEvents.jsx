@@ -152,19 +152,19 @@ const ManageEvents = () => {
           <table className="w-full text-left">
             <thead>
               <tr className="bg-white/2">
-                <th className="px-8 py-5 text-[10px] font-black text-gray-500 uppercase tracking-[0.2em]">
+                <th className="px-8 py-5 text-[10px] font-black text-gray-500 uppercase tracking-wide">
                   Event Info
                 </th>
-                <th className="px-8 py-5 text-[10px] font-black text-gray-500 uppercase tracking-[0.2em]">
+                <th className="px-8 py-5 text-[10px] font-black text-gray-500 uppercase tracking-wide">
                   Sales Progress
                 </th>
-                <th className="px-8 py-5 text-[10px] font-black text-gray-500 uppercase tracking-[0.2em]">
+                <th className="px-8 py-5 text-[10px] font-black text-gray-500 uppercase tracking-wide">
                   Revenue
                 </th>
-                <th className="px-8 py-5 text-[10px] font-black text-gray-500 uppercase tracking-[0.2em]">
+                <th className="px-8 py-5 text-[10px] font-black text-gray-500 uppercase tracking-wide">
                   Status
                 </th>
-                <th className="px-8 py-5 text-[10px] font-black text-gray-500 uppercase tracking-[0.2em] text-right">
+                <th className="px-8 py-5 text-[10px] font-black text-gray-500 uppercase tracking-wide text-right">
                   Actions
                 </th>
               </tr>

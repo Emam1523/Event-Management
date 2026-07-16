@@ -269,7 +269,7 @@ const CreateEvent = () => {
 
           <div className="lg:col-span-2 bg-zinc-950/50 border border-white/5 rounded-4xl p-8 md:p-10 shadow-2xl backdrop-blur-xl space-y-8">
             <div className="group">
-              <label className="block text-[10px] font-black text-zinc-500 uppercase tracking-[0.2em] mb-4 ml-2 group-focus-within:text-brand-orange transition-colors">
+              <label className="block text-[10px] font-black text-zinc-500 uppercase tracking-wide mb-4 ml-2 group-focus-within:text-brand-orange transition-colors">
                 Event Title
               </label>
               <input
@@ -284,7 +284,7 @@ const CreateEvent = () => {
             </div>
 
             <div className="group">
-              <label className="block text-[10px] font-black text-zinc-500 uppercase tracking-[0.2em] mb-4 ml-2 group-focus-within:text-brand-orange transition-colors">
+              <label className="block text-[10px] font-black text-zinc-500 uppercase tracking-wide mb-4 ml-2 group-focus-within:text-brand-orange transition-colors">
                 Event Description
               </label>
               <textarea
@@ -319,7 +319,7 @@ const CreateEvent = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div className="group">
-              <label className="block text-[10px] font-black text-zinc-500 uppercase tracking-[0.2em] mb-4 ml-2 group-focus-within:text-amber-500 transition-colors">
+              <label className="block text-[10px] font-black text-zinc-500 uppercase tracking-wide mb-4 ml-2 group-focus-within:text-amber-500 transition-colors">
                 Category
               </label>
               <div className="relative">
@@ -344,7 +344,7 @@ const CreateEvent = () => {
             </div>
 
             <div className="group">
-              <label className="block text-[10px] font-black text-zinc-500 uppercase tracking-[0.2em] mb-4 ml-2 group-focus-within:text-amber-500 transition-colors">
+              <label className="block text-[10px] font-black text-zinc-500 uppercase tracking-wide mb-4 ml-2 group-focus-within:text-amber-500 transition-colors">
                 Total Attendance
               </label>
               <div className="relative">
@@ -362,7 +362,7 @@ const CreateEvent = () => {
             </div>
 
             <div className="group">
-              <label className="block text-[10px] font-black text-zinc-500 uppercase tracking-[0.2em] mb-4 ml-2 group-focus-within:text-amber-500 transition-colors">
+              <label className="block text-[10px] font-black text-zinc-500 uppercase tracking-wide mb-4 ml-2 group-focus-within:text-amber-500 transition-colors">
                 Service Charge (%)
               </label>
               <div className="relative">
@@ -402,7 +402,7 @@ const CreateEvent = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div className="group">
-              <label className="block text-[10px] font-black text-zinc-500 uppercase tracking-[0.2em] mb-4 ml-2 group-focus-within:text-blue-500 transition-colors">
+              <label className="block text-[10px] font-black text-zinc-500 uppercase tracking-wide mb-4 ml-2 group-focus-within:text-blue-500 transition-colors">
                 Date
               </label>
               <div className="relative">
@@ -419,7 +419,7 @@ const CreateEvent = () => {
             </div>
 
             <div className="group">
-              <label className="block text-[10px] font-black text-zinc-500 uppercase tracking-[0.2em] mb-4 ml-2 group-focus-within:text-blue-500 transition-colors">
+              <label className="block text-[10px] font-black text-zinc-500 uppercase tracking-wide mb-4 ml-2 group-focus-within:text-blue-500 transition-colors">
                 Start Time
               </label>
               <div className="relative">
@@ -436,7 +436,7 @@ const CreateEvent = () => {
             </div>
 
             <div className="group">
-              <label className="block text-[10px] font-black text-zinc-500 uppercase tracking-[0.2em] mb-4 ml-2 group-focus-within:text-blue-500 transition-colors">
+              <label className="block text-[10px] font-black text-zinc-500 uppercase tracking-wide mb-4 ml-2 group-focus-within:text-blue-500 transition-colors">
                 End Time
               </label>
               <div className="relative">
@@ -472,7 +472,7 @@ const CreateEvent = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div className="group">
-              <label className="block text-[10px] font-black text-zinc-500 uppercase tracking-[0.2em] mb-4 ml-2 group-focus-within:text-emerald-500 transition-colors">
+              <label className="block text-[10px] font-black text-zinc-500 uppercase tracking-wide mb-4 ml-2 group-focus-within:text-emerald-500 transition-colors">
                 Location Name
               </label>
               <input
@@ -486,7 +486,7 @@ const CreateEvent = () => {
               />
             </div>
             <div className="group">
-              <label className="block text-[10px] font-black text-zinc-500 uppercase tracking-[0.2em] mb-4 ml-2 group-focus-within:text-emerald-500 transition-colors">
+              <label className="block text-[10px] font-black text-zinc-500 uppercase tracking-wide mb-4 ml-2 group-focus-within:text-emerald-500 transition-colors">
                 City
               </label>
               <div className="relative">
@@ -510,7 +510,7 @@ const CreateEvent = () => {
               </div>
             </div>
             <div className="group md:col-span-2">
-              <label className="block text-[10px] font-black text-zinc-500 uppercase tracking-[0.2em] mb-4 ml-2 group-focus-within:text-emerald-500 transition-colors">
+              <label className="block text-[10px] font-black text-zinc-500 uppercase tracking-wide mb-4 ml-2 group-focus-within:text-emerald-500 transition-colors">
                 Live Location
               </label>
               <MapPicker
@@ -568,7 +568,7 @@ const CreateEvent = () => {
                   <FiUpload className="text-3xl" />
                 </div>
                 <div className="text-center">
-                  <p className="text-white font-black uppercase tracking-[0.2em] text-[10px] mb-2">
+                  <p className="text-white font-black uppercase tracking-wide text-[10px] mb-2">
                     Upload Core Artifact
                   </p>
                   <p className="text-zinc-300/60 font-medium text-xs">
@@ -615,7 +615,7 @@ const CreateEvent = () => {
           {formData.capacity && (
             <div className="mb-8 p-6 bg-white/2 border border-white/5 rounded-3xl flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div>
-                <p className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500">
+                <p className="text-[10px] font-black uppercase tracking-wide text-zinc-500">
                   Allocated Audience
                 </p>
                 <h3 className="text-lg font-bold text-white mt-1 font-mono">
@@ -667,7 +667,7 @@ const CreateEvent = () => {
                 >
                   <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
                     <div className="md:col-span-2">
-                      <label className="block text-[10px] font-black text-zinc-500 uppercase tracking-[0.2em] mb-4">
+                      <label className="block text-[10px] font-black text-zinc-500 uppercase tracking-wide mb-4">
                         Pass Name
                       </label>
                       <input
@@ -682,7 +682,7 @@ const CreateEvent = () => {
                       />
                     </div>
                     <div>
-                      <label className="block text-[10px] font-black text-zinc-500 uppercase tracking-[0.2em] mb-4">
+                      <label className="block text-[10px] font-black text-zinc-500 uppercase tracking-wide mb-4">
                         Price (৳)
                       </label>
                       <input
@@ -697,7 +697,7 @@ const CreateEvent = () => {
                       />
                     </div>
                     <div>
-                      <label className="block text-[10px] font-black text-zinc-500 uppercase tracking-[0.2em] mb-4">
+                      <label className="block text-[10px] font-black text-zinc-500 uppercase tracking-wide mb-4">
                         Quantity
                       </label>
                       <input
@@ -740,7 +740,7 @@ const CreateEvent = () => {
             ) : (
               <>
                 <FiPlus className="text-2xl" />
-                <span className="uppercase tracking-[0.3em] text-sm">
+                <span className="uppercase tracking-wider text-sm">
                   Initialize Exhibition
                 </span>
               </>
@@ -749,7 +749,7 @@ const CreateEvent = () => {
           <button
             type="button"
             onClick={() => navigate("/admin/manage-events")}
-            className="flex-1 px-12 py-6 bg-white/5 hover:bg-white/10 text-white rounded-4xl font-black uppercase tracking-[0.2em] text-sm border border-white/10 transition-all"
+            className="flex-1 px-12 py-6 bg-white/5 hover:bg-white/10 text-white rounded-4xl font-black uppercase tracking-wide text-sm border border-white/10 transition-all"
           >
             Abort
           </button>

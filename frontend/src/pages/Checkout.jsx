@@ -260,7 +260,7 @@ const Checkout = () => {
         <section className="mb-8 rounded-3xl border border-slate-200 bg-white p-6 shadow-sm md:p-8">
           <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
             <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-zinc-500">
+              <p className="text-xs font-semibold uppercase tracking-wide text-zinc-500">
                 Secure Payment
               </p>
               <h1 className="mt-2 text-3xl font-black tracking-tight text-zinc-900">

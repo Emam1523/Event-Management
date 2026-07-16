@@ -506,7 +506,7 @@ const MyTickets = () => {
                       includeMargin={false}
                     />
                   </div>
-                  <p className="text-base font-mono font-bold text-white tracking-[0.3em] mb-1">
+                  <p className="text-base font-mono font-bold text-white tracking-wider mb-1">
                     {selectedTicket.bookingId}
                   </p>
                   <p className="text-[9px] font-black text-zinc-500 uppercase tracking-widest mb-6">

@@ -54,18 +54,32 @@ const PrivacyPolicy = () => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: idx * 0.1 }}
-                className="glass-card p-8 bg-white/5 border-white/10 flex flex-col md:flex-row gap-10 items-start hover:bg-white/10 transition-all"
+                className="glass-card px-8 py-4 bg-white/5 border-white/10 flex flex-col md:flex-row gap-10 items-start hover:bg-white/10 transition-all"
               >
                 <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center text-primary text-3xl shrink-0 border border-primary/20">
                   {section.icon}
                 </div>
                 <div>
-                  <h3 className="text-2xl font-black text-white mb-4 tracking-tight uppercase">
+                  <h3 className="text-2xl font-bold text-white mb-4 tracking-tight uppercase">
                     {section.title}
                   </h3>
-                  <p className="text-zinc-400 font-medium leading-relaxed text-lg">
+                  <p className="text-zinc-400 font-light leading-relaxed text-lg">
                     {section.content}
                   </p>
+                  {idx === 2 && (
+                    <div className="flex flex-wrap justify-start mt-2 gap-3">
+                      {["VISA", "MASTERCARD", "AAMARPAY", "BKASH", "NAGAD"].map(
+                        (tag) => (
+                          <span
+                            key={tag}
+                            className="px-3 py-1.5 bg-white/5 rounded-lg text-[9px] font-black text-zinc-400 border border-white/5"
+                          >
+                            {tag}
+                          </span>
+                        ),
+                      )}
+                    </div>
+                  )}
                 </div>
               </motion.div>
             ))}
