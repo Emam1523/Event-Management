@@ -302,7 +302,12 @@ exports.requestVerificationCode = asyncHandler(async (req, res) => {
     res.status(404);
     throw new Error("User not found");
   }
-
+  if (purpose === "password-change" && user.password === null) {
+    console.log("REQUESTED USER DATA: [" + user.id + "," + user.email + "]");
+    throw new Error(
+      "It seems the email you are using does not have Email & Password credential. You can try login with google from login page.",
+    );
+  }
   const code = await createVerificationCode({
     email,
     purpose,

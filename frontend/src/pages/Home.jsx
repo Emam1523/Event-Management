@@ -675,7 +675,7 @@ const Home = () => {
             <div className="absolute inset-0 bg-mesh opacity-10" />
             <div className="absolute -top-24 -right-24 w-96 h-96 bg-primary/10 rounded-full blur-30" />
             <div className="absolute -bottom-24 -left-24 w-96 h-96 bg-rose-500/10 rounded-full blur-30" />
-            <div className="absolute inset-0 sweep-light" />
+            {/* <div className="absolute inset-0 sweep-light" /> */}
             <div className="absolute top-12 left-12 hidden md:block orbit-dot" />
             <div className="absolute bottom-16 right-16 hidden md:block orbit-dot" />
 

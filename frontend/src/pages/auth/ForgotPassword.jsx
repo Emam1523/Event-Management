@@ -27,6 +27,7 @@ const ForgotPassword = () => {
   const [timer, setTimer] = useState(OTP_TIMER);
   const [timerActive, setTimerActive] = useState(false);
   const [codeError, setCodeError] = useState("");
+  const [error, setError] = useState("");
 
   const { showNotification } = useNotifications();
   const navigate = useNavigate();
@@ -65,6 +66,7 @@ const ForgotPassword = () => {
       setCode("");
       setCodeError("");
     } catch (error) {
+      setError((await error.response?.data?.message) || "Failed to send code.");
       showNotification(
         (await error.response?.data?.message) || "Failed to send code.",
         "error",
@@ -198,7 +200,7 @@ const ForgotPassword = () => {
         </div>
 
         <motion.div className="rounded-4xl border border-white/10 bg-white/3 backdrop-blur-3xl p-8 md:p-10 shadow-2xl shadow-black/50 relative overflow-hidden">
-          <div className="sweep-light" />
+          {/* <div className="sweep-light" /> */}
 
           <div className="relative z-10">
             <motion.div
@@ -259,6 +261,22 @@ const ForgotPassword = () => {
                         className="w-full rounded-2xl border border-white/10 bg-black/30 py-4 pl-14 pr-4 text-white outline-none focus:border-brand-orange/50 focus:shadow-[0_0_30px_rgba(255,90,53,0.1)] transition-all font-bold placeholder:text-zinc-700"
                       />
                     </div>
+                    {error && (
+                      <motion.div
+                        initial={{
+                          x: -20,
+                          opacity: 0,
+                        }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{
+                          duration: 0.4,
+                        }}
+                      >
+                        <p className="bg-red-400/20 text-red-500 border border-red-500 rounded-lg text-sm px-3 py-2">
+                          {error}
+                        </p>
+                      </motion.div>
+                    )}
                   </div>
 
                   <motion.button
@@ -378,6 +396,7 @@ const ForgotPassword = () => {
                     />
                   </div>
 
+                  {/* show error code message */}
                   <AnimatePresence>
                     {codeError && (
                       <motion.div
