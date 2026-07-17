@@ -34,7 +34,6 @@ const verifyStoredCode = async ({ email, purpose, code, consume = true }) => {
       email,
       purpose,
       consumedAt: null,
-      expiresAt: { gt: new Date() },
     },
     orderBy: { createdAt: "desc" },
   });
@@ -59,6 +58,13 @@ const toUserPayload = (user) => ({
   email: user.email,
   phone: user.phone || "",
   role: user.role,
+  provider: user?.password
+    ? "Email"
+    : user?.googleId
+      ? "Google"
+      : user?.facebookId
+        ? "Facebook"
+        : "Unidentified",
   avatar: user.avatar || "", // Added to map the Google profile photo to the frontend
   emailVerified: user.emailVerified,
 });
@@ -193,6 +199,7 @@ exports.loginUser = asyncHandler(async (req, res) => {
       });
     } catch (emailErr) {
       console.warn("Failed to send verification email:", emailErr.message);
+      throw new Error("Failed to send verification code. Try again");
     }
     res.status(201).json({
       user: toUserPayload(user),

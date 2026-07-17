@@ -10,6 +10,8 @@ const uniqueLogoId = {
   cid: "uniqueLogoId",
 };
 
+console.log(process.env?.SMTP_USER);
+
 const transporter = hasSmtpConfig
   ? nodemailer.createTransport({
       host: process.env.SMTP_HOST,
@@ -80,14 +82,21 @@ const sendVerificationCodeEmail = async ({ to, name, code, purpose }) => {
     return { skipped: true };
   }
 
-  await transporter.sendMail({
-    from: "Password Reset", // process.env.SMTP_FROM || process.env.SMTP_USER,
-    to,
-    subject,
-    text: textBody,
-    html: htmlBody,
-    attachments: [uniqueLogoId],
-  });
+  try {
+    await transporter.sendMail({
+      from: process.env.SMTP_FROM || process.env.SMTP_USER,
+      to: to,
+      subject: subject,
+      text: textBody,
+      html: htmlBody,
+      attachments: [uniqueLogoId],
+    });
+  } catch (error) {
+    console.error(error);
+    throw new Error(
+      `Failed to send email. Request type: ${labelByPurpose[purpose]?.split(" ")?.join("_")?.toUpperCase()}`,
+    );
+  }
 
   return { skipped: false };
 };
@@ -137,15 +146,22 @@ const sendContactFormEmail = async ({ name, email, subject, message }) => {
 
   const textBody = `New Contact Message\n\nName: ${name}\nEmail: ${email}\nSubject: ${subject}\n\nMessage:\n${message}`;
 
-  await transporter.sendMail({
-    from: process.env.SMTP_FROM || process.env.SMTP_USER,
-    to: systemEmail, // Send to the admin/system email
-    replyTo: email, // Allow replying directly to the user
-    subject: `[NextDhaka Contact] ${subject}`,
-    text: textBody,
-    html: htmlBody,
-    attachments: [uniqueLogoId],
-  });
+  try {
+    await transporter.sendMail({
+      from: process.env.SMTP_FROM || process.env.SMTP_USER,
+      to: systemEmail,
+      replyTo: email,
+      subject: `[NextDhaka Contact] ${subject}`,
+      secured: true,
+      sender: "info@nextdhaka.live",
+      text: textBody,
+      html: htmlBody,
+      attachments: [uniqueLogoId],
+    });
+  } catch (err) {
+    console.error(err);
+    throw new Error(`Failed to send email. Request type: CONTACT_SEND `);
+  }
 
   return { skipped: false };
 };

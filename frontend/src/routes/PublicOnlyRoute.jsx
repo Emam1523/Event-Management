@@ -1,8 +1,8 @@
-import { Navigate, Outlet } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
+import { Outlet } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
 const PublicOnlyRoute = () => {
-  const { isAuthenticated, isAdmin, loading } = useAuth();
+  const { loading } = useAuth();
 
   if (loading) {
     return (
@@ -10,10 +10,6 @@ const PublicOnlyRoute = () => {
         <div className="h-10 w-10 rounded-full border-2 border-slate-300 border-t-slate-900 animate-spin" />
       </div>
     );
-  }
-
-  if (isAuthenticated) {
-    return <Navigate to={isAdmin ? '/admin/profile' : '/profile'} replace />;
   }
 
   return <Outlet />;

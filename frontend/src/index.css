@@ -59,6 +59,9 @@
     letter-spacing: -0.02em;
     color: #ffffff;
   }
+  code {
+    @apply bg-amber-700/30 text-xs border border-amber-300 rounded-full px-3 py-1 uppercase text-amber-400 mx-2;
+  }
 }
 
 @layer components {

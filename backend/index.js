@@ -5,7 +5,10 @@ const dotenv = require("dotenv");
 const path = require("path");
 
 // Load env vars
-dotenv.config({ path: path.join(__dirname, "../.env") });
+dotenv.config({
+  path: path.join(__dirname, "../.env"),
+  override: true,
+});
 const errorHandler = require("./middleware/errorHandler");
 
 const app = express();

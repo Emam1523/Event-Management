@@ -23,6 +23,7 @@ const ManageUsers = () => {
       try {
         const res = await adminAPI.getUsers();
         setUsers(res.data?.data || []);
+        console.log(res.data.data);
       } catch (err) {
         console.error(err);
       } finally {
@@ -190,6 +191,7 @@ const ManageUsers = () => {
                       </td>
                       <td className="px-8 py-6">
                         <div className="flex items-center gap-2">
+                          <code>{u.provider}</code>
                           {u.role === "admin" && (
                             <FiShield className="text-purple-400" />
                           )}

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {
   FiUser,
@@ -257,9 +257,11 @@ const UserProfile = () => {
     setSavingReview(false);
   };
 
-  const avatarLetter = user?.avatar
-    ? user?.avatar
-    : user?.name?.charAt(0)?.toUpperCase() || "U";
+  const avatarLetter = useMemo(() => {
+    return user?.avatar
+      ? user?.avatar
+      : user?.name?.charAt(0)?.toUpperCase() || "U";
+  }, [user]);
   const isAdmin = user?.role === "admin";
 
   const statCards = !isAdmin
@@ -586,7 +588,7 @@ const UserProfile = () => {
                     </div>
                     <div>
                       <p className="text-[10px] font-black uppercase tracking-widest text-zinc-500">
-                        Account Status
+                        Account Status <code>{user?.provider}</code>
                       </p>
                       <p className="text-sm font-bold text-white mt-0.5">
                         {user?.emailVerified

@@ -44,24 +44,19 @@ const Login = () => {
 
     try {
       const result = await login(formData);
+      const role = result.user?.role;
       if (result.verificationRequired) {
         navigate(
           `/verify-email?email=${encodeURIComponent(
             result.email,
-          )}&purpose=registration&next=${result.user?.role === "admin" ? "/admin" : "/profile"}`,
+          )}&purpose=registration&next=${role === "admin" ? "/admin" : "/profile"}`,
           { replace: true },
         );
       } else if (result.success) {
         showNotification("Successfully logged in!", "success");
-
-        if (from !== "/profile") {
-          navigate(from, { replace: true });
-        } else {
-          const role = result.user?.role;
-          navigate(role === "admin" ? "/admin" : "/profile", {
-            replace: true,
-          });
-        }
+        navigate(role === "admin" ? "/admin" : "/profile", {
+          replace: true,
+        });
       } else {
         showNotification(result.message, "error");
         await logout();

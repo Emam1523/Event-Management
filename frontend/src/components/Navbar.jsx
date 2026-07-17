@@ -53,7 +53,7 @@ const Navbar = ({ hideMenu = false }) => {
 
   const userMenuItems = [
     {
-      to: user?.role === "admin" ? "/admin/profile" : "/profile",
+      to: user?.role === "admin" ? "/admin" : "/profile",
       label: "Identity Profile",
       icon: <FiUser />,
     },

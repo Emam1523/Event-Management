@@ -1,13 +1,16 @@
-const path = require('path');
-require('dotenv').config({ path: path.join(__dirname, '../.env') });
-const { defineConfig, env } = require('prisma/config');
+const path = require("path");
+require("dotenv").config({
+  path: path.join(__dirname, "../.env"),
+  override: true,
+});
+const { defineConfig, env } = require("prisma/config");
 
 module.exports = defineConfig({
-  schema: 'prisma/schema.prisma',
+  schema: "prisma/schema.prisma",
   migrations: {
-    path: 'prisma/migrations',
+    path: "prisma/migrations",
   },
   datasource: {
-    url: env('DATABASE_URL'),
+    url: env("DATABASE_URL"),
   },
 });
